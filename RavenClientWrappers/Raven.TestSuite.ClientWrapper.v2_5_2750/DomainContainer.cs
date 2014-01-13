@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
 using Raven.TestSuite.Common;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
@@ -15,15 +9,16 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         private Wrapper wrapperProxy;
 
-        public DomainContainer(string clientDllPath, string version, string appDomainPath, string originalPath)
+        public DomainContainer(string clientDllPath, string version, int databasePort)
         {
-             var e = new Evidence(AppDomain.CurrentDomain.Evidence);
+            var clientDllFolder = System.IO.Path.GetDirectoryName(clientDllPath);
+            var testSuiteRunningFolder = AppDomain.CurrentDomain.BaseDirectory;
             var setup = new AppDomainSetup();
-            setup.ApplicationBase = appDomainPath;
+            setup.ApplicationBase = clientDllFolder;
             domain = AppDomain.CreateDomain(version, null, setup);
             Type loaderType = typeof(Wrapper);
             wrapperProxy = (Wrapper)domain.CreateInstanceFrom(loaderType.Assembly.Location, loaderType.FullName).Unwrap();
-            wrapperProxy.LoadDocumentStoreAndInitialize(clientDllPath);
+            wrapperProxy.LoadDocumentStoreAndInitialize(clientDllPath, testSuiteRunningFolder, databasePort);
         }
 
         public IRavenClientWrapper Wrapper

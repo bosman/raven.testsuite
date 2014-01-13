@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.Common.Attributes;
-using Raven.TestSuite.Common.DatabaseObjects;
+using Raven.TestSuite.Tests.DatabaseObjects;
+using Xunit;
 
 namespace Raven.TestSuite.Tests
 {
@@ -19,34 +20,27 @@ namespace Raven.TestSuite.Tests
         }
 
         [RavenTest]
-        public void SomeTest()
+        public void SimpleTest1()
         {
-            var results = wrapper.DoInSession<List<string>>(
-                x =>
+            wrapper.Execute(store =>
                 {
-                    var capsOverMillion = x.Query<Country>().Where(o => o.Area > 1000000).Count();
-                    var capsOverThousand = x.Query<Country>().Where(o => o.Area > 1000).Count();
-                    return new List<string>() { capsOverMillion.ToString(), capsOverThousand.ToString() };
-                }
-                );
-            foreach (var result in results)
-            {
-                System.Console.WriteLine(result);
-            }
+                    using (var session = store.OpenSession())
+                    {
+                        Assert.True(session.Query<Country>().Count(o => o.Area > 1000000) > 0);
+                    }
+                });
         }
 
         [RavenTest]
-        public void TestThatThrowsException()
+        public void SimpleFailingTest1()
         {
-            var results = wrapper.DoInSession<List<string>>(
-                x =>
+            wrapper.Execute(store =>
+            {
+                using (var session = store.OpenSession())
                 {
-                    var capsOverMillion = x.Query<Country>().Where(o => o.Area > 1000000).Count();
-                    throw new Exception("This exception is thrown on purpose");
-                    var capsOverThousand = x.Query<Country>().Where(o => o.Area > 1000).Count();
-                    return new List<string>() { capsOverMillion.ToString(), capsOverThousand.ToString() };
+                    Assert.True(session.Query<Country>().Count(o => o.Area > 1000000) < 0);
                 }
-                );
+            });
         }
     }
 }

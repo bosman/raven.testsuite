@@ -5,10 +5,8 @@ using System.Text;
 
 namespace Raven.TestSuite.Common
 {
-    public interface IRavenClientWrapper
+    public interface IDocumentStoreWrapper
     {
-        string GetVersion();
-
-        void Execute(Action<IDocumentStoreWrapper> action);
+        IDocumentSessionWrapper OpenSession();
     }
 }

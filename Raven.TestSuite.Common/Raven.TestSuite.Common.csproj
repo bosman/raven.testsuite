@@ -41,8 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\RavenTestAttribute.cs" />
-    <Compile Include="DatabaseObjects\Country.cs" />
     <Compile Include="IDocumentSessionWrapper.cs" />
+    <Compile Include="IDocumentStoreWrapper.cs" />
     <Compile Include="IRavenClientWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestGroupBase.cs" />
