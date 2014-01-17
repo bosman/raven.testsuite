@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Raven.Client;
+using Raven.TestSuite.Common.WrapperInterfaces;
+using System;
 using System.Linq;
-using System.Text;
-using Raven.Client;
-using Raven.TestSuite.Common;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {

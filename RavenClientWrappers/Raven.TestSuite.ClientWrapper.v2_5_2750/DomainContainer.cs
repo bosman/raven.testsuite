@@ -1,5 +1,5 @@
-﻿using System;
-using Raven.TestSuite.Common;
+﻿using Raven.TestSuite.Common.WrapperInterfaces;
+using System;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {

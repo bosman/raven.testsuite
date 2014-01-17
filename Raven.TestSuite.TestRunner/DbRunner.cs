@@ -8,12 +8,12 @@ namespace Raven.TestSuite.TestRunner
         private bool _disposed;
         private Process dbServerProcess;
 
-        public static DbRunner Run(int port)
+        public static DbRunner Run(int port, string standaloneServerExePath)
         {
-            return new DbRunner(port);
+            return new DbRunner(port, standaloneServerExePath);
         }
 
-        private DbRunner(int port)
+        private DbRunner(int port, string standaloneServerExePath)
         {
             System.Console.WriteLine("Starting test with database on port " + port);
             this.dbServerProcess = new Process();

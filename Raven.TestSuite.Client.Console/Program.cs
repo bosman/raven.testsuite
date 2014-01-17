@@ -17,7 +17,7 @@ namespace Raven.TestSuite.Client.Console
             var progressIndicator = new Progress<ProgressReport>(progressReport => System.Console.WriteLine(progressReport.Message));
             var cancellationtokenSource = new CancellationTokenSource();
             var token = cancellationtokenSource.Token;
-            var task = runner.RunAllTests(progressIndicator, token);
+            var task = runner.RunAllTests(progressIndicator, token, "C:\\RavenDB-Build-2750");
             task.ContinueWith(continuation =>
                 {
                     if (continuation.IsCanceled)

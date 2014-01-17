@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Raven.TestSuite.Common;
-using Raven.TestSuite.Common.Attributes;
+﻿using Raven.TestSuite.Common.WrapperInterfaces;
+using Raven.TestSuite.Tests.Common.Attributes;
 using Raven.TestSuite.Tests.DatabaseObjects;
+using System.Linq;
 using Xunit;
 
 namespace Raven.TestSuite.Tests
 {
-    public class InitialDevTests : TestGroupBase
+    public class InitialDevTests
     {
         private IRavenClientWrapper wrapper;
 
@@ -19,7 +15,7 @@ namespace Raven.TestSuite.Tests
             this.wrapper = wrapper;
         }
 
-        [RavenTest]
+        [RavenDotNetApiTest]
         public void SimpleTest1()
         {
             wrapper.Execute(store =>
@@ -31,7 +27,7 @@ namespace Raven.TestSuite.Tests
                 });
         }
 
-        [RavenTest]
+        [RavenDotNetApiTest]
         public void SimpleFailingTest1()
         {
             wrapper.Execute(store =>

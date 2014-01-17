@@ -47,7 +47,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProgressReport.cs" />
     <Compile Include="RavenTestRunner.cs" />
-    <Compile Include="TestTests.cs" />
+    <Compile Include="RavenTestsGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Raven.TestSuite.Common\Raven.TestSuite.Common.csproj">
@@ -57,6 +57,7 @@
     <ProjectReference Include="..\Raven.TestSuite.Tests\Raven.TestSuite.Tests.csproj">
       <Project>{98CACF61-19FF-4FFC-9080-DD35DBCF8940}</Project>
       <Name>Raven.TestSuite.Tests</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\RavenClientWrappers\Raven.TestSuite.ClientWrapper.v2_5_2750\Raven.TestSuite.ClientWrapper.v2_5_2750.csproj">
       <Project>{CF6822E7-8849-4E49-8911-E71170C3B26C}</Project>

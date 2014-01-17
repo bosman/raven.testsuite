@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Raven.Client.Document;
+﻿using Raven.Client.Document;
 using Raven.TestSuite.ClientWrapper.v2_5_2750;
-using Raven.TestSuite.Common;
+using Raven.TestSuite.Common.WrapperInterfaces;
 
 namespace Raven.TestSuite.ClientWrapper._2_5_2750
 {
