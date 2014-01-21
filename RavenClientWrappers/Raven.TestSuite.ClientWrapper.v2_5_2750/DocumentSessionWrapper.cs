@@ -27,6 +27,19 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             }
         }
 
+        public void Store(dynamic entity)
+        {
+            this.documentSession.Store(entity);
+        }
 
+        public void SaveChanges()
+        {
+            this.documentSession.SaveChanges();
+        }
+
+        public T Load<T>(ValueType id)
+        {
+            return this.documentSession.Load<T>(id);
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
         IDocumentStoreWrapper Initialize();
 
         IEtagWrapper GetLastWrittenEtag();
+
+        void DeleteDatabase(string name);
     }
 }

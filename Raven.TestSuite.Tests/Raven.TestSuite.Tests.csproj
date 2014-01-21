@@ -50,6 +50,8 @@
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
     <Compile Include="Common\BaseTestGroup.cs" />
     <Compile Include="DatabaseObjects\Country.cs" />
+    <Compile Include="DatabaseObjects\Person.cs" />
+    <Compile Include="DotNetApiTests\SessionCrudTests.cs" />
     <Compile Include="InitialDevTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Attributes\RavenDotNetApiTestAttribute.cs" />

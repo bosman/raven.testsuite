@@ -44,5 +44,17 @@ namespace Raven.TestSuite.Tests
                 }
             });
         }
+
+        [RavenDotNetApiTest]
+        public void CreationDeletion()
+        {
+            wrapper.Execute(testEnv =>
+            {
+                using (var docStore = testEnv.CreateDocumentStore("TestDatabase").Initialize())
+                {
+                    docStore.DeleteDatabase("TestDatabase");
+                }
+            });
+        }
     }
 }

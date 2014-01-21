@@ -8,5 +8,11 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
     public interface IDocumentSessionWrapper : IDisposable
     {
         IOrderedQueryable<T> Query<T>();
+
+        void Store(dynamic entity);
+
+        T Load<T>(ValueType id);
+
+        void SaveChanges();
     }
 }
