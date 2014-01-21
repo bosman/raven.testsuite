@@ -49,6 +49,7 @@
     <Compile Include="DocumentSessionWrapper.cs" />
     <Compile Include="DocumentStoreWrapper.cs" />
     <Compile Include="DomainContainer.cs" />
+    <Compile Include="EtagWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wrapper.cs" />
   </ItemGroup>

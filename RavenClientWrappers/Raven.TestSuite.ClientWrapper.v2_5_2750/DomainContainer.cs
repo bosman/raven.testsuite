@@ -18,7 +18,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             domain = AppDomain.CreateDomain(version, null, setup);
             Type loaderType = typeof(Wrapper);
             wrapperProxy = (Wrapper)domain.CreateInstanceFrom(loaderType.Assembly.Location, loaderType.FullName).Unwrap();
-            wrapperProxy.LoadDocumentStoreAndInitialize(clientDllPath, testSuiteRunningFolder, databasePort);
+            wrapperProxy.LoadAssemblyAndSetUp(clientDllPath, testSuiteRunningFolder, databasePort);
         }
 
         public IRavenClientWrapper Wrapper

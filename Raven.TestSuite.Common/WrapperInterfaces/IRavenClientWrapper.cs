@@ -9,6 +9,8 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
     {
         string GetVersion();
 
-        void Execute(Action<IDocumentStoreWrapper> action);
+        void Execute(Action<ITestUnitEnvironment> action);
+
+        void Execute(Action<IRavenClientWrapper> action);
     }
 }

@@ -46,6 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
+    <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
+    <Compile Include="Common\BaseTestGroup.cs" />
     <Compile Include="DatabaseObjects\Country.cs" />
     <Compile Include="InitialDevTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

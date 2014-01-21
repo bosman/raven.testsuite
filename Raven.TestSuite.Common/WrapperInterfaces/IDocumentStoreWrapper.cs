@@ -5,8 +5,12 @@ using System.Text;
 
 namespace Raven.TestSuite.Common.WrapperInterfaces
 {
-    public interface IDocumentStoreWrapper
+    public interface IDocumentStoreWrapper : IDisposable
     {
         IDocumentSessionWrapper OpenSession();
+
+        IDocumentStoreWrapper Initialize();
+
+        IEtagWrapper GetLastWrittenEtag();
     }
 }

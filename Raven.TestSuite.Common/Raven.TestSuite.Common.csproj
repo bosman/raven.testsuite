@@ -43,9 +43,11 @@
     <Compile Include="Constants.cs" />
     <Compile Include="WrapperInterfaces\IDocumentSessionWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDocumentStoreWrapper.cs" />
+    <Compile Include="WrapperInterfaces\IEtagWrapper.cs" />
     <Compile Include="WrapperInterfaces\IRavenClientWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestResult.cs" />
+    <Compile Include="WrapperInterfaces\ITestUnitEnvironment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
