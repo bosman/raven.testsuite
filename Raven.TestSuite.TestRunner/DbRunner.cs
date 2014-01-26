@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace Raven.TestSuite.TestRunner
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class DbRunner : IDisposable
     {
         private bool _disposed;
@@ -26,7 +29,31 @@ namespace Raven.TestSuite.TestRunner
             this.dbServerProcess.StartInfo.RedirectStandardOutput = true;
             this.dbServerProcess.StartInfo.CreateNoWindow = true;
             this.dbServerProcess.Start();
+
+            this.WaitForStartAndCalculateWarmupTime();
         }
+
+        private void WaitForStartAndCalculateWarmupTime()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            while (true)
+            {
+                var output = this.dbServerProcess.StandardOutput.ReadLine();
+
+                if (output != null && output.StartsWith("Available commands: cls, reset, gc, q", StringComparison.InvariantCultureIgnoreCase)) 
+                    break;
+
+                if (stopwatch.Elapsed.TotalSeconds > 30)
+                    throw new InvalidOperationException("Server did not started withing 30 seconds.");
+
+                Thread.Sleep(100);
+            }
+
+            stopwatch.Stop();
+            StartupTime = stopwatch.Elapsed;
+        }
+
+        public TimeSpan StartupTime { get; private set; }
 
         public void Dispose()
         {

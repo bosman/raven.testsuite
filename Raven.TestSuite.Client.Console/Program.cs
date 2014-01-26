@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Raven.TestSuite.Common;
-using Raven.TestSuite.TestRunner;
-
-namespace Raven.TestSuite.Client.Console
+﻿namespace Raven.TestSuite.Client.Console
 {
-    class Program
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading;
+
+    using Raven.TestSuite.Common;
+    using Raven.TestSuite.TestRunner;
+
+    public class Program
     {
-        static void Main(string[] args)
+        private static RavenTestRunner runner;
+
+        public static void Main(string[] args)
         {
-            var runner = new RavenTestRunner();
-            var progressIndicator = new Progress<ProgressReport>(progressReport => System.Console.WriteLine(progressReport.Message));
+            SubscribeToApplicationExit();
+
+            runner = new RavenTestRunner();
+            var progressIndicator = new Progress<ProgressReport>(progressReport => Console.WriteLine(progressReport.Message));
             var cancellationtokenSource = new CancellationTokenSource();
             var token = cancellationtokenSource.Token;
             var task = runner.RunAllTests(progressIndicator, token, "C:\\RavenDB-Build-2750");
@@ -22,23 +25,22 @@ namespace Raven.TestSuite.Client.Console
                 {
                     if (continuation.IsCanceled)
                     {
-                        System.Console.WriteLine("Tests cancelled");
+                        Console.WriteLine("Tests cancelled");
                     }
                     else if (continuation.IsCompleted)
                     {
                         DisplayResults(continuation.Result);
                     }
-                    
                 });
 
             var shouldQuit = false;
             while (!shouldQuit)
             {
-                var key = System.Console.ReadKey();
+                var key = Console.ReadKey();
                 switch (key.Key)
                 {
                         case ConsoleKey.T:
-                            System.Console.WriteLine("Test");
+                            Console.WriteLine("Test");
                         break;
                         case ConsoleKey.C:
                             cancellationtokenSource.Cancel();
@@ -51,22 +53,53 @@ namespace Raven.TestSuite.Client.Console
 
         }
 
-        private static void DisplayResults(List<TestResult> results)
+        private static void SubscribeToApplicationExit()
         {
-            System.Console.WriteLine("=====Results=====");
+#if DEBUG
+            var processes = Process.GetProcessesByName("Raven.Server");
+            foreach (var process in processes)
+                process.Kill();
+#endif
+
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+            Console.CancelKeyPress += ConsoleOnCancelKeyPress;
+        }
+
+        private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs consoleCancelEventArgs)
+        {
+            ShutDown();
+        }
+
+        private static void OnProcessExit(object sender, EventArgs eventArgs)
+        {
+            ShutDown();
+        }
+
+        private static void ShutDown()
+        {
+            if (runner == null)
+                return;
+
+            runner.Dispose();
+            runner = null;
+        }
+
+        private static void DisplayResults(IEnumerable<TestResult> results)
+        {
+            Console.WriteLine("=====Results=====");
             foreach (var testResult in results)
             {
-                System.Console.WriteLine("Test name: " + testResult.TestName);
+                Console.WriteLine("Test name: " + testResult.TestName);
                 if (testResult.IsSuccess)
                 {
-                    System.Console.WriteLine("Success");
+                    Console.WriteLine("Success");
                 }
                 else
                 {
-                    System.Console.WriteLine("Failure: " + testResult.Exception.Message);
+                    Console.WriteLine("Failure: " + testResult.Exception.Message);
                 }
-                System.Console.WriteLine("Execution time: " + testResult.ExecutionTime);
-                System.Console.WriteLine("===============================");
+                Console.WriteLine("Execution time: " + testResult.ExecutionTime);
+                Console.WriteLine("===============================");
             }
         }
     }

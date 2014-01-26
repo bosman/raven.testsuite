@@ -149,3 +149,6 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+/packages/Microsoft.CompilerServices.AsyncTargetingPack.1.0.1
+/packages/RavenDB.Client.2.5.2750
+/packages/xunit.1.9.2/lib/net20

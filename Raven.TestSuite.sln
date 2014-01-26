@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.TestSuite.Client.Console", "Raven.TestSuite.Client.Console\Raven.TestSuite.Client.Console.csproj", "{4C6CB762-3E9B-4459-BF83-B508B19FFC50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.TestSuite.Common", "Raven.TestSuite.Common\Raven.TestSuite.Common.csproj", "{6E17F8A9-867B-48AB-8B7B-67D40B437E3B}"
@@ -10,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.TestSuite.ClientWrapper.v2_5_2750", "RavenClientWrappers\Raven.TestSuite.ClientWrapper.v2_5_2750\Raven.TestSuite.ClientWrapper.v2_5_2750.csproj", "{CF6822E7-8849-4E49-8911-E71170C3B26C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.TestSuite.Tests", "Raven.TestSuite.Tests\Raven.TestSuite.Tests.csproj", "{98CACF61-19FF-4FFC-9080-DD35DBCF8940}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3EF5C1CC-6A9F-4DDC-8BE4-3F6E71E442AF}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
