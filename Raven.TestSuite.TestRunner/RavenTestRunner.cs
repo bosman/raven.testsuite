@@ -13,12 +13,16 @@ using System.Threading.Tasks;
 
 namespace Raven.TestSuite.TestRunner
 {
-    public class RavenTestRunner
+    public class RavenTestRunner : IDisposable
     {
+        private DbRunner dbRunner;
+
         public Task<List<TestResult>> RunAllTests(IProgress<ProgressReport> progress, CancellationToken token, string ravenVersionFolderPath)
         {
             var task = Task.Factory.StartNew<List<TestResult>>(() =>
                 {
+                    this.Cleanup();
+
                     var testGroups = GetAllRavenDotNetApiTests();
                     var testResults = new List<TestResult>();
 
@@ -27,8 +31,10 @@ namespace Raven.TestSuite.TestRunner
                     var clientDllPath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ClientDllPartialPath);
                     var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
 
-                    using (var dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
+                    using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
                     {
+                        Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
+
                         using (var domainContainer = new ClientWrapper.v2_5_2750.DomainContainer(
                             clientDllPath, "version1", dbPort))
                         {
@@ -54,6 +60,15 @@ namespace Raven.TestSuite.TestRunner
                     return testResults;
                 }, token);
             return task;
+        }
+
+        private void Cleanup()
+        {
+            if (this.dbRunner == null)
+                return;
+
+            this.dbRunner.Dispose();
+            this.dbRunner = null;
         }
 
         private static void InterruptExecutionIfCancellationRequested(CancellationToken token)
@@ -128,6 +143,11 @@ namespace Raven.TestSuite.TestRunner
                        }).ToList();
 
             return ravTestGr;
+        }
+
+        public void Dispose()
+        {
+            this.Cleanup();
         }
     }
 }
