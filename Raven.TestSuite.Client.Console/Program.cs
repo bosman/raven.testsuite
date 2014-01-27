@@ -61,6 +61,9 @@
                 process.Kill();
 #endif
 
+            if (Process.GetProcessesByName("Raven.Server").Length > 0) 
+                throw new InvalidOperationException("Cannot start tests when there are Raven.Server's running.");
+
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
             Console.CancelKeyPress += ConsoleOnCancelKeyPress;
         }
