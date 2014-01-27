@@ -1,14 +1,15 @@
 ﻿using Raven.TestSuite.Common.WrapperInterfaces;
+using Raven.TestSuite.Tests.Common.Attributes;
+using Raven.TestSuite.Tests.Common.Runner;
+using Xunit;
 
 namespace Raven.TestSuite.Tests.Common
 {
+    [RunWithRaven]
     public class BaseTestGroup
     {
-        protected IRavenClientWrapper wrapper;
+        public IRavenClientWrapper wrapper { get; set; }
 
-        public BaseTestGroup(IRavenClientWrapper wrapper)
-        {
-            this.wrapper = wrapper;
-        }
+       
     }
 }

@@ -12,6 +12,8 @@
     <AssemblyName>Raven.TestSuite.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,9 +40,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="ExecutableAttribute.cs" />
+    <Compile Include="IRavenCommand.cs" />
+    <Compile Include="RavenDotNetApiTestAttribute.cs" />
     <Compile Include="WrapperInterfaces\IDocumentSessionWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDocumentStoreWrapper.cs" />
     <Compile Include="WrapperInterfaces\IEtagWrapper.cs" />
@@ -49,7 +57,11 @@
     <Compile Include="TestResult.cs" />
     <Compile Include="WrapperInterfaces\ITestUnitEnvironment.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

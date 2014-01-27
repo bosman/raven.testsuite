@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +43,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbRunner.cs" />
@@ -54,17 +60,16 @@
       <Project>{6E17F8A9-867B-48AB-8B7B-67D40B437E3B}</Project>
       <Name>Raven.TestSuite.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Raven.TestSuite.Tests\Raven.TestSuite.Tests.csproj">
-      <Project>{98CACF61-19FF-4FFC-9080-DD35DBCF8940}</Project>
-      <Name>Raven.TestSuite.Tests</Name>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\RavenClientWrappers\Raven.TestSuite.ClientWrapper.v2_5_2750\Raven.TestSuite.ClientWrapper.v2_5_2750.csproj">
       <Project>{CF6822E7-8849-4E49-8911-E71170C3B26C}</Project>
       <Name>Raven.TestSuite.ClientWrapper.v2_5_2750</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -9,10 +9,6 @@ namespace Raven.TestSuite.Tests
 {
     public class InitialDevTests : BaseTestGroup
     {
-        public InitialDevTests(IRavenClientWrapper wrapper) : base(wrapper)
-        {
-        }
-
         [RavenDotNetApiTest]
         [PreinitializeDatabase("World")]
         public void SimpleTest1()

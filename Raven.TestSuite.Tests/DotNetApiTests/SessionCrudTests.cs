@@ -13,10 +13,6 @@ namespace Raven.TestSuite.Tests.DotNetApiTests
 {
     public class SessionCrudTests : BaseTestGroup
     {
-        public SessionCrudTests(IRavenClientWrapper wrapper)
-            : base(wrapper)
-        {
-        }
 
         [RavenDotNetApiTest]
         public void EntityAddedToANewDatabaseIsReturnedByIdFromTheLoadMethodInASeparateSession()

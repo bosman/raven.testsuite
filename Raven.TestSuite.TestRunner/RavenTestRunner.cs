@@ -19,33 +19,41 @@ namespace Raven.TestSuite.TestRunner
 
         public Task<List<TestResult>> RunAllTests(IProgress<ProgressReport> progress, CancellationToken token, string ravenVersionFolderPath)
         {
+            return RunTests(progress, token, ravenVersionFolderPath, (method) => true);
+        }
+
+        public Task<List<TestResult>> RunTests(IProgress<ProgressReport> progress, CancellationToken token,
+                                                  string ravenVersionFolderPath, Func<MethodInfo, bool> filter)
+        {
             var task = Task.Factory.StartNew<List<TestResult>>(() =>
+            {
+                this.Cleanup();
+
+                var testGroups = GetAllRavenDotNetApiTests();
+                var testResults = new List<TestResult>();
+
+                var dbPort = 8080;
+
+                var clientDllPath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ClientDllPartialPath);
+                var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
+
+                using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
                 {
-                    this.Cleanup();
+                    Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
 
-                    var testGroups = GetAllRavenDotNetApiTests();
-                    var testResults = new List<TestResult>();
-
-                    var dbPort = 8080;
-
-                    var clientDllPath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ClientDllPartialPath);
-                    var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
-
-                    using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
+                    using (var domainContainer = new ClientWrapper.v2_5_2750.DomainContainer(
+                        clientDllPath, "version1", dbPort))
                     {
-                        Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
+                        var wrapper = domainContainer.Wrapper;
+                        System.Console.WriteLine("Using .Net wrapper version: " + wrapper.GetVersion());
 
-                        using (var domainContainer = new ClientWrapper.v2_5_2750.DomainContainer(
-                            clientDllPath, "version1", dbPort))
+                        foreach (var testGroup in testGroups)
                         {
-                            var wrapper = domainContainer.Wrapper;
-                            System.Console.WriteLine("Using .Net wrapper version: " + wrapper.GetVersion());
-
-                            foreach (var testGroup in testGroups)
+                            InterruptExecutionIfCancellationRequested(token);
+                            var obj = Activator.CreateInstance(testGroup.GroupType, new object[] { wrapper });
+                            foreach (var test in testGroup.Tests)
                             {
-                                InterruptExecutionIfCancellationRequested(token);
-                                var obj = Activator.CreateInstance(testGroup.GroupType, new object[] { wrapper });
-                                foreach (var test in testGroup.Tests)
+                                if (filter(test))
                                 {
                                     InterruptExecutionIfCancellationRequested(token);
                                     RunExecutableAttributesCodeBeforeTest(test, wrapper);
@@ -56,9 +64,10 @@ namespace Raven.TestSuite.TestRunner
                             }
                         }
                     }
+                }
 
-                    return testResults;
-                }, token);
+                return testResults;
+            }, token);
             return task;
         }
 
@@ -99,7 +108,7 @@ namespace Raven.TestSuite.TestRunner
         private static TestResult RunTest(RavenTestsGroup testGroup, MethodInfo test, object obj)
         {
             var watch = new Stopwatch();
-            var result = new TestResult {TestName = testGroup.GroupType.FullName + "." + test.Name};
+            var result = new TestResult { TestName = testGroup.GroupType.FullName + "." + test.Name };
             try
             {
                 watch.Start();
@@ -126,7 +135,8 @@ namespace Raven.TestSuite.TestRunner
 
         public IEnumerable<RavenTestsGroup> GetAllRavenDotNetApiTests()
         {
-            var ass = AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
+            var asssss = AppDomain.CurrentDomain.GetAssemblies();
+            var ass =  AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
 
             var ravTestGr =
                 ass.GetTypes()
