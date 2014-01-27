@@ -1,4 +1,4 @@
-﻿namespace Raven.TestSuite.Tests.DotNetApiTests
+﻿namespace Raven.TestSuite.Tests.Api.DotNet.Session
 {
     using Raven.TestSuite.Common.WrapperInterfaces;
     using Raven.TestSuite.Tests.Common;
@@ -21,7 +21,7 @@
         [RavenDotNetApiTest]
         public void EntityAddedToANewDatabaseIsReturnedByIdFromTheLoadMethodInASeparateSession()
         {
-            wrapper.Execute(testEnv =>
+            this.wrapper.Execute(testEnv =>
             {
                 var initialPerson = new Person { Id = 1, FirstName = "Clark", LastName = "Kent" };
 
