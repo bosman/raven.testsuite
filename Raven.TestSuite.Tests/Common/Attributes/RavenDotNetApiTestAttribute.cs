@@ -1,9 +1,11 @@
-﻿using System;
-
-namespace Raven.TestSuite.Tests.Common.Attributes
+﻿namespace Raven.TestSuite.Tests.Common.Attributes
 {
+    using System;
+
+    using Xunit;
+
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RavenDotNetApiTestAttribute : Attribute
+    public class RavenDotNetApiTestAttribute : FactAttribute
     {
     }
 }

@@ -63,6 +63,10 @@
       <Project>{6E17F8A9-867B-48AB-8B7B-67D40B437E3B}</Project>
       <Name>Raven.TestSuite.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RavenClientWrappers\Raven.TestSuite.ClientWrapper.v2_5_2750\Raven.TestSuite.ClientWrapper.v2_5_2750.csproj">
+      <Project>{cf6822e7-8849-4e49-8911-e71170c3b26c}</Project>
+      <Name>Raven.TestSuite.ClientWrapper.v2_5_2750</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

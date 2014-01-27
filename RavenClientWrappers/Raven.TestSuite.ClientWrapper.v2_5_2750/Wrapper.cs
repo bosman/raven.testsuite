@@ -12,6 +12,20 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         private int databasePort;
         private string testSuiteRunningFolder;
 
+        public Wrapper()
+        {
+        }
+
+        private Wrapper(Assembly assembly)
+        {
+            this.assembly = assembly;
+        }
+
+        public static Wrapper Create()
+        {
+            return new Wrapper(Assembly.Load("Raven.Client.Lightweight"));
+        }
+
         internal void LoadAssemblyAndSetUp(string clientDllPath, string testSuiteRunningFolder, int databasePort)
         {
             this.testSuiteRunningFolder = testSuiteRunningFolder;

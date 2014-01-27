@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.TestSuite.Common.WrapperInterfaces;
-using Raven.TestSuite.Tests.Common;
-using Raven.TestSuite.Tests.Common.Attributes;
-using Raven.TestSuite.Tests.DatabaseObjects;
-using Xunit;
-
-namespace Raven.TestSuite.Tests.DotNetApiTests
+﻿namespace Raven.TestSuite.Tests.DotNetApiTests
 {
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using Raven.TestSuite.Tests.Common;
+    using Raven.TestSuite.Tests.Common.Attributes;
+    using Raven.TestSuite.Tests.DatabaseObjects;
+
+    using Xunit;
+
     public class SessionCrudTests : BaseTestGroup
     {
+        public SessionCrudTests()
+        {
+        } 
+
         public SessionCrudTests(IRavenClientWrapper wrapper)
             : base(wrapper)
         {
