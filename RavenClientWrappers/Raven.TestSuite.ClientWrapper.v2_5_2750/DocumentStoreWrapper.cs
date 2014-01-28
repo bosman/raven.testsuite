@@ -1,6 +1,7 @@
 ﻿using System;
 using Raven.Client.Document;
 using Raven.TestSuite.ClientWrapper.v2_5_2750;
+using Raven.TestSuite.Common.Abstractions.Data;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using Raven.Client.Connection;
 
@@ -8,17 +9,45 @@ namespace Raven.TestSuite.ClientWrapper._2_5_2750
 {
     public class DocumentStoreWrapper : IDocumentStoreWrapper, IDisposable
     {
-        private DocumentStore documentStore;
+        private readonly DocumentStore documentStore;
 
         public DocumentStoreWrapper(DocumentStore documentStore)
         {
             this.documentStore = documentStore;
         }
 
+        public IDisposable AggressivelyCacheFor(TimeSpan cacheDuration)
+        {
+            return documentStore.AggressivelyCacheFor(cacheDuration);
+        }
+
+        public IDisposable AggressivelyCache()
+        {
+            return documentStore.AggressivelyCache();
+        }
+
+        public IDisposable DisableAggressiveCaching()
+        {
+            return documentStore.DisableAggressiveCaching();
+        }
+
+        public IDisposable SetRequestsTimeoutFor(TimeSpan timeout)
+        {
+            return documentStore.SetRequestsTimeoutFor(timeout);
+        }
+
         public IDocumentSessionWrapper OpenSession()
         {
             return new DocumentSessionWrapper(this.documentStore.OpenSession());
         }
+
+        public IDocumentSessionWrapper OpenSession(string database)
+        {
+            return new DocumentSessionWrapper(documentStore.OpenSession(database));
+        }
+
+        public IDatabaseCommandsWrapper DatabaseCommands { get { return new DatabaseCommandsWrapper(documentStore.DatabaseCommands); } }
+        public string Url { get { return documentStore.Url; } }
 
         public IDocumentStoreWrapper Initialize()
         {
@@ -31,7 +60,7 @@ namespace Raven.TestSuite.ClientWrapper._2_5_2750
             this.documentStore.Dispose();
         }
 
-        public IEtagWrapper GetLastWrittenEtag()
+        public EtagWrapper GetLastWrittenEtag()
         {
             return new EtagWrapper(this.documentStore.GetLastWrittenEtag());
         }

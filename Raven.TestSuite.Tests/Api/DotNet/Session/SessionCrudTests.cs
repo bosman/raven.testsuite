@@ -27,6 +27,7 @@
 
                 using (var docStore = testEnv.CreateDocumentStore("TestDatabase").Initialize())
                 {
+
                     using (var session = docStore.OpenSession())
                     {
                         session.Store(initialPerson);

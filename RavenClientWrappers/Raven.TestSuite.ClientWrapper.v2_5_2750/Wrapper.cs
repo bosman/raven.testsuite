@@ -68,5 +68,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             documentStore.DefaultDatabase = defaultDatabase;
             return new DocumentStoreWrapper(documentStore);
         }
+
+
     }
 }
