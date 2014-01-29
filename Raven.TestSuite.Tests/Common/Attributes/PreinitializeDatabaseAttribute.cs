@@ -22,7 +22,7 @@ namespace Raven.TestSuite.Tests.Common.Attributes
                     {
                         using (var session = docStore.OpenSession())
                         {
-                            var etag = docStore.GetLastWrittenEtag();
+                            //var etag = docStore.GetLastWrittenEtag();
                         }
                     }
                 };

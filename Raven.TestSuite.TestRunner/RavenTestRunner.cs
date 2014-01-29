@@ -25,6 +25,7 @@ namespace Raven.TestSuite.TestRunner
                     this.Cleanup();
 
                     var testGroups = GetAllRavenDotNetApiTests();
+                    var restGroups = GetAllRavenRestApiTests();
                     var testResults = new List<TestResult>();
 
                     var dbPort = 8080;
@@ -51,6 +52,20 @@ namespace Raven.TestSuite.TestRunner
                                     InterruptExecutionIfCancellationRequested(token);
                                     RunExecutableAttributesCodeBeforeTest(test, wrapper);
                                     var result = RunTest(testGroup, test, obj);
+                                    testResults.Add(result);
+                                    ReportResultAsProgressReport(progress, result);
+                                }
+                            }
+
+                            foreach (var restGroup in restGroups)
+                            {
+                                InterruptExecutionIfCancellationRequested(token);
+                                var obj = Activator.CreateInstance(restGroup.GroupType, new object[] { wrapper });
+                                foreach (var test in restGroup.Tests)
+                                {
+                                    InterruptExecutionIfCancellationRequested(token);
+                                    RunExecutableAttributesCodeBeforeTest(test, wrapper);
+                                    var result = RunTest(restGroup, test, obj);
                                     testResults.Add(result);
                                     ReportResultAsProgressReport(progress, result);
                                 }
@@ -127,6 +142,16 @@ namespace Raven.TestSuite.TestRunner
 
         public IEnumerable<RavenTestsGroup> GetAllRavenDotNetApiTests()
         {
+            return GetAllRavenTestsByType(typeof (RavenDotNetApiTestAttribute));
+        }
+
+        public IEnumerable<RavenTestsGroup> GetAllRavenRestApiTests()
+        {
+            return GetAllRavenTestsByType(typeof(RavenRestApiTestAttribute));
+        }
+
+        public IEnumerable<RavenTestsGroup> GetAllRavenTestsByType(Type revenTestAttributeType)
+        {
             var ass = AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
 
             var ravTestGr =
@@ -134,14 +159,14 @@ namespace Raven.TestSuite.TestRunner
                    .Where(
                        t =>
                        t.GetMethods()
-                        .Any(m => m.GetCustomAttributes(typeof(RavenDotNetApiTestAttribute), false).Length > 0))
+                        .Any(m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0))
                    .Select(groupType => new RavenTestsGroup
-                       {
-                           GroupType = groupType,
-                           Tests = groupType.GetMethods()
-                                    .Where(
-                                        m => m.GetCustomAttributes(typeof(RavenDotNetApiTestAttribute), false).Length > 0).ToList()
-                       }).ToList();
+                   {
+                       GroupType = groupType,
+                       Tests = groupType.GetMethods()
+                                .Where(
+                                    m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0).ToList()
+                   }).ToList();
 
             return ravTestGr;
         }

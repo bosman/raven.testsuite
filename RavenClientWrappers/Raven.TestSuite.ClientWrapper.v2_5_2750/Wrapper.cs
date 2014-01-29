@@ -2,11 +2,12 @@
 using Raven.TestSuite.Common.WrapperInterfaces;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
-    public class Wrapper : MarshalByRefObject, IRavenClientWrapper, ITestUnitEnvironment
+    public partial class Wrapper : MarshalByRefObject, IRavenClientWrapper, ITestUnitEnvironment, IRestEnvironment
     {
         private Assembly assembly;
         private int databasePort;
@@ -48,17 +49,17 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return "2.5.2750";
         }
 
-        public void Execute(Action<ITestUnitEnvironment> action)
-        {
-            action(this);
-        }
-
         public void Execute(Action<IRavenClientWrapper> action)
         {
             action(this);
         }
 
-        // ITestUnitEnvironment
+#region ITestUnitEnvironment
+
+        public void Execute(Action<ITestUnitEnvironment> action)
+        {
+            action(this);
+        }
 
         public IDocumentStoreWrapper CreateDocumentStore(string defaultDatabase)
         {
@@ -69,6 +70,47 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new DocumentStoreWrapper(documentStore);
         }
 
+#endregion
+        
+#region IRestEnvironment
 
+        public void Execute(Action<IRestEnvironment> action)
+        {
+            action(this);
+        }
+
+        public HttpResponseMessage RawGet(string url)
+        {
+            var client = new HttpClient();
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+            task.Wait();
+            return task.Result;
+        }
+
+        public HttpResponseMessage RawPut(string url, string content)
+        {
+            var client = new HttpClient();
+            var task = client.PutAsync(url, new StringContent(content));
+            task.Wait();
+            return task.Result;
+        }
+
+        public HttpResponseMessage RawPost(string url, string content)
+        {
+            var client = new HttpClient();
+            var task = client.PostAsync(url, new StringContent(content));
+            task.Wait();
+            return task.Result;
+        }
+
+        public HttpResponseMessage RawDelete(string url)
+        {
+            var client = new HttpClient();
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
+            task.Wait();
+            return task.Result;
+        }
+
+#endregion
     }
 }

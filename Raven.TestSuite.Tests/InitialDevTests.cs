@@ -14,7 +14,7 @@ namespace Raven.TestSuite.Tests
         }
 
         [RavenDotNetApiTest]
-        [PreinitializeDatabase("World")]
+        //[PreinitializeDatabase("World")]
         public void SimpleTest1()
         {
             wrapper.Execute(testEnv =>
@@ -29,7 +29,7 @@ namespace Raven.TestSuite.Tests
             });
         }
 
-        [RavenDotNetApiTest]
+        //[RavenDotNetApiTest]
         [PreinitializeDatabase("World")]
         public void SimpleFailingTest1()
         {
@@ -45,7 +45,7 @@ namespace Raven.TestSuite.Tests
             });
         }
 
-        [RavenDotNetApiTest]
+        //[RavenDotNetApiTest]
         public void CreationDeletion()
         {
             wrapper.Execute(testEnv =>
