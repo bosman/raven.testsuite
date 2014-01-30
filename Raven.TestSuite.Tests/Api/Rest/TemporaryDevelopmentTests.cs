@@ -17,12 +17,15 @@ namespace Raven.TestSuite.Tests.Api.Rest
         {
         }
 
+        /*
+        THESE TESTS ARE ONLY FOR THE FRAMEWORK DEVELOPMENT PURPOSES. SHOULD BE REMOVED WHEN NO LONGER NEEDED.
+        */
         [RavenRestApiTest]
         public void SimpleRawGetTest()
         {
-            this.wrapper.Execute(rest =>
+            this.wrapper.Execute(env =>
                 {
-                    var response = rest.RawGet("http://localhost:8080/databases/World/docs/city/1989");
+                    var response = env.RawGet("http://localhost:8080/databases/World/docs/city/1989");
                     Assert.NotNull(response);
                 });
         }
@@ -30,9 +33,9 @@ namespace Raven.TestSuite.Tests.Api.Rest
         [RavenRestApiTest]
         public void SimpleRawPutTest()
         {
-            this.wrapper.Execute(rest =>
+            this.wrapper.Execute(env =>
             {
-                var response = rest.RawPut("http://localhost:8080/databases/World/docs/testing/1", "{ FirstName: 'Bob', LastName: 'Smith', Address: '5 Elm St' }");
+                var response = env.RawPut("/databases/World/docs/testing/1", "{ FirstName: 'Bob', LastName: 'Smith', Address: '5 Elm St' }");
                 Assert.NotNull(response);
             });
         }
@@ -40,9 +43,9 @@ namespace Raven.TestSuite.Tests.Api.Rest
         [RavenRestApiTest]
         public void SimpleRawPostTest()
         {
-            this.wrapper.Execute(rest =>
+            this.wrapper.Execute(env =>
             {
-                var response = rest.RawPost("http://localhost:8080/databases/World/docs", "{ FirstName: 'John', LastName: 'Doe', Address: '5 Elm St' }");
+                var response = env.RawPost("databases/World/docs", "{ FirstName: 'John', LastName: 'Doe', Address: '5 Elm St' }");
                 Assert.NotNull(response);
             });
         }
@@ -50,9 +53,9 @@ namespace Raven.TestSuite.Tests.Api.Rest
         [RavenRestApiTest]
         public void SimpleRawDeleteTest()
         {
-            this.wrapper.Execute(rest =>
+            this.wrapper.Execute(env =>
             {
-                var response = rest.RawDelete("http://localhost:8080/databases/World/docs/testing/3");
+                var response = env.RawDelete("http://localhost:8080/databases/World/docs/testing/3");
                 Assert.NotNull(response);
             });
         }

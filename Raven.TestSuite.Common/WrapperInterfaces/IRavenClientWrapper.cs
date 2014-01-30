@@ -12,7 +12,5 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
         void Execute(Action<ITestUnitEnvironment> action);
 
         void Execute(Action<IRavenClientWrapper> action);
-
-        void Execute(Action<IRestEnvironment> action);
     }
 }

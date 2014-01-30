@@ -1,4 +1,6 @@
 ﻿using Raven.TestSuite.ClientWrapper._2_5_2750;
+using Raven.TestSuite.Common;
+using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using System;
 using System.IO;
@@ -7,7 +9,7 @@ using System.Reflection;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
-    public partial class Wrapper : MarshalByRefObject, IRavenClientWrapper, ITestUnitEnvironment, IRestEnvironment
+    public partial class Wrapper : MarshalByRefObject, IRavenClientWrapper, ITestUnitEnvironment
     {
         private Assembly assembly;
         private int databasePort;
@@ -54,7 +56,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             action(this);
         }
 
-#region ITestUnitEnvironment
+        #region ITestUnitEnvironment
 
         public void Execute(Action<ITestUnitEnvironment> action)
         {
@@ -70,47 +72,55 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new DocumentStoreWrapper(documentStore);
         }
 
-#endregion
-        
-#region IRestEnvironment
+        #endregion
 
-        public void Execute(Action<IRestEnvironment> action)
-        {
-            action(this);
-        }
+        #region REST HTTP Api
 
-        public HttpResponseMessage RawGet(string url)
+        public RestResponse RawGet(string url)
         {
             var client = new HttpClient();
-            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
-            task.Wait();
-            return task.Result;
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, CompleteUrlIfNeeded(url)));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public HttpResponseMessage RawPut(string url, string content)
+        public RestResponse RawPut(string url, string content)
         {
             var client = new HttpClient();
-            var task = client.PutAsync(url, new StringContent(content));
-            task.Wait();
-            return task.Result;
+            var task = client.PutAsync(CompleteUrlIfNeeded(url), new StringContent(content));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public HttpResponseMessage RawPost(string url, string content)
+        public RestResponse RawPost(string url, string content)
         {
             var client = new HttpClient();
-            var task = client.PostAsync(url, new StringContent(content));
-            task.Wait();
-            return task.Result;
+            var task = client.PostAsync(CompleteUrlIfNeeded(url), new StringContent(content));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public HttpResponseMessage RawDelete(string url)
+        public RestResponse RawDelete(string url)
         {
             var client = new HttpClient();
-            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url));
-            task.Wait();
-            return task.Result;
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, CompleteUrlIfNeeded(url)));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = null };
         }
 
-#endregion
+        private string CompleteUrlIfNeeded(string url)
+        {
+            Uri result;
+            if (Uri.TryCreate(url, UriKind.Absolute, out result))
+            {
+                return result.ToString();
+            }
+            var ub = new UriBuilder("http", "localhost", databasePort, url);
+            return ub.ToString();
+        }
+
+        private RavenJTokenWrapper HttpResponseMessageToRavenJTokenWrapper(HttpResponseMessage httpResponseMessage)
+        {
+            var resultContent = httpResponseMessage.Content.ReadAsStringAsync();
+            return RavenJTokenWrapper.Parse(resultContent.Result);
+        }
+
+        #endregion
     }
 }

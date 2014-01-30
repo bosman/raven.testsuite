@@ -13,7 +13,7 @@ namespace Raven.TestSuite.Tests
         {
         }
 
-        [RavenDotNetApiTest]
+        //[RavenDotNetApiTest]
         //[PreinitializeDatabase("World")]
         public void SimpleTest1()
         {
