@@ -1,5 +1,5 @@
-﻿using System;
-using Raven.TestSuite.Common.WrapperInterfaces;
+﻿using Raven.TestSuite.Common.WrapperInterfaces;
+using System;
 
 namespace Raven.TestSuite.Tests.Common.Attributes
 {

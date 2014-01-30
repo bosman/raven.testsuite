@@ -14,6 +14,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         private Assembly assembly;
         private int databasePort;
         private string testSuiteRunningFolder;
+        private ToolsRunner toolsRunner;
 
         public Wrapper()
         {
@@ -24,15 +25,21 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             this.assembly = assembly;
         }
 
+        public int DbPort
+        {
+            get { return this.databasePort; }
+        }
+
         public static Wrapper Create()
         {
             return new Wrapper(Assembly.Load("Raven.Client.Lightweight"));
         }
 
-        internal void LoadAssemblyAndSetUp(string clientDllPath, string testSuiteRunningFolder, int databasePort)
+        internal void LoadAssemblyAndSetUp(string clientDllPath, string ravenVersionFolderPath, string testSuiteRunningFolder, int databasePort)
         {
             this.testSuiteRunningFolder = testSuiteRunningFolder;
             this.databasePort = databasePort;
+            this.toolsRunner = new ToolsRunner(ravenVersionFolderPath);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             this.assembly = Assembly.LoadFile(clientDllPath);
         }
@@ -119,6 +126,15 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         {
             var resultContent = httpResponseMessage.Content.ReadAsStringAsync();
             return RavenJTokenWrapper.Parse(resultContent.Result);
+        }
+
+        #endregion
+
+        #region Tools
+
+        public void RunSmuggler(string arguments)
+        {
+            this.toolsRunner.RunSmuggler(arguments);
         }
 
         #endregion

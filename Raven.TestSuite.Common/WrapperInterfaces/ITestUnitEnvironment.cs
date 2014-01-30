@@ -10,7 +10,9 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
     {
         IDocumentStoreWrapper CreateDocumentStore(string defaultDatabase);
 
-#region REST HTTP Api
+        int DbPort { get; }
+
+        #region REST HTTP Api
 
         RestResponse RawGet(string url);
 
@@ -20,7 +22,13 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawDelete(string url);
 
-#endregion
+        #endregion
+
+        #region Tools
+
+        void RunSmuggler(string arguments);
+
+        #endregion
 
     }
 }

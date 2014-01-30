@@ -20,7 +20,7 @@ namespace Raven.TestSuite.TestRunner
         {
             System.Console.WriteLine("Starting test with database on port " + port);
             this.dbServerProcess = new Process();
-            this.dbServerProcess.StartInfo.FileName = "C:\\RavenDB-Build-2750\\Server\\Raven.Server.exe";
+            this.dbServerProcess.StartInfo.FileName = standaloneServerExePath;
             this.dbServerProcess.StartInfo.Arguments = "--set=Raven/Port==" + port;
             this.dbServerProcess.StartInfo.LoadUserProfile = false;
             this.dbServerProcess.StartInfo.UseShellExecute = false;

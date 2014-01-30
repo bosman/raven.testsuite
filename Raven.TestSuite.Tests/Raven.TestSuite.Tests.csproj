@@ -60,6 +60,7 @@
     <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
     <Compile Include="Common\Attributes\RavenRestApiTestAttribute.cs" />
+    <Compile Include="Common\Attributes\RavenSmugglerTestAttribute.cs" />
     <Compile Include="Common\BaseTestGroup.cs" />
     <Compile Include="DatabaseObjects\Country.cs" />
     <Compile Include="DatabaseObjects\Person.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Attributes\RavenDotNetApiTestAttribute.cs" />
     <Compile Include="Tools\Smuggler\SmugglerBaseTestGroup.cs" />
+    <Compile Include="Tools\Smuggler\TemporarySmugglerDevTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Raven.TestSuite.Common\Raven.TestSuite.Common.csproj">
