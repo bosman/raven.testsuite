@@ -30,6 +30,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             get { return this.databasePort; }
         }
 
+        public string DefaultDbAddress
+        {
+            get { return "http://localhost:" + this.databasePort; }
+        }
+
         public static Wrapper Create()
         {
             return new Wrapper(Assembly.Load("Raven.Client.Lightweight"));

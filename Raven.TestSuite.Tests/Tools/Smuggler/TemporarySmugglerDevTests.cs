@@ -24,10 +24,27 @@ namespace Raven.TestSuite.Tests.Tools.Smuggler
                         File.Delete(pathToDump);
                     }
 
-                    env.RunSmuggler("out http://localhost:" + env.DbPort + " " + pathToDump);
+                    env.RunSmuggler(string.Format("out http://localhost:{0} {1}", env.DbPort, pathToDump));
 
                     Assert.True(File.Exists(pathToDump));
                 });
+        }
+
+        [RavenSmugglerTest]
+        public void SomeOtherTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var pathToDump = @"C:\temp\dump.raven";
+                if (File.Exists(pathToDump))
+                {
+                    File.Delete(pathToDump);
+                }
+
+                env.RunSmuggler(string.Format("out {0} {1}", env.DefaultDbAddress, pathToDump));
+
+                Assert.True(File.Exists(pathToDump));
+            });
         }
     }
 }

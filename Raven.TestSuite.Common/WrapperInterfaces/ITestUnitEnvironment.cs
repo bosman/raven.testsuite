@@ -12,6 +12,8 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         int DbPort { get; }
 
+        string DefaultDbAddress { get; }
+
         #region REST HTTP Api
 
         RestResponse RawGet(string url);
