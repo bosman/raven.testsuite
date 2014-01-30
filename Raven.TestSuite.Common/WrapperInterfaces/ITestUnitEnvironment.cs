@@ -30,6 +30,8 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         void RunSmuggler(string arguments);
 
+        ISmugglerArgumentsBuilder SmugglerArgsBuilder();
+
         #endregion
 
     }

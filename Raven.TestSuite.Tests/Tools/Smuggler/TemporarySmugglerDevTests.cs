@@ -23,8 +23,8 @@ namespace Raven.TestSuite.Tests.Tools.Smuggler
                     {
                         File.Delete(pathToDump);
                     }
-
-                    env.RunSmuggler(string.Format("out http://localhost:{0} {1}", env.DbPort, pathToDump));
+                    var args = env.SmugglerArgsBuilder().ExportFrom("http://localhost:" + env.DbPort).UsingFile(pathToDump).Build();
+                    env.RunSmuggler(args);
 
                     Assert.True(File.Exists(pathToDump));
                 });
@@ -35,13 +35,32 @@ namespace Raven.TestSuite.Tests.Tools.Smuggler
         {
             this.wrapper.Execute(env =>
             {
-                var pathToDump = @"C:\temp\dump.raven";
+                var pathToDump = @"C:\temp\dump2.raven";
                 if (File.Exists(pathToDump))
                 {
                     File.Delete(pathToDump);
                 }
 
-                env.RunSmuggler(string.Format("out {0} {1}", env.DefaultDbAddress, pathToDump));
+                var args = env.SmugglerArgsBuilder().ExportFrom(env.DefaultDbAddress).UsingFile(pathToDump).Build();
+                env.RunSmuggler(args);
+
+                Assert.True(File.Exists(pathToDump));
+            });
+        }
+
+        [RavenSmugglerTest]
+        public void YetAnotherTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var pathToDump = @"C:\temp\dump3.raven";
+                if (File.Exists(pathToDump))
+                {
+                    File.Delete(pathToDump);
+                }
+
+                var args = env.SmugglerArgsBuilder().ExportFrom(env.DefaultDbAddress).UsingFile(pathToDump).UsingDatabase("World").WithExcludeExpired().Build();
+                env.RunSmuggler(args);
 
                 Assert.True(File.Exists(pathToDump));
             });

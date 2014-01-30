@@ -8,7 +8,7 @@
     <ProjectGuid>{CF6822E7-8849-4E49-8911-E71170C3B26C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Raven.TestSuite.ClientWrapper._2_5_2750</RootNamespace>
+    <RootNamespace>Raven.TestSuite.ClientWrapper.v2_5_2750</RootNamespace>
     <AssemblyName>Raven.TestSuite.ClientWrapper.2_5_2750</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineTools\SmugglerArgumentsBuilder.cs" />
     <Compile Include="DatabaseCommandsWrapper.cs" />
     <Compile Include="DocumentSessionWrapper.cs" />
     <Compile Include="DocumentStoreWrapper.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="JsonDocumentWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PutResultWrapper.cs" />
-    <Compile Include="ToolsRunner.cs" />
+    <Compile Include="CommandLineTools\ToolsRunner.cs" />
     <Compile Include="Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>

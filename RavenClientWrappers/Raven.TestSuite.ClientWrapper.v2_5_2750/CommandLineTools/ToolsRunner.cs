@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Raven.TestSuite.Common.Abstractions;
 using System.IO;
 
-namespace Raven.TestSuite.ClientWrapper._2_5_2750
+namespace Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools
 {
     public class ToolsRunner
     {

@@ -5,7 +5,7 @@ using Raven.TestSuite.Common.Abstractions.Data;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using Raven.Client.Connection;
 
-namespace Raven.TestSuite.ClientWrapper._2_5_2750
+namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
     public class DocumentStoreWrapper : IDocumentStoreWrapper, IDisposable
     {

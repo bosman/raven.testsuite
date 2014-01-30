@@ -623,6 +623,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="WrapperInterfaces\IScriptedPatchRequestWrapper.cs" />
+    <Compile Include="WrapperInterfaces\ISmugglerArgumentsBuilder.cs" />
     <Compile Include="WrapperInterfaces\ISortedFieldWrapper.cs" />
     <Compile Include="WrapperInterfaces\ISpatialOptionsWrapper.cs" />
     <Compile Include="WrapperInterfaces\ISuggestionOptionsWrapper.cs" />

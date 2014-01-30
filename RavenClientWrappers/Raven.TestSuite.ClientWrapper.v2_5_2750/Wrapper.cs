@@ -1,4 +1,5 @@
-﻿using Raven.TestSuite.ClientWrapper._2_5_2750;
+﻿using Raven.TestSuite.ClientWrapper.v2_5_2750;
+using Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
@@ -140,6 +141,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         public void RunSmuggler(string arguments)
         {
             this.toolsRunner.RunSmuggler(arguments);
+        }
+
+        public ISmugglerArgumentsBuilder SmugglerArgsBuilder()
+        {
+            return new SmugglerArgumentsBuilder();
         }
 
         #endregion
