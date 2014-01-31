@@ -26,62 +26,65 @@ namespace Raven.TestSuite.TestRunner
 
                     var testGroups = GetAllRavenDotNetApiTests();
                     var restGroups = GetAllRavenRestApiTests();
-                    var smugglerGroups = GetAllRavenTestsByType(typeof (RavenSmugglerTestAttribute));
+                    var smugglerGroups = GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute));
                     var testResults = new List<TestResult>();
 
                     var dbPort = 8080;
 
                     var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
 
-                    using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
+                    var domainContainer = VersionPicker.TryCreateDomainContainerForRavenVersion(ravenVersionFolderPath, dbPort);
+                    if (domainContainer != null)
                     {
-                        Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
-
-                        using (var domainContainer = new ClientWrapper.v2_5_2750.DomainContainer(
-                            ravenVersionFolderPath, "version1", dbPort))
+                        using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
                         {
-                            var wrapper = domainContainer.Wrapper;
-                            System.Console.WriteLine("Using .Net wrapper version: " + wrapper.GetVersion());
+                            Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
 
-                            foreach (var testGroup in testGroups)
+                            using (domainContainer)
                             {
-                                InterruptExecutionIfCancellationRequested(token);
-                                var obj = Activator.CreateInstance(testGroup.GroupType, new object[] { wrapper });
-                                foreach (var test in testGroup.Tests)
+                                var wrapper = domainContainer.Wrapper;
+                                System.Console.WriteLine("Using .Net wrapper version: " + wrapper.GetVersion());
+
+                                foreach (var testGroup in testGroups)
                                 {
                                     InterruptExecutionIfCancellationRequested(token);
-                                    RunExecutableAttributesCodeBeforeTest(test, wrapper);
-                                    var result = RunTest(testGroup, test, obj);
-                                    testResults.Add(result);
-                                    ReportResultAsProgressReport(progress, result);
+                                    var obj = Activator.CreateInstance(testGroup.GroupType, new object[] { wrapper });
+                                    foreach (var test in testGroup.Tests)
+                                    {
+                                        InterruptExecutionIfCancellationRequested(token);
+                                        RunExecutableAttributesCodeBeforeTest(test, wrapper);
+                                        var result = RunTest(testGroup, test, obj);
+                                        testResults.Add(result);
+                                        ReportResultAsProgressReport(progress, result);
+                                    }
                                 }
-                            }
 
-                            foreach (var restGroup in restGroups)
-                            {
-                                InterruptExecutionIfCancellationRequested(token);
-                                var obj = Activator.CreateInstance(restGroup.GroupType, new object[] { wrapper });
-                                foreach (var test in restGroup.Tests)
+                                foreach (var restGroup in restGroups)
                                 {
                                     InterruptExecutionIfCancellationRequested(token);
-                                    RunExecutableAttributesCodeBeforeTest(test, wrapper);
-                                    var result = RunTest(restGroup, test, obj);
-                                    testResults.Add(result);
-                                    ReportResultAsProgressReport(progress, result);
+                                    var obj = Activator.CreateInstance(restGroup.GroupType, new object[] { wrapper });
+                                    foreach (var test in restGroup.Tests)
+                                    {
+                                        InterruptExecutionIfCancellationRequested(token);
+                                        RunExecutableAttributesCodeBeforeTest(test, wrapper);
+                                        var result = RunTest(restGroup, test, obj);
+                                        testResults.Add(result);
+                                        ReportResultAsProgressReport(progress, result);
+                                    }
                                 }
-                            }
 
-                            foreach (var smugglerGroup in smugglerGroups)
-                            {
-                                InterruptExecutionIfCancellationRequested(token);
-                                var obj = Activator.CreateInstance(smugglerGroup.GroupType, new object[] { wrapper });
-                                foreach (var test in smugglerGroup.Tests)
+                                foreach (var smugglerGroup in smugglerGroups)
                                 {
                                     InterruptExecutionIfCancellationRequested(token);
-                                    RunExecutableAttributesCodeBeforeTest(test, wrapper);
-                                    var result = RunTest(smugglerGroup, test, obj);
-                                    testResults.Add(result);
-                                    ReportResultAsProgressReport(progress, result);
+                                    var obj = Activator.CreateInstance(smugglerGroup.GroupType, new object[] { wrapper });
+                                    foreach (var test in smugglerGroup.Tests)
+                                    {
+                                        InterruptExecutionIfCancellationRequested(token);
+                                        RunExecutableAttributesCodeBeforeTest(test, wrapper);
+                                        var result = RunTest(smugglerGroup, test, obj);
+                                        testResults.Add(result);
+                                        ReportResultAsProgressReport(progress, result);
+                                    }
                                 }
                             }
                         }
@@ -129,7 +132,7 @@ namespace Raven.TestSuite.TestRunner
         private static TestResult RunTest(RavenTestsGroup testGroup, MethodInfo test, object obj)
         {
             var watch = new Stopwatch();
-            var result = new TestResult {TestName = testGroup.GroupType.FullName + "." + test.Name};
+            var result = new TestResult { TestName = testGroup.GroupType.FullName + "." + test.Name };
             try
             {
                 watch.Start();
@@ -156,7 +159,7 @@ namespace Raven.TestSuite.TestRunner
 
         public IEnumerable<RavenTestsGroup> GetAllRavenDotNetApiTests()
         {
-            return GetAllRavenTestsByType(typeof (RavenDotNetApiTestAttribute));
+            return GetAllRavenTestsByType(typeof(RavenDotNetApiTestAttribute));
         }
 
         public IEnumerable<RavenTestsGroup> GetAllRavenRestApiTests()

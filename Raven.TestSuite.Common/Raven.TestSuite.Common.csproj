@@ -604,6 +604,7 @@
     <Compile Include="Abstractions\Json\RavenJsonTextReader.cs" />
     <Compile Include="RestResponse.cs" />
     <Compile Include="WrapperInterfaces\IDocumentConventionWrapper.cs" />
+    <Compile Include="WrapperInterfaces\IDomainContainer.cs" />
     <Compile Include="WrapperInterfaces\IHighlightedFieldWrapper.cs" />
     <Compile Include="WrapperInterfaces\IReferenceWrapper.cs" />
     <Compile Include="WrapperInterfaces\IAttachmentWrapper.cs" />

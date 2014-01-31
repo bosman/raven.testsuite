@@ -53,6 +53,7 @@
     <Compile Include="ProgressReport.cs" />
     <Compile Include="RavenTestRunner.cs" />
     <Compile Include="RavenTestsGroup.cs" />
+    <Compile Include="VersionPicker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Raven.TestSuite.Common\Raven.TestSuite.Common.csproj">
