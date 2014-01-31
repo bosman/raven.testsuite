@@ -34,6 +34,11 @@ namespace Raven.TestSuite.TestRunner
             return null;
         }
 
-
+        public static string GetRavenVersionByFolder(string ravenVersionFolderPath)
+        {
+            var ravenClientDllPath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ClientDllPartialPath);
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(ravenClientDllPath);
+            return fileVersionInfo.FileVersion;
+        }
     }
 }

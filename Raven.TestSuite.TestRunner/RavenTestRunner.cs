@@ -18,14 +18,23 @@ namespace Raven.TestSuite.TestRunner
     {
         private DbRunner dbRunner;
 
-        public Task<List<TestResult>> RunAllTests(IProgress<ProgressReport> progress, CancellationToken token, string ravenVersionFolderPath)
+        public Task<List<TestRun>> RunAllTests(IProgress<ProgressReport> progress, CancellationToken token, string ravenVersionFolderPath)
         {
-            var task = Task.Factory.StartNew<List<TestResult>>(() =>
+            var task = Task.Factory.StartNew<List<TestRun>>(() =>
                 {
                     this.Cleanup();
 
+                    var allRuns = new List<TestRun>();
+
                     var testGroups = GetAllRavenDotNetApiTests();
                     var restGroups = GetAllRavenRestApiTests();
+
+                    var testRun = new TestRun
+                        {
+                            RavenVersion = VersionPicker.GetRavenVersionByFolder(ravenVersionFolderPath),
+                            StartedAt = DateTime.Now
+                        };
+
                     var smugglerGroups = GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute));
                     var testResults = new List<TestResult>();
 
@@ -90,7 +99,10 @@ namespace Raven.TestSuite.TestRunner
                         }
                     }
 
-                    return testResults;
+                    testRun.TestResults = testResults;
+                    allRuns.Add(testRun);
+
+                    return allRuns;
                 }, token);
             return task;
         }

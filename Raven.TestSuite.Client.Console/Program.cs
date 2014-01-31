@@ -1,4 +1,7 @@
-﻿namespace Raven.TestSuite.Client.Console
+﻿using Raven.Client;
+using Raven.TestSuite.Storage;
+
+namespace Raven.TestSuite.Client.Console
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +15,17 @@
     {
         private static RavenTestRunner runner;
 
+        private static IDocumentStore docStore;
+
         public static void Main(string[] args)
         {
+            docStore = new Raven.Client.Embedded.EmbeddableDocumentStore
+            {
+                DataDirectory = "Data",
+                UseEmbeddedHttpServer = true
+            }.Initialize();
+
+
             SubscribeToApplicationExit();
 
             runner = new RavenTestRunner();
@@ -29,7 +41,7 @@
                     }
                     else if (continuation.IsCompleted)
                     {
-                        DisplayResults(continuation.Result);
+                        StoreAndDisplayResults(continuation.Result);
                     }
                 });
 
@@ -50,7 +62,7 @@
                         break;
                 }
             }
-
+            Console.WriteLine("Exiting. Please wait...");
         }
 
         private static void SubscribeToApplicationExit()
@@ -87,21 +99,40 @@
             runner = null;
         }
 
-        private static void DisplayResults(IEnumerable<TestResult> results)
+        private static void StoreAndDisplayResults(IEnumerable<TestRun> testRuns)
         {
-            Console.WriteLine("=====Results=====");
-            foreach (var testResult in results)
+            Console.WriteLine("=====Test Run Results=====");
+            foreach (var testRun in testRuns)
             {
-                Console.WriteLine("Test name: " + testResult.TestName);
-                if (testResult.IsSuccess)
+                var ravenTestRun = RavenTestRun.FromTestRun(testRun);
+                using (var session = docStore.OpenSession())
                 {
-                    Console.WriteLine("Success");
+                    Console.WriteLine(
+                        string.Format("Raven version: {0} (Started: {1}, Stopped: {2})",
+                                      testRun.RavenVersion, testRun.StartedAt.ToString(),
+                                      testRun.StoppedAt.ToString()));
+
+                    foreach (var testResult in testRun.TestResults)
+                    {
+                        var ravenTestResult = RavenTestResult.FromTestResult(testResult);
+                        session.Store(ravenTestResult);
+                        ravenTestRun.RavenTestResultIds.Add(ravenTestResult.Id);
+
+                        Console.WriteLine("Test name: " + testResult.TestName);
+                        if (testResult.IsSuccess)
+                        {
+                            Console.WriteLine("Success");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failure: " + testResult.Exception.Message);
+                        }
+                        Console.WriteLine("Execution time: " + testResult.ExecutionTime);
+                    }
+
+                    session.Store(ravenTestRun);
+                    session.SaveChanges();
                 }
-                else
-                {
-                    Console.WriteLine("Failure: " + testResult.Exception.Message);
-                }
-                Console.WriteLine("Execution time: " + testResult.ExecutionTime);
                 Console.WriteLine("===============================");
             }
         }

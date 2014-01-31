@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using Raven.TestSuite.Tests.Common;
 using Raven.TestSuite.Tests.Common.Attributes;
@@ -64,6 +65,12 @@ namespace Raven.TestSuite.Tests.Tools.Smuggler
 
                 Assert.True(File.Exists(pathToDump));
             });
+        }
+
+        [RavenSmugglerTest]
+        public void FailingTest()
+        {
+            throw new Exception("Test");
         }
     }
 }
