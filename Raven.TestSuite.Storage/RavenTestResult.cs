@@ -14,6 +14,7 @@ namespace Raven.TestSuite.Storage
             return new RavenTestResult
                 {
                     TestName = testResult.TestName,
+                    TestType = testResult.TestType,
                     ExecutionTime = testResult.ExecutionTime,
                     IsSuccess = testResult.IsSuccess,
                     ExceptionMessage = testResult.Exception != null ? testResult.Exception.Message : string.Empty,
@@ -24,6 +25,8 @@ namespace Raven.TestSuite.Storage
         public int Id { get; set; }
 
         public string TestName { get; set; }
+
+        public string TestType { get; set; }
 
         public bool IsSuccess { get; set; }
 

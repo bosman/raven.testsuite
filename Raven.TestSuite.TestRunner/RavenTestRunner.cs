@@ -98,7 +98,7 @@ namespace Raven.TestSuite.TestRunner
                             }
                         }
                     }
-
+                    testRun.StoppedAt = DateTime.Now;
                     testRun.TestResults = testResults;
                     allRuns.Add(testRun);
 
@@ -144,7 +144,8 @@ namespace Raven.TestSuite.TestRunner
         private static TestResult RunTest(RavenTestsGroup testGroup, MethodInfo test, object obj)
         {
             var watch = new Stopwatch();
-            var result = new TestResult { TestName = testGroup.GroupType.FullName + "." + test.Name };
+            var ravenTestAttribute = test.GetCustomAttribute<RavenTestAttribute>();
+            var result = new TestResult { TestName = testGroup.GroupType.FullName + "." + test.Name, TestType = ravenTestAttribute.TestTypeName };
             try
             {
                 watch.Start();

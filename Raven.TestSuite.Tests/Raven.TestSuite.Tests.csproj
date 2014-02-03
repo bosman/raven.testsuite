@@ -61,6 +61,7 @@
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
     <Compile Include="Common\Attributes\RavenRestApiTestAttribute.cs" />
     <Compile Include="Common\Attributes\RavenSmugglerTestAttribute.cs" />
+    <Compile Include="Common\Attributes\RavenTestAttribute.cs" />
     <Compile Include="Common\BaseTestGroup.cs" />
     <Compile Include="DatabaseObjects\Country.cs" />
     <Compile Include="DatabaseObjects\Person.cs" />

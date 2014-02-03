@@ -5,7 +5,7 @@
     using Xunit;
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RavenDotNetApiTestAttribute : FactAttribute
+    public class RavenDotNetApiTestAttribute : RavenTestAttribute
     {
     }
 }

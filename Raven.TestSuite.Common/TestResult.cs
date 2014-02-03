@@ -12,6 +12,8 @@ namespace Raven.TestSuite.Common
 
         public string TestName { get; set; }
 
+        public string TestType { get; set; }
+
         public bool IsSuccess { get; set; }
 
         public TimeSpan ExecutionTime { get; set; }
