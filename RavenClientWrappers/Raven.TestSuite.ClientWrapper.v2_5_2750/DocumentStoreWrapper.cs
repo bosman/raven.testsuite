@@ -62,7 +62,12 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public EtagWrapper GetLastWrittenEtag()
         {
-            return new EtagWrapper(this.documentStore.GetLastWrittenEtag());
+            var etag = this.documentStore.GetLastWrittenEtag();
+            if (etag != null)
+            {
+                return new EtagWrapper(etag);
+            }
+            return null;
         }
 
         public void DeleteDatabase(string name)

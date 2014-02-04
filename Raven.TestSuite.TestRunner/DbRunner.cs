@@ -116,7 +116,7 @@ namespace Raven.TestSuite.TestRunner
                 }
                 else
                 {
-                    throw new Exception("RavenDB command-line server did not halt within 10 seconds of pressing enter.");
+                    throw new Exception(string.Format("RavenDB command-line server did not halt within {0} seconds of pressing enter.", (timeout / 1000)));
                 }
                 //string errorOutput = dbServerProcess.StandardError.ReadToEnd();
                 //string output = dbServerProcess.StandardOutput.ReadToEnd();

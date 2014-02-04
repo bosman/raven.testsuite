@@ -599,9 +599,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(short value)
 		{
 			return new RavenJValueWrapper(value);
@@ -612,9 +609,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(ushort value)
 		{
 			return new RavenJValueWrapper(value);
@@ -685,9 +679,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(short? value)
 		{
 			return new RavenJValueWrapper(value);
@@ -698,9 +689,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(ushort? value)
 		{
 			return new RavenJValueWrapper(value);
@@ -711,9 +699,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(uint? value)
 		{
 			return new RavenJValueWrapper(value);
@@ -724,9 +709,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(ulong? value)
 		{
 			return new RavenJValueWrapper(value);
@@ -767,9 +749,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(uint value)
 		{
 			return new RavenJValueWrapper(value);
@@ -780,9 +759,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// </summary>
 		/// <param name="value">The value to create a <see cref="RavenJValueWrapper"/> from.</param>
 		/// <returns>The <see cref="RavenJValueWrapper"/> initialized with the specified value.</returns>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public static implicit operator RavenJTokenWrapper(ulong value)
 		{
 			return new RavenJValueWrapper(value);

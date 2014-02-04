@@ -18,7 +18,7 @@
         {
         }
 
-        //[RavenDotNetApiTest]
+        [RavenDotNetApiTest]
         public void EntityAddedToANewDatabaseIsReturnedByIdFromTheLoadMethodInASeparateSession()
         {
             this.wrapper.Execute(testEnv =>

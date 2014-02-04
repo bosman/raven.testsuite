@@ -88,9 +88,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// Initializes a new instance of the <see cref="RavenJValueWrapper"/> class with the given value.
 		/// </summary>
 		/// <param name="value">The value.</param>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public RavenJValueWrapper(ulong value)
 			: this(value, JTokenType.Integer)
 		{

@@ -187,9 +187,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// Writes a <see cref="UInt32"/> valueWrapper.
 		/// </summary>
 		/// <param name="value">The <see cref="UInt32"/> valueWrapper to write.</param>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public override void WriteValue(uint value)
 		{
 			base.WriteValue(value);
@@ -210,9 +207,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// Writes a <see cref="UInt64"/> valueWrapper.
 		/// </summary>
 		/// <param name="value">The <see cref="UInt64"/> valueWrapper to write.</param>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public override void WriteValue(ulong value)
 		{
 			base.WriteValue(value);
@@ -263,9 +257,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// Writes a <see cref="UInt16"/> valueWrapper.
 		/// </summary>
 		/// <param name="value">The <see cref="UInt16"/> valueWrapper to write.</param>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public override void WriteValue(ushort value)
 		{
 			base.WriteValue(value);
@@ -296,9 +287,6 @@ namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 		/// Writes a <see cref="SByte"/> valueWrapper.
 		/// </summary>
 		/// <param name="value">The <see cref="SByte"/> valueWrapper to write.</param>
-#if !SILVERLIGHT
-		[CLSCompliant(false)]
-#endif
 		public override void WriteValue(sbyte value)
 		{
 			base.WriteValue(value);

@@ -32,9 +32,9 @@ namespace Raven.TestSuite.Client.Console
             var progressIndicator = new Progress<ProgressReport>(progressReport => Console.WriteLine(progressReport.Message));
             var cancellationtokenSource = new CancellationTokenSource();
             var token = cancellationtokenSource.Token;
-            //var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
+            var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
-            var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
+            //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
             var testRunSetup = new TestRunSetup {RavenVersionPath = versionsList};
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             task.ContinueWith(continuation =>

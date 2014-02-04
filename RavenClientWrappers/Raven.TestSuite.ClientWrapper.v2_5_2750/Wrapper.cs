@@ -131,6 +131,10 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         private RavenJTokenWrapper HttpResponseMessageToRavenJTokenWrapper(HttpResponseMessage httpResponseMessage)
         {
             var resultContent = httpResponseMessage.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(resultContent.Result))
+            {
+                return null;
+            }
             return RavenJTokenWrapper.Parse(resultContent.Result);
         }
 
