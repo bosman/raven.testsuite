@@ -63,12 +63,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttachmentWrapper.cs" />
     <Compile Include="CommandLineTools\SmugglerArgumentsBuilder.cs" />
     <Compile Include="DatabaseCommandsWrapper.cs" />
     <Compile Include="DocumentSessionWrapper.cs" />
     <Compile Include="DocumentStoreWrapper.cs" />
     <Compile Include="DomainContainer.cs" />
     <Compile Include="Extensions\WrapperExtensions.cs" />
+    <Compile Include="IndexDefinitionWrapper.cs" />
     <Compile Include="JsonDocumentWrapper.cs" />
     <Compile Include="MultiLoadResultWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

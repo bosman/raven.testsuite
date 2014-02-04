@@ -61,12 +61,9 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IPutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata)
         {
-            //TODO: 
-            throw new NotImplementedException();
-            /*
             return
-                new PutResultWrapper(inner.Put(key, (Etag)etag.Unwrap(), (RavenJObject) document.Unwrap(),
-                                               (RavenJObject)metadata.Unwrap()));*/
+                new PutResultWrapper(inner.Put(key, Etag.Parse(etag.ToString()), RavenJObject.Parse(document.ToString()),
+                                               RavenJObject.Parse(metadata.ToString())));
         }
 
         public void Delete(string key, EtagWrapper etag)
@@ -86,17 +83,19 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IAttachmentWrapper GetAttachment(string key)
         {
-            throw new NotImplementedException();
+            return AttachmentWrapper.FromAttachment(inner.GetAttachment(key));
         }
 
         public IEnumerable<IAttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize)
         {
-            throw new NotImplementedException();
+            return
+                inner.GetAttachmentHeadersStartingWith(idPrefix, start, pageSize)
+                     .Select(AttachmentWrapper.FromAttachment);
         }
 
         public IAttachmentWrapper HeadAttachment(string key)
         {
-            throw new NotImplementedException();
+            return AttachmentWrapper.FromAttachment(inner.HeadAttachment(key));
         }
 
         public void DeleteAttachment(string key, EtagWrapper etag)
