@@ -53,6 +53,7 @@
     <Compile Include="ProgressReport.cs" />
     <Compile Include="RavenTestRunner.cs" />
     <Compile Include="RavenTestsGroup.cs" />
+    <Compile Include="TestRunSetup.cs" />
     <Compile Include="VersionPicker.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,10 @@ namespace Raven.TestSuite.TestRunner
     {
         private bool _disposed;
         private Process dbServerProcess;
+        private AutoResetEvent outputWaitHandle;
+        private AutoResetEvent errorWaitHandle;
+        private int timeout = 20000;
+        private bool serverStarted = false;
 
         public static DbRunner Run(int port, string standaloneServerExePath)
         {
@@ -28,7 +32,36 @@ namespace Raven.TestSuite.TestRunner
             this.dbServerProcess.StartInfo.RedirectStandardInput = true;
             this.dbServerProcess.StartInfo.RedirectStandardOutput = true;
             this.dbServerProcess.StartInfo.CreateNoWindow = true;
+
+            outputWaitHandle = new AutoResetEvent(false);
+            errorWaitHandle = new AutoResetEvent(false);
+
+            this.dbServerProcess.OutputDataReceived += (sender, e) =>
+                {
+                    if (e.Data == null)
+                    {
+                        outputWaitHandle.Set();
+                    }
+                    else
+                    {
+                        if (e.Data.StartsWith("Available commands:", StringComparison.InvariantCultureIgnoreCase) &&
+                            !this.serverStarted)
+                        {
+                            this.serverStarted = true;
+                        }
+                    }
+                };
+            this.dbServerProcess.ErrorDataReceived += (seder, e) =>
+                {
+                    if (e.Data == null)
+                    {
+                        errorWaitHandle.Set();
+                    }
+                };
+
             this.dbServerProcess.Start();
+            this.dbServerProcess.BeginOutputReadLine();
+            this.dbServerProcess.BeginErrorReadLine();
 
             this.WaitForStartAndCalculateWarmupTime();
         }
@@ -36,13 +69,8 @@ namespace Raven.TestSuite.TestRunner
         private void WaitForStartAndCalculateWarmupTime()
         {
             var stopwatch = Stopwatch.StartNew();
-            while (true)
+            while (!serverStarted)
             {
-                var output = this.dbServerProcess.StandardOutput.ReadLine();
-
-                if (output != null && output.StartsWith("Available commands: cls, reset, gc, q", StringComparison.InvariantCultureIgnoreCase)) 
-                    break;
-
                 if (stopwatch.Elapsed.TotalSeconds > 30)
                     throw new InvalidOperationException("Server did not started withing 30 seconds.");
 
@@ -81,17 +109,23 @@ namespace Raven.TestSuite.TestRunner
                 catch (Exception)
                 {
                 }
-                if (!dbServerProcess.WaitForExit(10000))
+                if (dbServerProcess.WaitForExit(timeout) && outputWaitHandle.WaitOne(timeout) &&
+                    errorWaitHandle.WaitOne(timeout))
+                {
+                    //process closed
+                }
+                else
+                {
                     throw new Exception("RavenDB command-line server did not halt within 10 seconds of pressing enter.");
+                }
+                //string errorOutput = dbServerProcess.StandardError.ReadToEnd();
+                //string output = dbServerProcess.StandardOutput.ReadToEnd();
 
-                string errorOutput = dbServerProcess.StandardError.ReadToEnd();
-                string output = dbServerProcess.StandardOutput.ReadToEnd();
+                //if (!String.IsNullOrEmpty(errorOutput))
+                //    throw new Exception("RavendB command-line server finished with error text: " + errorOutput + "\r\n" + output);
 
-                if (!String.IsNullOrEmpty(errorOutput))
-                    throw new Exception("RavendB command-line server finished with error text: " + errorOutput + "\r\n" + output);
-
-                if (dbServerProcess.ExitCode != 0)
-                    throw new Exception("RavenDB command-line server finished with exit code: " + dbServerProcess.ExitCode + " " + output);
+                //if (dbServerProcess.ExitCode != 0)
+                //    throw new Exception("RavenDB command-line server finished with exit code: " + dbServerProcess.ExitCode + " " + output);
 
 
                 dbServerProcess.Close();
