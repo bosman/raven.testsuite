@@ -25,7 +25,6 @@ namespace Raven.TestSuite.Client.Console
                 UseEmbeddedHttpServer = true
             }.Initialize();
 
-
             SubscribeToApplicationExit();
 
             runner = new RavenTestRunner();

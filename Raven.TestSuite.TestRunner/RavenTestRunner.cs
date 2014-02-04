@@ -45,8 +45,6 @@ namespace Raven.TestSuite.TestRunner
                                     StartedAt = DateTime.Now
                                 };
 
-                            var testResults = new List<TestResult>();
-
                             var dbPort = 8080;
 
                             var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath,

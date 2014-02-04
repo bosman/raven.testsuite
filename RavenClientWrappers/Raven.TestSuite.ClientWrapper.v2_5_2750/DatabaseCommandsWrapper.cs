@@ -4,10 +4,12 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using Raven.Client.Connection;
+using Raven.Json.Linq;
 using Raven.TestSuite.Common.Abstractions.Data;
 using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using System.Linq;
+using Raven.Abstractions.Data;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
@@ -37,12 +39,24 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         public IMultiLoadResultWrapper Get(string[] ids, string[] includes, string transformer = null, Dictionary<string, RavenJTokenWrapper> queryInputs = null,
                                            bool metadataOnly = false)
         {
-            throw new NotImplementedException();
+            Dictionary<string, RavenJToken> qi = null;
+            if (queryInputs != null)
+            {
+                qi = queryInputs.ToDictionary(queryInput => queryInput.Key, queryInput => RavenJToken.Parse(queryInput.Value.ToString()));
+            }
+            var multiLoadResult = inner.Get(ids, includes, transformer, qi, metadataOnly);
+            var result = new MultiLoadResultWrapper
+                {
+                    Includes = multiLoadResult.Includes.Select(i => RavenJObjectWrapper.Parse(i.ToString())).ToList(),
+                    Results = multiLoadResult.Results.Select(r => RavenJObjectWrapper.Parse(r.ToString())).ToList()
+                };
+            return result;
         }
 
         public IJsonDocumentWrapper[] GetDocuments(int start, int pageSize, bool metadataOnly = false)
         {
-            throw new NotImplementedException();
+            var docs = inner.GetDocuments(start, pageSize, metadataOnly);
+            return docs.Select(d => new JsonDocumentWrapper(d) as IJsonDocumentWrapper).ToArray();
         }
 
         public IPutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata)
@@ -57,18 +71,17 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public void Delete(string key, EtagWrapper etag)
         {
-            throw new NotImplementedException();
-           //TODO inner.Delete(key, (Etag) etag.Unwrap());
+           inner.Delete(key, Etag.Parse(etag.ToString()));
         }
 
         public void PutAttachment(string key, EtagWrapper etag, Stream data, RavenJObjectWrapper metadata)
         {
-            throw new NotImplementedException();
+            inner.PutAttachment(key, Etag.Parse(etag.ToString()), data, RavenJObject.Parse(metadata.ToString()));
         }
 
         public void UpdateAttachmentMetadata(string key, EtagWrapper etag, RavenJObjectWrapper metadata)
         {
-            throw new NotImplementedException();
+            inner.UpdateAttachmentMetadata(key, Etag.Parse(etag.ToString()), RavenJObject.Parse(metadata.ToString()));
         }
 
         public IAttachmentWrapper GetAttachment(string key)
@@ -88,17 +101,17 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public void DeleteAttachment(string key, EtagWrapper etag)
         {
-            throw new NotImplementedException();
+            inner.DeleteAttachment(key, Etag.Parse(etag.ToString()));
         }
 
         public string[] GetDatabaseNames(int pageSize, int start = 0)
         {
-            throw new NotImplementedException();
+            return inner.GetDatabaseNames(pageSize, start);
         }
 
         public string[] GetIndexNames(int start, int pageSize)
         {
-            throw new NotImplementedException();
+            return inner.GetIndexNames(start, pageSize);
         }
 
         public IIndexDefinitionWrapper[] GetIndexes(int start, int pageSize)
@@ -108,7 +121,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public void ResetIndex(string name)
         {
-            throw new NotImplementedException();
+            inner.ResetIndex(name);
         }
 
         public IIndexDefinitionWrapper GetIndex(string name)
