@@ -10,6 +10,7 @@ using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using System.Linq;
 using Raven.Abstractions.Data;
+using Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
@@ -17,10 +18,10 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
     {
         private readonly IDatabaseCommands inner;
 
-         public DatabaseCommandsWrapper(IDatabaseCommands databaseCommands)
-         {
-             inner = databaseCommands;
-         }
+        public DatabaseCommandsWrapper(IDatabaseCommands databaseCommands)
+        {
+            inner = databaseCommands;
+        }
 
         public NameValueCollection OperationsHeaders { get; set; }
 
@@ -42,13 +43,13 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             Dictionary<string, RavenJToken> qi = null;
             if (queryInputs != null)
             {
-                qi = queryInputs.ToDictionary(queryInput => queryInput.Key, queryInput => RavenJToken.Parse(queryInput.Value.ToString()));
+                qi = queryInputs.ToDictionary(queryInput => queryInput.Key, queryInput => queryInput.Value.Unwrap());
             }
             var multiLoadResult = inner.Get(ids, includes, transformer, qi, metadataOnly);
             var result = new MultiLoadResultWrapper
                 {
-                    Includes = multiLoadResult.Includes.Select(i => RavenJObjectWrapper.Parse(i.ToString())).ToList(),
-                    Results = multiLoadResult.Results.Select(r => RavenJObjectWrapper.Parse(r.ToString())).ToList()
+                    Includes = multiLoadResult.Includes.Select(i => i.Wrap()).ToList(),
+                    Results = multiLoadResult.Results.Select(r => r.Wrap()).ToList()
                 };
             return result;
         }
@@ -61,46 +62,44 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IPutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata)
         {
-            return
-                new PutResultWrapper(inner.Put(key, Etag.Parse(etag.ToString()), RavenJObject.Parse(document.ToString()),
-                                               RavenJObject.Parse(metadata.ToString())));
+            return new PutResultWrapper(inner.Put(key, etag.Unwrap(), document.Unwrap(), metadata.Unwrap()));
         }
 
         public void Delete(string key, EtagWrapper etag)
         {
-           inner.Delete(key, Etag.Parse(etag.ToString()));
+            inner.Delete(key, etag.Unwrap());
         }
 
         public void PutAttachment(string key, EtagWrapper etag, Stream data, RavenJObjectWrapper metadata)
         {
-            inner.PutAttachment(key, Etag.Parse(etag.ToString()), data, RavenJObject.Parse(metadata.ToString()));
+            inner.PutAttachment(key, etag.Unwrap(), data, metadata.Unwrap());
         }
 
         public void UpdateAttachmentMetadata(string key, EtagWrapper etag, RavenJObjectWrapper metadata)
         {
-            inner.UpdateAttachmentMetadata(key, Etag.Parse(etag.ToString()), RavenJObject.Parse(metadata.ToString()));
+            inner.UpdateAttachmentMetadata(key, etag.Unwrap(), metadata.Unwrap());
         }
 
         public IAttachmentWrapper GetAttachment(string key)
         {
-            return AttachmentWrapper.FromAttachment(inner.GetAttachment(key));
+            return inner.GetAttachment(key).Wrap();
         }
 
         public IEnumerable<IAttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize)
         {
             return
                 inner.GetAttachmentHeadersStartingWith(idPrefix, start, pageSize)
-                     .Select(AttachmentWrapper.FromAttachment);
+                     .Select(a => a.Wrap());
         }
 
         public IAttachmentWrapper HeadAttachment(string key)
         {
-            return AttachmentWrapper.FromAttachment(inner.HeadAttachment(key));
+            return inner.HeadAttachment(key).Wrap();
         }
 
         public void DeleteAttachment(string key, EtagWrapper etag)
         {
-            inner.DeleteAttachment(key, Etag.Parse(etag.ToString()));
+            inner.DeleteAttachment(key, etag.Unwrap());
         }
 
         public string[] GetDatabaseNames(int pageSize, int start = 0)
@@ -311,6 +310,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         public void PrepareTransaction(string txId)
         {
             throw new NotImplementedException();
+        }
+
+        public IDatabaseStatisticsWrapper GetStatistics()
+        {
+            return inner.GetStatistics().Wrap();
         }
     }
 }

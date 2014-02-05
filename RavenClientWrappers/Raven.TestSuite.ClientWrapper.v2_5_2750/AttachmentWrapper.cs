@@ -22,22 +22,5 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         public EtagWrapper Etag { get; set; }
 
         public string Key { get; set; }
-
-        public static IAttachmentWrapper FromAttachment(Attachment attachment)
-        {
-            if (attachment != null)
-            {
-                var attachemntWrapper = new AttachmentWrapper
-                {
-                    Data = attachment.Data,
-                    Size = attachment.Size,
-                    Metadata = RavenJObjectWrapper.Parse(attachment.Metadata.ToString()),
-                    Etag = EtagWrapper.Parse(attachment.Etag.ToString()),
-                    Key = attachment.Key
-                };
-                return attachemntWrapper;
-            }
-            return null;
-        }
     }
 }

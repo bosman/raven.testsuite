@@ -56,5 +56,18 @@ namespace Raven.TestSuite.Tests
                 }
             });
         }
+
+        [RavenDotNetApiTest]
+        public void GetStats()
+        {
+            wrapper.Execute(testEnv =>
+            {
+                using (var docStore = testEnv.CreateDocumentStore("TestDatabase").Initialize())
+                {
+                    var stats = docStore.DatabaseCommands.GetStatistics();
+                    Assert.NotNull(stats);
+                }
+            });
+        }
     }
 }

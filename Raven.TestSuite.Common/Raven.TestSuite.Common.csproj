@@ -564,6 +564,8 @@
     <Compile Include="Abstractions\Constants.cs" />
     <Compile Include="Abstractions\Data\Constants.cs" />
     <Compile Include="Abstractions\Data\EtagWrapper.cs" />
+    <Compile Include="Abstractions\Data\IndexingPriorityWrapper.cs" />
+    <Compile Include="Abstractions\Data\IndexLockModeWrapper.cs" />
     <Compile Include="Abstractions\Data\UuidType.cs" />
     <Compile Include="Abstractions\Default.cs" />
     <Compile Include="Abstractions\Enums\FieldIndexingWrapper.cs" />
@@ -605,9 +607,11 @@
     <Compile Include="RestResponse.cs" />
     <Compile Include="TestRun.cs" />
     <Compile Include="TestRunWithTestResults.cs" />
+    <Compile Include="WrapperInterfaces\IDatabaseStatisticsWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDocumentConventionWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDomainContainer.cs" />
     <Compile Include="WrapperInterfaces\IHighlightedFieldWrapper.cs" />
+    <Compile Include="WrapperInterfaces\IIndexStatsWrapper.cs" />
     <Compile Include="WrapperInterfaces\IReferenceWrapper.cs" />
     <Compile Include="WrapperInterfaces\IAttachmentWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDatabaseCommandsWrapper.cs" />
@@ -626,6 +630,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="WrapperInterfaces\IScriptedPatchRequestWrapper.cs" />
+    <Compile Include="WrapperInterfaces\IServerErrorWrapper.cs" />
     <Compile Include="WrapperInterfaces\ISmugglerArgumentsBuilder.cs" />
     <Compile Include="WrapperInterfaces\ISortedFieldWrapper.cs" />
     <Compile Include="WrapperInterfaces\ISpatialOptionsWrapper.cs" />

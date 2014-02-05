@@ -118,7 +118,7 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         //TODO: GetResponse[] MultiGet(GetRequest[] requests);
 
-        //TODO: DatabaseStatistics GetStatistics();
+        IDatabaseStatisticsWrapper GetStatistics();
 
         //TODO: JsonDocumentMetadata Head(string key);
 
