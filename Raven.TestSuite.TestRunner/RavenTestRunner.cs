@@ -27,60 +27,61 @@ namespace Raven.TestSuite.TestRunner
 
                     foreach (var ravenVersionFolderPath in testRunSetup.RavenVersionPath)
                     {
+                        if (!Directory.Exists(ravenVersionFolderPath))
+                        {
+                            continue;
+                        }
+                        var testRun = new TestRun();
                         try
                         {
-                            if (!Directory.Exists(ravenVersionFolderPath))
-                            {
-                                continue;
-                            }
-                            this.Cleanup();
-
-                            var testGroups = new List<RavenTestsGroup>();
-                            testGroups.AddRange(GetAllRavenDotNetApiTests());
-                            testGroups.AddRange(GetAllRavenRestApiTests());
-                            testGroups.AddRange(GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute)));
-
-                            var testRun = new TestRun
-                                {
-                                    RavenVersion = VersionPicker.GetRavenVersionByFolder(ravenVersionFolderPath),
-                                    StartedAt = DateTime.Now
-                                };
-
-                            var dbPort = 8080;
-
-                            var serverStandaloneExePath = Path.Combine(ravenVersionFolderPath,
-                                                                       Constants.Paths.ServerStandaloneExePartialPath);
-
-                            var domainContainer =
-                                VersionPicker.TryCreateDomainContainerForRavenVersion(ravenVersionFolderPath, dbPort);
-                            if (domainContainer != null)
-                            {
-                                using (dbRunner = DbRunner.Run(dbPort, serverStandaloneExePath))
-                                {
-                                    Console.WriteLine("Server startup time: {0}s", dbRunner.StartupTime.TotalSeconds);
-
-                                    using (domainContainer)
-                                    {
-                                        var wrapper = domainContainer.Wrapper;
-                                        System.Console.WriteLine(string.Format("Using .Net wrapper version: {0} to test Raven version {1}", wrapper.GetVersion(), testRun.RavenVersion));
-
-                                        testRun.TestResults = testGroups.SelectMany(tg => RunTestGroup(progress, token, tg, wrapper)).ToList();
-                                    }
-                                }
-                            }
-                            testRun.StoppedAt = DateTime.Now;
-                            allRuns.Add(testRun);
+                            PerformTestRun(progress, token, testRunSetup, testRun, ravenVersionFolderPath);
                         }
                         catch (Exception ex)
                         {
-                            // TODO add notification to send to UI that the whole thing failed
+                            testRun.Exception = ex;
+                        }
+                        finally
+                        {
+                            testRun.StoppedAt = DateTime.Now;
+                            allRuns.Add(testRun);
                         }
                     }
-
                     return allRuns;
 
                 }, token);
             return task;
+        }
+
+        private void PerformTestRun(IProgress<ProgressReport> progress, CancellationToken token, TestRunSetup testRunSetup, TestRun testRun,
+                                    string ravenVersionFolderPath)
+        {
+            testRun.RavenVersion = VersionPicker.GetRavenVersionByFolder(ravenVersionFolderPath);
+            this.Cleanup();
+            var testGroups = GetTestGroupsForTestRuns();
+            using (var domainContainer = VersionPicker.CreateDomainContainer(ravenVersionFolderPath, testRunSetup.DatabasePort))
+            {
+                using (dbRunner = DbRunner.Run(testRunSetup.DatabasePort, ConstructServerExePath(ravenVersionFolderPath)))
+                {
+                    testRun.DbServerStartupTime = dbRunner.StartupTime;
+                    var wrapper = domainContainer.Wrapper;
+                    testRun.WrapperVersion = wrapper.GetVersion();
+                    testRun.TestResults = testGroups.SelectMany(tg => RunTestGroup(progress, token, tg, wrapper)).ToList();
+                }
+            }
+        }
+
+        private string ConstructServerExePath(string ravenVersionFolderPath)
+        {
+            return Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
+        }
+
+        private List<RavenTestsGroup> GetTestGroupsForTestRuns()
+        {
+            var testGroups = new List<RavenTestsGroup>();
+            testGroups.AddRange(GetAllRavenDotNetApiTests());
+            testGroups.AddRange(GetAllRavenRestApiTests());
+            testGroups.AddRange(GetAllRavenTestsByType(typeof (RavenSmugglerTestAttribute)));
+            return testGroups;
         }
 
         private IEnumerable<TestResult> RunTestGroup(IProgress<ProgressReport> progress, CancellationToken token, RavenTestsGroup testGroup,
@@ -88,8 +89,7 @@ namespace Raven.TestSuite.TestRunner
         {
             var results = new List<TestResult>();
             InterruptExecutionIfCancellationRequested(token);
-            var obj = Activator.CreateInstance(testGroup.GroupType,
-                                               new object[] { wrapper });
+            var obj = Activator.CreateInstance(testGroup.GroupType, new object[] { wrapper });
 
             DeployNorthwindIfNeeded(testGroup, wrapper);
 

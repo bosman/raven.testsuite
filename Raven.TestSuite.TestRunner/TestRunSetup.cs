@@ -11,8 +11,11 @@ namespace Raven.TestSuite.TestRunner
         public TestRunSetup()
         {
             this.RavenVersionPath = new List<string>();
+            this.DatabasePort = 8080;
         }
 
         public List<string> RavenVersionPath { get; set; }
+
+        public int DatabasePort { get; set; }
     }
 }

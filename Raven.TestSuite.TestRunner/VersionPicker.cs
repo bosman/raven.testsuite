@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Raven.TestSuite.Common.Abstractions;
 using System.IO;
 using System.Diagnostics;
+using Raven.TestSuite.Common.Exceptions;
 using Raven.TestSuite.Common.WrapperInterfaces;
 
 namespace Raven.TestSuite.TestRunner
@@ -19,19 +20,23 @@ namespace Raven.TestSuite.TestRunner
                 new Tuple<string, Type>("2.5.2750.0", typeof(ClientWrapper.v2_5_2750.DomainContainer))
             };
 
-        public static IDomainContainer TryCreateDomainContainerForRavenVersion(string ravenVersionFolderPath, int databasePort)
+        public static IDomainContainer CreateDomainContainer(string ravenVersionFolderPath, int databasePort)
         {
             var ravenClientDllPath = Path.Combine(ravenVersionFolderPath, Constants.Paths.ClientDllPartialPath);
+            if (!File.Exists(ravenClientDllPath))
+            {
+                throw new ArgumentException(string.Format("Folder \"{0}\" is not a valid Raven folder.", ravenClientDllPath));
+            }
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(ravenClientDllPath);
 
             foreach (var version in versionsMap)
             {
-                if (fileVersionInfo.FileVersion.CompareTo(version.Item1) >= 0)
+                if (String.Compare(fileVersionInfo.FileVersion, version.Item1, StringComparison.InvariantCulture) >= 0)
                 {
                     return (IDomainContainer)Activator.CreateInstance(version.Item2, new object[] { ravenVersionFolderPath, version.Item1, databasePort });
                 }
             }
-            return null;
+            throw new RavenVersionNotSupportedException(fileVersionInfo.FileVersion);
         }
 
         public static string GetRavenVersionByFolder(string ravenVersionFolderPath)

@@ -34,7 +34,7 @@ namespace Raven.TestSuite.Client.Console
             var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
-            var testRunSetup = new TestRunSetup {RavenVersionPath = versionsList};
+            var testRunSetup = new TestRunSetup {RavenVersionPath = versionsList, DatabasePort = 8080};
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             task.ContinueWith(continuation =>
                 {
