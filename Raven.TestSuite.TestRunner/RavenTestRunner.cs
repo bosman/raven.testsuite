@@ -37,8 +37,8 @@ namespace Raven.TestSuite.TestRunner
 
                             var testGroups = new List<RavenTestsGroup>();
                             testGroups.AddRange(GetAllRavenDotNetApiTests());
-                            //testGroups.AddRange(GetAllRavenRestApiTests());
-                            //testGroups.AddRange(GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute)));
+                            testGroups.AddRange(GetAllRavenRestApiTests());
+                            testGroups.AddRange(GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute)));
 
                             var testRun = new TestRun
                                 {
