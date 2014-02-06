@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Raven.TestSuite.TestRunner
 {
+    [Serializable]
     public class RavenTestRunner : IDisposable
     {
         private DbRunner dbRunner;
@@ -36,8 +37,8 @@ namespace Raven.TestSuite.TestRunner
 
                             var testGroups = new List<RavenTestsGroup>();
                             testGroups.AddRange(GetAllRavenDotNetApiTests());
-                            testGroups.AddRange(GetAllRavenRestApiTests());
-                            testGroups.AddRange(GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute)));
+                            //testGroups.AddRange(GetAllRavenRestApiTests());
+                            //testGroups.AddRange(GetAllRavenTestsByType(typeof(RavenSmugglerTestAttribute)));
 
                             var testRun = new TestRun
                                 {
@@ -82,13 +83,16 @@ namespace Raven.TestSuite.TestRunner
             return task;
         }
 
-        private static IEnumerable<TestResult> RunTestGroup(IProgress<ProgressReport> progress, CancellationToken token, RavenTestsGroup testGroup,
+        private IEnumerable<TestResult> RunTestGroup(IProgress<ProgressReport> progress, CancellationToken token, RavenTestsGroup testGroup,
                                          IRavenClientWrapper wrapper)
         {
             var results = new List<TestResult>();
             InterruptExecutionIfCancellationRequested(token);
             var obj = Activator.CreateInstance(testGroup.GroupType,
                                                new object[] { wrapper });
+
+            DeployNorthwindIfNeeded(testGroup, wrapper);
+
             foreach (var test in testGroup.Tests)
             {
                 InterruptExecutionIfCancellationRequested(token);
@@ -97,7 +101,28 @@ namespace Raven.TestSuite.TestRunner
                 results.Add(result);
                 ReportResultAsProgressReport(progress, result);
             }
+
+            DeleteNorthwindIfNeeded(testGroup, wrapper);
+
             return results;
+        }
+
+        private static void DeleteNorthwindIfNeeded(RavenTestsGroup testGroup, IRavenClientWrapper wrapper)
+        {
+            var attribute = testGroup.GroupType.GetCustomAttribute<RequiresFreshNorthwindDatabaseAttribute>();
+            if (attribute != null)
+            {
+                wrapper.Execute(attribute.DeleteNorthwind());
+            }
+        }
+
+        private void DeployNorthwindIfNeeded(RavenTestsGroup testGroup, IRavenClientWrapper wrapper)
+        {
+            var attribute = testGroup.GroupType.GetCustomAttribute<RequiresFreshNorthwindDatabaseAttribute>();
+            if (attribute != null)
+            {
+                wrapper.Execute(attribute.DeployNorthwind());
+            }
         }
 
         private void Cleanup()

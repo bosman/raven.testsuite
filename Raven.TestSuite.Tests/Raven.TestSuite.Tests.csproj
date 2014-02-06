@@ -62,8 +62,21 @@
     <Compile Include="Common\Attributes\RavenRestApiTestAttribute.cs" />
     <Compile Include="Common\Attributes\RavenSmugglerTestAttribute.cs" />
     <Compile Include="Common\Attributes\RavenTestAttribute.cs" />
+    <Compile Include="Common\Attributes\RequiresFreshNorthwindDatabaseAttribute.cs" />
     <Compile Include="Common\BaseTestGroup.cs" />
     <Compile Include="DatabaseObjects\Country.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Address.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Category.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Company.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Contact.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Employee.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Order.cs" />
+    <Compile Include="DatabaseObjects\Northwind\OrderLine.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Product.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Region.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Shipper.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Supplier.cs" />
+    <Compile Include="DatabaseObjects\Northwind\Territory.cs" />
     <Compile Include="DatabaseObjects\Person.cs" />
     <Compile Include="Api\DotNet\Session\SessionCrudTests.cs" />
     <Compile Include="InitialDevTests.cs" />
@@ -82,7 +95,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assets\Northwind.dump" />
+    <Content Include="Assets\Northwind.dump">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

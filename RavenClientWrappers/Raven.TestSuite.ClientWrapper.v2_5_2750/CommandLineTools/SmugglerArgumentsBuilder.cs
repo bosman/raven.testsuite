@@ -21,7 +21,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools
 
         public ISmugglerArgumentsBuilder ImportTo(string dbAddress)
         {
-            this.transferDirection = "in" + dbAddress;
+            this.transferDirection = "in " + dbAddress;
             return this;
         }
 
