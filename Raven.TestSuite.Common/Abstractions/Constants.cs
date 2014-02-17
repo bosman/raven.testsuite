@@ -17,5 +17,10 @@
         {
             public const string Northwind = "Northwind";
         }
+
+        public static class DbUrl
+        {
+            public const string Northwind = "/databases/" + Constants.DbName.Northwind;
+        }
     }
 }

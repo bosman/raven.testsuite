@@ -56,6 +56,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Rest\Crud\GetTests.cs" />
+    <Compile Include="Api\Rest\Crud\PutTests.cs" />
     <Compile Include="Api\Rest\TemporaryDevelopmentTests.cs" />
     <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
