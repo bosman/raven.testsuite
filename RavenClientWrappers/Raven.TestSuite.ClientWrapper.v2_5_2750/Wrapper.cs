@@ -1,9 +1,9 @@
-﻿using Raven.TestSuite.ClientWrapper.v2_5_2750;
-using Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools;
+﻿using Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -96,10 +96,22 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawPut(string url, string content)
+        public RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null)
         {
+            var request = new HttpRequestMessage();
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, List<string>> header in headers)
+                {
+                    request.Headers.Add(header.Key, header.Value);
+                }
+            }
+            request.Content = new StringContent(content);
+            request.RequestUri = new Uri(CompleteUrlIfNeeded(url));
+            request.Method = HttpMethod.Put;
+
             var client = new HttpClient();
-            var task = client.PutAsync(CompleteUrlIfNeeded(url), new StringContent(content));
+            var task = client.SendAsync(request);
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
@@ -131,11 +143,14 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         private RavenJTokenWrapper HttpResponseMessageToRavenJTokenWrapper(HttpResponseMessage httpResponseMessage)
         {
             var resultContent = httpResponseMessage.Content.ReadAsStringAsync();
-            if (string.IsNullOrEmpty(resultContent.Result))
+            try
+            {
+                return RavenJTokenWrapper.Parse(resultContent.Result);
+            }
+            catch 
             {
                 return null;
             }
-            return RavenJTokenWrapper.Parse(resultContent.Result);
         }
 
         #endregion

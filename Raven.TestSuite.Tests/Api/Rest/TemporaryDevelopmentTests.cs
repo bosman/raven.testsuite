@@ -20,7 +20,7 @@ namespace Raven.TestSuite.Tests.Api.Rest
         /*
         THESE TESTS ARE ONLY FOR THE FRAMEWORK DEVELOPMENT PURPOSES. SHOULD BE REMOVED WHEN NO LONGER NEEDED.
         */
-        [RavenRestApiTest]
+        //[RavenRestApiTest]
         public void SimpleRawGetTest()
         {
             this.wrapper.Execute(env =>
@@ -30,7 +30,7 @@ namespace Raven.TestSuite.Tests.Api.Rest
                 });
         }
 
-        [RavenRestApiTest]
+        //[RavenRestApiTest]
         public void SimpleRawPutTest()
         {
             this.wrapper.Execute(env =>
@@ -40,7 +40,7 @@ namespace Raven.TestSuite.Tests.Api.Rest
             });
         }
 
-        [RavenRestApiTest]
+        //[RavenRestApiTest]
         public void SimpleRawPostTest()
         {
             this.wrapper.Execute(env =>
@@ -50,7 +50,7 @@ namespace Raven.TestSuite.Tests.Api.Rest
             });
         }
 
-        [RavenRestApiTest]
+        //[RavenRestApiTest]
         public void SimpleRawDeleteTest()
         {
             this.wrapper.Execute(env =>
