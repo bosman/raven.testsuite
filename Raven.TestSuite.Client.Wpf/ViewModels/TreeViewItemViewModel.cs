@@ -9,7 +9,7 @@ using Raven.TestSuite.Client.Wpf.Models;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels
 {
-    public class TreeViewItemViewModel
+    public class TreeViewItemViewModel : INotifyPropertyChanged
     {
         readonly ObservableCollection<TreeViewItemViewModel> children;
         readonly TreeViewItemViewModel parent;
@@ -28,6 +28,24 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         public TreeViewItemViewModel Parent
         {
             get { return parent; }
+        }
+
+        private bool isChecked;
+        public bool IsChecked
+        {
+            get { return isChecked; }
+            set
+            {
+                if (isChecked != value)
+                {
+                    isChecked = value;
+                    foreach (var child in Children)
+                    {
+                        child.IsChecked = isChecked;
+                    }
+                    this.OnPropertyChanged("IsChecked");
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

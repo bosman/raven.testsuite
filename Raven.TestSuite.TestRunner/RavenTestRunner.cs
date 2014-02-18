@@ -57,7 +57,7 @@ namespace Raven.TestSuite.TestRunner
         {
             testRun.RavenVersion = VersionPicker.GetRavenVersionByFolder(ravenVersionFolderPath);
             this.Cleanup();
-            var testGroups = GetTestGroupsForTestRuns();
+            var testGroups = GetTestGroupsForTestRuns(testRunSetup.TestFullNamesToRun);
             using (var domainContainer = VersionPicker.CreateDomainContainer(ravenVersionFolderPath, testRunSetup.DatabasePort))
             {
                 using (dbRunner = DbRunner.Run(testRunSetup.DatabasePort, ConstructServerExePath(ravenVersionFolderPath)))
@@ -75,13 +75,9 @@ namespace Raven.TestSuite.TestRunner
             return Path.Combine(ravenVersionFolderPath, Constants.Paths.ServerStandaloneExePartialPath);
         }
 
-        private List<RavenTestsGroup> GetTestGroupsForTestRuns()
+        private List<RavenTestsGroup> GetTestGroupsForTestRuns(IList<string> testFullNamesToRun = null)
         {
-            var testGroups = new List<RavenTestsGroup>();
-            testGroups.AddRange(GetAllRavenDotNetApiTests());
-            testGroups.AddRange(GetAllRavenRestApiTests());
-            testGroups.AddRange(GetAllRavenTestsByType(typeof (RavenSmugglerTestAttribute)));
-            return testGroups;
+            return GetAllRavenTests(testFullNamesToRun).ToList();
         }
 
         private IEnumerable<TestResult> RunTestGroup(IProgress<ProgressReport> progress, CancellationToken token, RavenTestsGroup testGroup,
@@ -188,11 +184,11 @@ namespace Raven.TestSuite.TestRunner
             return result;
         }
 
-        public IEnumerable<RavenTestsGroup> GetAllRavenTests()
+        public IEnumerable<RavenTestsGroup> GetAllRavenTests(IList<string> testFullNamesToRun = null)
         {
             var ass = AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
             var testCategories = ass.GetTypes().Where(t => t.IsSubclassOf(typeof(RavenTestAttribute)));
-            return testCategories.SelectMany(GetAllRavenTestsByType).ToList();
+            return testCategories.SelectMany(tc => GetAllRavenTestsByType(tc, testFullNamesToRun)).ToList();
         }
 
         public IEnumerable<RavenTestsGroup> GetAllRavenDotNetApiTests()
@@ -205,7 +201,7 @@ namespace Raven.TestSuite.TestRunner
             return GetAllRavenTestsByType(typeof(RavenRestApiTestAttribute));
         }
 
-        public IEnumerable<RavenTestsGroup> GetAllRavenTestsByType(Type revenTestAttributeType)
+        public IEnumerable<RavenTestsGroup> GetAllRavenTestsByType(Type revenTestAttributeType, IList<string> testFullNamesToRun = null)
         {
             var ass = AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
 
@@ -214,14 +210,15 @@ namespace Raven.TestSuite.TestRunner
                    .Where(
                        t =>
                        t.GetMethods()
-                        .Any(m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0))
+                        .Any(m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0 && (testFullNamesToRun == null || testFullNamesToRun.Contains(t.FullName + "." + m.Name))))
                    .Select(groupType => new RavenTestsGroup
                    {
                        GroupType = groupType,
                        Category = revenTestAttributeType,
                        Tests = groupType.GetMethods()
                                 .Where(
-                                    m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0).ToList()
+                                    m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0
+                                    && (testFullNamesToRun == null || testFullNamesToRun.Contains(groupType.FullName + "." + m.Name))).ToList()
                    }).ToList();
 
             return ravTestGr;

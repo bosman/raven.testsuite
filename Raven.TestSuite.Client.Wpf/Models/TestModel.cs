@@ -9,6 +9,8 @@ namespace Raven.TestSuite.Client.Wpf.Models
 {
     public class TestModel : NotificationObject
     {
+        public string FullName { get; set; }
+
         private string name;
         public string Name
         {

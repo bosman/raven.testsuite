@@ -16,6 +16,8 @@ namespace Raven.TestSuite.TestRunner
 
         public List<string> RavenVersionPath { get; set; }
 
+        public IList<string> TestFullNamesToRun { get; set; } 
+
         public int DatabasePort { get; set; }
     }
 }

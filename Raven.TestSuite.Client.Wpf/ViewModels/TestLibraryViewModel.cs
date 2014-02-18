@@ -16,7 +16,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
     {
         private static RavenTestRunner runner;
 
-        readonly ReadOnlyCollection<TestCategoryViewModel> testCategories;
+        private ReadOnlyCollection<TestCategoryViewModel> testCategories;
 
         private ObservableCollection<string> logMessages;
 
@@ -27,23 +27,30 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         public TestLibraryViewModel()
         {
             runner = new RavenTestRunner();
-
-            runner = new RavenTestRunner();
-            var testCategories = runner.GetAllRavenTests()
-                .GroupBy(x => x.Category)
-                .Select(y => new TestCategoryModel
-                    {
-                        Name = y.Key.Name,
-                        TestGroups = y.Select(tg => new TestGroupModel
-                            {
-                                Name = tg.GroupType.Name,
-                                Tests = tg.Tests.Select(t => new TestModel { Name = t.Name }).ToList()
-                            }).ToList()
-                    }).ToList();
-
-            this.testCategories = new ReadOnlyCollection<TestCategoryViewModel>(testCategories.Select(x => new TestCategoryViewModel(x)).ToList());
-
+            LoadAllAvailableTests();
             logMessages = new ObservableCollection<string>();
+        }
+
+        private void LoadAllAvailableTests()
+        {
+            var testCategories = runner.GetAllRavenTests()
+                                       .GroupBy(x => x.Category)
+                                       .Select(y => new TestCategoryModel
+                                           {
+                                               Name = y.Key.Name,
+                                               TestGroups = y.Select(tg => new TestGroupModel
+                                                   {
+                                                       Name = tg.GroupType.Name,
+                                                       Tests = tg.Tests.Select(t => new TestModel
+                                                           {
+                                                               Name = t.Name,
+                                                               FullName = tg.GroupType.FullName + "." + t.Name
+                                                           }).ToList()
+                                                   }).ToList()
+                                           }).ToList();
+
+            this.testCategories =
+                new ReadOnlyCollection<TestCategoryViewModel>(testCategories.Select(x => new TestCategoryViewModel(x)).ToList());
         }
 
         public ReadOnlyCollection<TestCategoryViewModel> TestCategories
@@ -67,6 +74,8 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         private void OnRunTests()
         {
+            var testsToRun = GetTestFullNamesToRun();
+
             this.isTestsRunning = true;
             this.isTestStopping = false;
             this.logMessages.Clear();
@@ -76,7 +85,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
-            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080 };
+            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun};
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             task.ContinueWith(continuation =>
             {
@@ -91,6 +100,34 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                     //StoreAndDisplayResults(continuation.Result);
                 }
             });
+        }
+
+        private IList<string> GetTestFullNamesToRun()
+        {
+            var results = new List<string>();
+            foreach (var testCategory in TestCategories)
+            {
+                results.AddRange(testCategory.Children.SelectMany(GetTestFullNamesToRun).ToList());
+            }
+            return results;
+        }
+
+        private IList<string> GetTestFullNamesToRun(TreeViewItemViewModel treeViewItemViewModel)
+        {
+            var results = new List<string>();
+            var testViewModel = treeViewItemViewModel as TestViewModel;
+            if (testViewModel != null)
+            {
+                if (testViewModel.IsChecked)
+                {
+                    results.Add(testViewModel.TestFullName);
+                }
+            }
+            else
+            {
+                results.AddRange(treeViewItemViewModel.Children.SelectMany(GetTestFullNamesToRun).ToList());
+            }
+            return results;
         }
 
         private void OnStopTests()

@@ -112,20 +112,23 @@
             <TreeView Margin="5" ItemsSource="{Binding TestCategories}" Height="247">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type viewModels:TestCategoryViewModel}" ItemsSource="{Binding Children}">
-                        <StackPanel>
-                            <TextBlock Text="{Binding TestCategoryName}"></TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                            <TextBlock Margin="1" Text="{Binding TestCategoryName}"></TextBlock>
                         </StackPanel>
                     </HierarchicalDataTemplate>
 
                     <HierarchicalDataTemplate DataType="{x:Type viewModels:TestGroupViewModel}" ItemsSource="{Binding Children}">
-                        <StackPanel>
-                            <TextBlock Text="{Binding TestGroupName}"></TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                            <TextBlock Margin="1" Text="{Binding TestGroupName}"></TextBlock>
                         </StackPanel>
                     </HierarchicalDataTemplate>
 
                     <DataTemplate DataType="{x:Type viewModels:TestViewModel}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding TestName}"></TextBlock>
+                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                            <TextBlock Margin="1" Text="{Binding TestName}"></TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TreeView.Resources>

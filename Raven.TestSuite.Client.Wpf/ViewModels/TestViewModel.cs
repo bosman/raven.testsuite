@@ -21,5 +21,10 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         {
             get { return test.Name; }
         }
+
+        public string TestFullName
+        {
+            get { return test.FullName; }
+        }
     }
 }
