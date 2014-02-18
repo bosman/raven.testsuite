@@ -188,6 +188,13 @@ namespace Raven.TestSuite.TestRunner
             return result;
         }
 
+        public IEnumerable<RavenTestsGroup> GetAllRavenTests()
+        {
+            var ass = AppDomain.CurrentDomain.Load("Raven.TestSuite.Tests");
+            var testCategories = ass.GetTypes().Where(t => t.IsSubclassOf(typeof(RavenTestAttribute)));
+            return testCategories.SelectMany(GetAllRavenTestsByType).ToList();
+        }
+
         public IEnumerable<RavenTestsGroup> GetAllRavenDotNetApiTests()
         {
             return GetAllRavenTestsByType(typeof(RavenDotNetApiTestAttribute));
@@ -211,6 +218,7 @@ namespace Raven.TestSuite.TestRunner
                    .Select(groupType => new RavenTestsGroup
                    {
                        GroupType = groupType,
+                       Category = revenTestAttributeType,
                        Tests = groupType.GetMethods()
                                 .Where(
                                     m => m.GetCustomAttributes(revenTestAttributeType, false).Length > 0).ToList()

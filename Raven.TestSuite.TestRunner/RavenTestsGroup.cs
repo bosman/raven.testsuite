@@ -11,6 +11,8 @@ namespace Raven.TestSuite.TestRunner
     {
         public Type GroupType { get; set; }
 
+        public Type Category { get; set; }
+
         public IList<MethodInfo> Tests { get; set; } 
     }
 }
