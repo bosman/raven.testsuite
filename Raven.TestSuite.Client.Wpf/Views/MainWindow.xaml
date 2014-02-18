@@ -104,43 +104,62 @@
                    Margin="15"><Run Text="(made with " /><Hyperlink NavigateUri="http://visualstudiogallery.msdn.microsoft.com/970005b8-ee15-4295-9960-375e6ea1276c"
                                                                     RequestNavigate="Hyperlink_RequestNavigate"><Run Text="WPF MVVM project template" /></Hyperlink><Run Text=")" /></TextBlock>
     </Grid>-->
-    <Grid DataContext="{StaticResource TestLibViewModel}" Margin="10">
-        <StackPanel Orientation="Vertical"
-                    Margin="10,10,0,0"
+    <DockPanel Margin="10"
                     HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="747"
-                    >
-            <TreeView Margin="5" ItemsSource="{Binding TestCategories}" Height="247">
-                <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type viewModels:TestCategoryViewModel}" ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-                            <TextBlock Margin="1" Text="{Binding TestCategoryName}"></TextBlock>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
+                    DataContext="{StaticResource TestLibViewModel}">
 
-                    <HierarchicalDataTemplate DataType="{x:Type viewModels:TestGroupViewModel}" ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-                            <TextBlock Margin="1" Text="{Binding TestGroupName}"></TextBlock>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
+        <StackPanel DockPanel.Dock="Bottom" Height="70" Orientation="Horizontal">
+            <Button Margin="3" Content="Run Tests" HorizontalAlignment="Left" Command="{Binding RunTestsCommand}" />
+            <Button Margin="3" Content="Stop Tests" HorizontalAlignment="Left" Command="{Binding StopTestsCommand}" />
 
-                    <DataTemplate DataType="{x:Type viewModels:TestViewModel}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
-                            <TextBlock Margin="1" Text="{Binding TestName}"></TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </TreeView.Resources>
-            </TreeView>
-            
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="3" Content="Run Tests" HorizontalAlignment="Left" Command="{Binding RunTestsCommand}" />
-                <Button Margin="3" Content="Stop Tests" HorizontalAlignment="Left" Command="{Binding StopTestsCommand}" />
-            </StackPanel>
-
-            <ListBox Margin="5" VerticalAlignment="Bottom" Height="94" ItemsSource="{Binding LogMessages}">
+            <ListBox Margin="5,0,5,5" VerticalAlignment="Bottom" Width="585" Height="60" ItemsSource="{Binding LogMessages}">
             </ListBox>
         </StackPanel>
-    </Grid>
+
+        <TreeView DockPanel.Dock="Left" Margin="5" ItemsSource="{Binding TestCategories}" Width="300"  >
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type viewModels:TestCategoryViewModel}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        <TextBlock Margin="1" Text="{Binding TestCategoryName}"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate DataType="{x:Type viewModels:TestGroupViewModel}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        <TextBlock Margin="1" Text="{Binding TestGroupName}"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:TestViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        <TextBlock Margin="1" Text="{Binding TestName}"></TextBlock>
+                        <Image Width="12" Height="12">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="../Images/question_mark_8x16.png"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding TestStatus}" Value="LastTestPassed">
+                                            <Setter Property="Source" Value="../Images/check_16x13.png"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding TestStatus}" Value="LastTestFailed">
+                                            <Setter Property="Source" Value="../Images/x_14x14.png"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+
+
+
+        <StackPanel>
+
+        </StackPanel>
+    </DockPanel>
 </Window>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Raven.TestSuite.Client.Wpf.Models;
+using Raven.TestSuite.Common;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels
 {
@@ -45,6 +46,14 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                     }
                     this.OnPropertyChanged("IsChecked");
                 }
+            }
+        }
+
+        public virtual void UpdateLastTestResult(TestResult testResult)
+        {
+            foreach (var child in Children)
+            {
+                child.UpdateLastTestResult(testResult);
             }
         }
 

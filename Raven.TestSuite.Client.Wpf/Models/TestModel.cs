@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Raven.TestSuite.Client.Wpf.Helpers;
+using Raven.TestSuite.Common;
 
 namespace Raven.TestSuite.Client.Wpf.Models
 {
@@ -21,6 +22,20 @@ namespace Raven.TestSuite.Client.Wpf.Models
                 {
                     name = value;
                     RaisePropertyChanged(() => Name);
+                }
+            }
+        }
+
+        private TestResult lastTestResult;
+        public TestResult LastTestResult
+        {
+            get { return lastTestResult; }
+            set
+            {
+                if (lastTestResult != value)
+                {
+                    lastTestResult = value;
+                    RaisePropertyChanged(() => LastTestResult);
                 }
             }
         }

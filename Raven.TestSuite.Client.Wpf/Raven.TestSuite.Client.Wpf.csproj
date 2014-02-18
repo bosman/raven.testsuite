@@ -80,6 +80,7 @@
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\NotificationObject.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
+    <Compile Include="Helpers\TestStatus.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\TestCategoryModel.cs" />
     <Compile Include="Models\TestGroupModel.cs" />
@@ -130,6 +131,15 @@
       <Project>{969a3cbe-5449-4627-bded-8885a463eee7}</Project>
       <Name>Raven.TestSuite.TestRunner</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\check_16x13.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\x_14x14.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\question_mark_8x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

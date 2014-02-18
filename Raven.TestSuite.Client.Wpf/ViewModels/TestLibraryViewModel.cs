@@ -140,6 +140,14 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         private void OnTestRunProgressReport(ProgressReport progressReport)
         {
+            var testResultProgressReport = progressReport as TestResultProgressReport;
+            if (testResultProgressReport != null)
+            {
+                foreach (var testCategory in TestCategories)
+                {
+                    testCategory.UpdateLastTestResult(testResultProgressReport.TestResult);
+                }
+            }
             this.logMessages.Add(progressReport.Message);
         }
     }

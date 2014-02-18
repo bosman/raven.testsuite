@@ -140,8 +140,9 @@ namespace Raven.TestSuite.TestRunner
 
         private static void ReportResultAsProgressReport(IProgress<ProgressReport> progress, TestResult result)
         {
-            progress.Report(new ProgressReport
+            progress.Report(new TestResultProgressReport
                 {
+                    TestResult = result,
                     Message = result.TestName + " : " + (result.IsSuccess ? "Passed" : "Failed")
                 });
         }
