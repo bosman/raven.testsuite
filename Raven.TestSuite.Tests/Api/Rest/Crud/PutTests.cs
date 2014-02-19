@@ -1,15 +1,13 @@
-﻿using Raven.TestSuite.Common.Abstractions;
-using Raven.TestSuite.Common.WrapperInterfaces;
-using Raven.TestSuite.Tests.Common;
-using Raven.TestSuite.Tests.Common.Attributes;
-using System;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Raven.TestSuite.Tests.Api.Rest.Crud
+﻿namespace Raven.TestSuite.Tests.Api.Rest.Crud
 {
+    using Raven.TestSuite.Common.Abstractions;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using Raven.TestSuite.Tests.Common.Attributes;
+    using System.Collections.Generic;
+    using Xunit;
+
     [RequiresFreshNorthwindDatabaseAttribute]
-    public class PutTests : BaseTestGroup
+    public class PutTests : BaseRestApiTestGroup
     {
         public PutTests(IRavenClientWrapper wrapper)
             : base(wrapper)
@@ -71,8 +69,7 @@ namespace Raven.TestSuite.Tests.Api.Rest.Crud
 
                 var response = env.RawPut(Constants.DbUrl.Northwind + "/docs/SetMetadataTest/1", "{a:1}", headers);
                 response = env.RawGet(Constants.DbUrl.Northwind + "/docs/SetMetadataTest/1");
-                Assert.NotNull(response.RavenJTokenWrapper);
-                Assert.Equal((int)response.RawResponse.StatusCode, 200);
+                this.AssertNotNullGetResponse(response);
 
                 var responseHeaders = response.RawResponse.Headers.GetValues("Some-Raven-Metadata-Key").GetEnumerator();
                 if(responseHeaders.MoveNext())

@@ -96,6 +96,18 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
+        public RestResponse RawPatch(string url, string content)
+        {
+            var request = new HttpRequestMessage();
+            request.Content = new StringContent(content);
+            request.RequestUri = new Uri(CompleteUrlIfNeeded(url));
+            request.Method = new HttpMethod("PATCH");
+
+            var client = new HttpClient();
+            var task = client.SendAsync(request);
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
+        }
+
         public RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null)
         {
             var request = new HttpRequestMessage();

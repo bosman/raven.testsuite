@@ -18,6 +18,8 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawGet(string url);
 
+        RestResponse RawPatch(string url, string content);
+
         RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null);
 
         RestResponse RawPost(string url, string content);
@@ -33,6 +35,5 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
         ISmugglerArgumentsBuilder SmugglerArgsBuilder();
 
         #endregion
-
     }
 }

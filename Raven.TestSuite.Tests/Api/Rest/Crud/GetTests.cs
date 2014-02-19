@@ -1,13 +1,12 @@
-﻿using Raven.TestSuite.Common.Abstractions;
-using Raven.TestSuite.Common.WrapperInterfaces;
-using Raven.TestSuite.Tests.Common;
-using Raven.TestSuite.Tests.Common.Attributes;
-using Xunit;
-
-namespace Raven.TestSuite.Tests.Api.Rest.Crud
+﻿namespace Raven.TestSuite.Tests.Api.Rest.Crud
 {
+    using Raven.TestSuite.Common.Abstractions;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using Raven.TestSuite.Tests.Common.Attributes;
+    using Xunit;
+
     [RequiresFreshNorthwindDatabaseAttribute]
-    public class GetTests : BaseTestGroup
+    public class GetTests : BaseRestApiTestGroup
     {
         public GetTests(IRavenClientWrapper wrapper)
             : base(wrapper)
@@ -31,9 +30,8 @@ namespace Raven.TestSuite.Tests.Api.Rest.Crud
             this.wrapper.Execute(env =>
             {
                 var response = env.RawGet(Constants.DbUrl.Northwind + "/docs/categories/1");
-                Assert.NotNull(response.RavenJTokenWrapper);
+                base.AssertNotNullGetResponse(response);
                 Assert.Equal("Beverages", response.RavenJTokenWrapper.Value<string>("Name"));
-                Assert.Equal((int)response.RawResponse.StatusCode, 200);
             });
         }
     }
