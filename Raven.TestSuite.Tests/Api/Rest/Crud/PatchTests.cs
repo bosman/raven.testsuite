@@ -39,7 +39,7 @@
         }
 
         [RavenRestApiTest]
-        public void OverwriteAttributeTest()
+        public void OverrideAttributeTest()
         {
             this.wrapper.Execute(env =>
             {
@@ -48,6 +48,18 @@
                 response = env.RawGet(Constants.DbUrl.Northwind + "/docs/categories/3");
                 this.AssertNotNullGetResponse(response);
                 Assert.Equal("OverwriteAttributeTestValue", response.RavenJTokenWrapper.Value<string>("Name"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void OverrideAttributeWithCorrectPrevValueTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/categories/4",
+                    "[{ Type: 'Set', Name: 'Name', Value: 'OverrideAttributeWithCorrectPrevValueTestValue', PrevValue: 'Dairy Products'}]");
+                this.AssertNotNullGetResponse(response);
+                Assert.Equal("OverrideAttributeWithCorrectPrevValueTestValue", response.RavenJTokenWrapper.Value<string>("Name"));
             });
         }
     }
