@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,7 +13,7 @@ using Raven.TestSuite.TestRunner;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels
 {
-    public class TestLibraryViewModel
+    public class TestLibraryViewModel : INotifyPropertyChanged
     {
         private static RavenTestRunner runner;
 
@@ -21,11 +22,42 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         private ObservableCollection<string> logMessages;
 
         private bool isTestsRunning = false;
+        public bool IsTestsRunning
+        {
+            get { return isTestsRunning; }
+            set
+            {
+                if (isTestsRunning != value)
+                {
+                    isTestsRunning = value;
+                    this.OnPropertyChanged("IsTestsRunning");
+                }
+            }
+        }
+
         private bool isTestStopping = false;
+        public bool IsTestStopping
+        {
+            get { return isTestStopping; }
+            set
+            {
+                if (isTestStopping != value)
+                {
+                    isTestStopping = value;
+                    this.OnPropertyChanged("IsTestStopping");
+                }
+            }
+        }
+
         private CancellationTokenSource cancellationTokenSource;
+
+        public ICommand RunTestsCommand { get; set; }
+        public ICommand StopTestsCommand { get; set; }
 
         public TestLibraryViewModel()
         {
+            RunTestsCommand = new DelegateCommand(OnRunTests, () => !this.IsTestsRunning);
+            StopTestsCommand = new DelegateCommand(OnStopTests, () => this.IsTestsRunning && !this.IsTestStopping);
             runner = new RavenTestRunner();
             LoadAllAvailableTests();
             logMessages = new ObservableCollection<string>();
@@ -65,19 +97,19 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         #region Commands
 
-        public ICommand RunTestsCommand { get { return new DelegateCommand(OnRunTests, () => !this.isTestsRunning); } }
-        public ICommand StopTestsCommand { get { return new DelegateCommand(OnStopTests, () => this.isTestsRunning && !this.isTestStopping); } }
+        //public ICommand RunTestsCommand { get { return new DelegateCommand(OnRunTests, () => !this.IsTestsRunning); } }
+        //public ICommand StopTestsCommand { get { return new DelegateCommand(OnStopTests, () => this.IsTestsRunning && !this.IsTestStopping); } }
 
         #endregion
 
         #region Command Handlers
 
-        private void OnRunTests()
+        private async void OnRunTests()
         {
             var testsToRun = GetTestFullNamesToRun();
 
-            this.isTestsRunning = true;
-            this.isTestStopping = false;
+            IsTestsRunning = true;
+            IsTestStopping = false;
             this.logMessages.Clear();
             var progressIndicator = new Progress<ProgressReport>(OnTestRunProgressReport);
             cancellationTokenSource = new CancellationTokenSource();
@@ -86,20 +118,26 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
             var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun};
-            var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
-            task.ContinueWith(continuation =>
-            {
-                this.isTestsRunning = false;
-                if (continuation.IsCanceled)
-                {
-                    this.isTestStopping = false;
-                    this.logMessages.Add("Tests cancelled");
-                }
-                else if (continuation.IsCompleted)
-                {
-                    //StoreAndDisplayResults(continuation.Result);
-                }
-            });
+            //var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
+            await runner.RunAllTests(progressIndicator, token, testRunSetup);
+            IsTestsRunning = false;
+            //task.ContinueWith(continuation =>
+            //{
+            //    IsTestsRunning = false;
+            //    if (continuation.IsCanceled)
+            //    {
+            //        IsTestStopping = false;
+            //        this.logMessages.Add("Tests cancelled");
+            //    }
+            //    else if (continuation.IsCompleted)
+            //    {
+            //        //StoreAndDisplayResults(continuation.Result);
+            //    }
+            //});
+            //task.Wait();
+            this.logMessages.Add("Finished");
+            //this.logMessages.Add("Finished2");
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private IList<string> GetTestFullNamesToRun()
@@ -132,7 +170,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         private void OnStopTests()
         {
-            this.isTestStopping = true;
+            IsTestStopping = true;
             cancellationTokenSource.Cancel();
         }
 
@@ -149,6 +187,14 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                 }
             }
             this.logMessages.Add(progressReport.Message);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
