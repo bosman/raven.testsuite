@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Raven.TestSuite.Client.Wpf.Helpers;
 using Raven.TestSuite.Client.Wpf.Models;
+using Raven.TestSuite.Common;
 using Raven.TestSuite.TestRunner;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels
@@ -20,6 +21,8 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         private ReadOnlyCollection<TestCategoryViewModel> testCategories;
 
         private ObservableCollection<string> logMessages;
+
+        private ObservableCollection<TestResult> testResults; 
 
         private bool isTestsRunning = false;
         public bool IsTestsRunning
@@ -61,6 +64,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             runner = new RavenTestRunner();
             LoadAllAvailableTests();
             logMessages = new ObservableCollection<string>();
+            testResults = new ObservableCollection<TestResult>();
         }
 
         private void LoadAllAvailableTests()
@@ -95,12 +99,10 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             get { return logMessages; }
         }
 
-        #region Commands
-
-        //public ICommand RunTestsCommand { get { return new DelegateCommand(OnRunTests, () => !this.IsTestsRunning); } }
-        //public ICommand StopTestsCommand { get { return new DelegateCommand(OnStopTests, () => this.IsTestsRunning && !this.IsTestStopping); } }
-
-        #endregion
+        public ObservableCollection<TestResult> TestResults
+        {
+            get { return testResults; }
+        }
 
         #region Command Handlers
 
@@ -111,6 +113,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             IsTestsRunning = true;
             IsTestStopping = false;
             this.logMessages.Clear();
+            this.testResults.Clear();
             var progressIndicator = new Progress<ProgressReport>(OnTestRunProgressReport);
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
@@ -118,25 +121,25 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
             var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun};
-            //var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
-            await runner.RunAllTests(progressIndicator, token, testRunSetup);
+            var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
+            try
+            {
+                await task;
+            }
+            catch (Exception ex)
+            {
+                if (task.IsCanceled)
+                {
+                    IsTestStopping = false;
+                    this.logMessages.Add("Tests cancelled");
+                }
+                else
+                {
+                    this.logMessages.Add("Error: " + ex.Message);
+                }
+            }
             IsTestsRunning = false;
-            //task.ContinueWith(continuation =>
-            //{
-            //    IsTestsRunning = false;
-            //    if (continuation.IsCanceled)
-            //    {
-            //        IsTestStopping = false;
-            //        this.logMessages.Add("Tests cancelled");
-            //    }
-            //    else if (continuation.IsCompleted)
-            //    {
-            //        //StoreAndDisplayResults(continuation.Result);
-            //    }
-            //});
-            //task.Wait();
             this.logMessages.Add("Finished");
-            //this.logMessages.Add("Finished2");
             CommandManager.InvalidateRequerySuggested();
         }
 
@@ -185,6 +188,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                 {
                     testCategory.UpdateLastTestResult(testResultProgressReport.TestResult);
                 }
+                testResults.Add(testResultProgressReport.TestResult);
             }
             this.logMessages.Add(progressReport.Message);
         }

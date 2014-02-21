@@ -39,6 +39,10 @@ namespace Raven.TestSuite.TestRunner
                         catch (Exception ex)
                         {
                             testRun.Exception = ex;
+                            if (ex is OperationCanceledException)
+                            {
+                                throw;
+                            }
                         }
                         finally
                         {
