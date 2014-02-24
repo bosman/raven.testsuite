@@ -9,6 +9,8 @@ namespace Raven.TestSuite.TestRunner
 {
     public class TestResultProgressReport : ProgressReport
     {
+        public string RavenVersion { get; set; }
+
         public TestResult TestResult { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace Raven.TestSuite.TestRunner
                 {
                     testRun.DbServerStartupTime = dbRunner.StartupTime;
                     var wrapper = domainContainer.Wrapper;
-                    testRun.WrapperVersion = wrapper.GetVersion();
+                    testRun.WrapperVersion = wrapper.GetWrapperVersion();
                     testRun.TestResults = testGroups.SelectMany(tg => RunTestGroup(progress, token, tg, wrapper)).ToList();
                 }
             }
@@ -99,7 +99,7 @@ namespace Raven.TestSuite.TestRunner
                 RunExecutableAttributesCodeBeforeTest(test, wrapper);
                 var result = ExecuteTestMethod(testGroup, test, obj);
                 results.Add(result);
-                ReportResultAsProgressReport(progress, result);
+                ReportResultAsProgressReport(progress, result, wrapper);
             }
 
             DeleteNorthwindIfNeeded(testGroup, wrapper);
@@ -142,11 +142,12 @@ namespace Raven.TestSuite.TestRunner
             }
         }
 
-        private static void ReportResultAsProgressReport(IProgress<ProgressReport> progress, TestResult result)
+        private static void ReportResultAsProgressReport(IProgress<ProgressReport> progress, TestResult result, IRavenClientWrapper wrapper)
         {
             progress.Report(new TestResultProgressReport
                 {
                     TestResult = result,
+                    RavenVersion = wrapper.GetRavenDllVersion(),
                     Message = result.TestName + " : " + (result.IsSuccess ? "Passed" : "Failed")
                 });
         }

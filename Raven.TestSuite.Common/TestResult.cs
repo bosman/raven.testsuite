@@ -12,16 +12,6 @@ namespace Raven.TestSuite.Common
 
         public string TestName { get; set; }
 
-        public string HumanTestName
-        {
-            get { return TestName.Replace("Raven.TestSuite.Tests.", string.Empty); }
-        }
-
-        public string Color
-        {
-            get { return IsSuccess ? "PaleGreen" : "Tomato"; }
-        }
-
         public string TestType { get; set; }
 
         public bool IsSuccess { get; set; }

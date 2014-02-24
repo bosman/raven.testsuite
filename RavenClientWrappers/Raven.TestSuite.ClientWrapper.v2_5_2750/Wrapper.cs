@@ -1,4 +1,5 @@
-﻿using Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools;
+﻿using System.Diagnostics;
+using Raven.TestSuite.ClientWrapper.v2_5_2750.CommandLineTools;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.Common.Abstractions.Json.Linq;
 using Raven.TestSuite.Common.WrapperInterfaces;
@@ -16,6 +17,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         private int databasePort;
         private string testSuiteRunningFolder;
         private ToolsRunner toolsRunner;
+        private string ravenDllVersion;
 
         public Wrapper()
         {
@@ -47,6 +49,8 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             this.databasePort = databasePort;
             this.toolsRunner = new ToolsRunner(ravenVersionFolderPath);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(clientDllPath);
+            ravenDllVersion = fileVersionInfo.FileVersion;
             this.assembly = Assembly.LoadFile(clientDllPath);
         }
 
@@ -59,7 +63,12 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return assembly;
         }
 
-        public string GetVersion()
+        public string GetRavenDllVersion()
+        {
+            return ravenDllVersion;
+        }
+
+        public string GetWrapperVersion()
         {
             return "2.5.2750";
         }

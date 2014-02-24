@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Raven.TestSuite.Client.Wpf.Helpers;
 using Raven.TestSuite.Client.Wpf.Models;
+using Raven.TestSuite.Client.Wpf.ViewModels.TestRunner;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.TestRunner;
 
@@ -22,7 +24,9 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         private ObservableCollection<string> logMessages;
 
-        private ObservableCollection<TestResult> testResults; 
+        private ObservableCollection<CurrentTestResultViewModel> currentTestResults;
+
+        public ObservableCollection<VersionFolderViewModel> VersionFolders { get; set; }
 
         private bool isTestsRunning = false;
         public bool IsTestsRunning
@@ -56,15 +60,18 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         public ICommand RunTestsCommand { get; set; }
         public ICommand StopTestsCommand { get; set; }
+        public ICommand AddVersionFolder { get; set; }
 
         public TestLibraryViewModel()
         {
             RunTestsCommand = new DelegateCommand(OnRunTests, () => !this.IsTestsRunning);
             StopTestsCommand = new DelegateCommand(OnStopTests, () => this.IsTestsRunning && !this.IsTestStopping);
+            AddVersionFolder = new DelegateCommand(OnAddVersionFolder, () => !this.isTestsRunning);
             runner = new RavenTestRunner();
             LoadAllAvailableTests();
             logMessages = new ObservableCollection<string>();
-            testResults = new ObservableCollection<TestResult>();
+            currentTestResults = new ObservableCollection<CurrentTestResultViewModel>();
+            VersionFolders = new ObservableCollection<VersionFolderViewModel>();
         }
 
         private void LoadAllAvailableTests()
@@ -99,12 +106,22 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             get { return logMessages; }
         }
 
-        public ObservableCollection<TestResult> TestResults
+        public ObservableCollection<CurrentTestResultViewModel> CurrentTestResults
         {
-            get { return testResults; }
+            get { return currentTestResults; }
         }
 
         #region Command Handlers
+
+        private void OnAddVersionFolder()
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                VersionFolders.Add(new VersionFolderViewModel { Path = dialog.SelectedPath, IsSelected = true });
+            }
+        }
 
         private async void OnRunTests()
         {
@@ -113,14 +130,15 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             IsTestsRunning = true;
             IsTestStopping = false;
             this.logMessages.Clear();
-            this.testResults.Clear();
+            this.currentTestResults.Clear();
             var progressIndicator = new Progress<ProgressReport>(OnTestRunProgressReport);
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
-            var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
+            var versionsList = VersionFolders.Where(vf => vf.IsSelected).Select(vf => vf.Path).ToList();
+            //var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
-            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun};
+            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun };
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             try
             {
@@ -188,7 +206,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                 {
                     testCategory.UpdateLastTestResult(testResultProgressReport.TestResult);
                 }
-                testResults.Add(testResultProgressReport.TestResult);
+                currentTestResults.Add(CurrentTestResultViewModel.FromTestResultProgressReport(testResultProgressReport));
             }
             this.logMessages.Add(progressReport.Message);
         }

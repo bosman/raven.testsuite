@@ -7,7 +7,9 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 {
     public interface IRavenClientWrapper
     {
-        string GetVersion();
+        string GetRavenDllVersion();
+
+        string GetWrapperVersion();
 
         void Execute(Action<ITestUnitEnvironment> action);
 
