@@ -19,6 +19,10 @@
                 <views:TestRunnerView DataContext="{Binding TestLibraryViewModel}">
                 </views:TestRunnerView>
             </TabItem>
+            <TabItem Header="Tests Storage">
+                <views:TestsStorageView DataContext="{Binding TestsStorageViewModel}">
+                </views:TestsStorageView>
+            </TabItem>
             <TabItem Header="Something"></TabItem>
         </TabControl>
 

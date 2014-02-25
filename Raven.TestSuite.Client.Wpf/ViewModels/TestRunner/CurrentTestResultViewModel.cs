@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Raven.TestSuite.Common;
 using Raven.TestSuite.TestRunner;
 
@@ -17,9 +18,9 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestRunner
             get { return TestName.Replace("Raven.TestSuite.Tests.", string.Empty); }
         }
 
-        public string Color
+        public Brush Color
         {
-            get { return IsSuccess ? "PaleGreen" : "Tomato"; }
+            get { return IsSuccess ? Brushes.PaleGreen : Brushes.Tomato; }
         }
 
         public string TestType { get; set; }

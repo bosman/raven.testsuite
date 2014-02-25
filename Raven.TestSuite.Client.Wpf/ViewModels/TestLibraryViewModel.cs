@@ -8,10 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Raven.Client;
 using Raven.TestSuite.Client.Wpf.Helpers;
 using Raven.TestSuite.Client.Wpf.Models;
 using Raven.TestSuite.Client.Wpf.ViewModels.TestRunner;
 using Raven.TestSuite.Common;
+using Raven.TestSuite.Storage;
 using Raven.TestSuite.TestRunner;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels
@@ -19,6 +21,8 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
     public class TestLibraryViewModel : INotifyPropertyChanged
     {
         private static RavenTestRunner runner;
+
+        public IDocumentStore DocumentStore { get; set; }
 
         private ReadOnlyCollection<TestCategoryViewModel> testCategories;
 
@@ -138,7 +142,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
             //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
             //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
-            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8080, TestFullNamesToRun = testsToRun };
+            var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8082, TestFullNamesToRun = testsToRun };
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             try
             {
@@ -157,8 +161,31 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                 }
             }
             IsTestsRunning = false;
+            if (task.IsCompleted)
+            {
+                StoreResults(task.Result);
+            }
             this.logMessages.Add("Finished");
             CommandManager.InvalidateRequerySuggested();
+        }
+
+        private void StoreResults(IEnumerable<TestRun> testRuns)
+        {
+            foreach (var testRun in testRuns)
+            {
+                var ravenTestRun = RavenTestRun.FromTestRun(testRun);
+                using (var session = DocumentStore.OpenSession())
+                {
+                    foreach (var testResult in testRun.TestResults)
+                    {
+                        var ravenTestResult = RavenTestResult.FromTestResult(testResult);
+                        session.Store(ravenTestResult);
+                        ravenTestRun.RavenTestResultIds.Add(ravenTestResult.Id);
+                    }
+                    session.Store(ravenTestRun);
+                    session.SaveChanges();
+                }
+            }
         }
 
         private IList<string> GetTestFullNamesToRun()

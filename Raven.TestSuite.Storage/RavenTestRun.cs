@@ -23,6 +23,8 @@ namespace Raven.TestSuite.Storage
                 };
         }
 
+        public int Id { get; set; }
+
         public string RavenVersion { get; set; }
 
         public string WrapperVersion { get; set; }
