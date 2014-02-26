@@ -19,7 +19,6 @@ namespace Raven.TestSuite.Storage
                     StoppedAt = testRun.StoppedAt,
                     ExceptionMessage = testRun.Exception != null ? testRun.Exception.Message : string.Empty,
                     ExceptionType = testRun.Exception != null ? testRun.Exception.GetType() : null,
-                    RavenTestResultIds = new List<int>()
                 };
         }
 
@@ -28,8 +27,6 @@ namespace Raven.TestSuite.Storage
         public string RavenVersion { get; set; }
 
         public string WrapperVersion { get; set; }
-
-        public List<int> RavenTestResultIds { get; set; }
 
         public DateTime StartedAt { get; set; }
 

@@ -139,9 +139,6 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
             var versionsList = VersionFolders.Where(vf => vf.IsSelected).Select(vf => vf.Path).ToList();
-            //var versionsList = new List<string> { "C:\\RavenDB-Build-2750" };
-            //var versionsList = new List<string> { "C:\\RavenDB-Unstable-Build-2804" };
-            //var versionsList = new List<string> { "C:\\RavenDB-Build-2750", "C:\\RavenDB-Unstable-Build-2804" };
             var testRunSetup = new TestRunSetup { RavenVersionPath = versionsList, DatabasePort = 8082, TestFullNamesToRun = testsToRun };
             var task = runner.RunAllTests(progressIndicator, token, testRunSetup);
             try
@@ -176,13 +173,14 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
                 var ravenTestRun = RavenTestRun.FromTestRun(testRun);
                 using (var session = DocumentStore.OpenSession())
                 {
+                    session.Store(ravenTestRun);
                     foreach (var testResult in testRun.TestResults)
                     {
                         var ravenTestResult = RavenTestResult.FromTestResult(testResult);
+                        ravenTestResult.RavenTestRunId = ravenTestRun.Id;
                         session.Store(ravenTestResult);
-                        ravenTestRun.RavenTestResultIds.Add(ravenTestResult.Id);
                     }
-                    session.Store(ravenTestRun);
+                    
                     session.SaveChanges();
                 }
             }

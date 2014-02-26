@@ -23,7 +23,10 @@
                 <views:TestsStorageView DataContext="{Binding TestsStorageViewModel}">
                 </views:TestsStorageView>
             </TabItem>
-            <TabItem Header="Something"></TabItem>
+            <TabItem Header="Tests Comparator">
+                <views:TestsComparatorView DataContext="{Binding TestsComparatorViewModel}">
+                </views:TestsComparatorView>
+            </TabItem>
         </TabControl>
 
     </DockPanel>

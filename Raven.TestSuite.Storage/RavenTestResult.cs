@@ -24,6 +24,8 @@ namespace Raven.TestSuite.Storage
 
         public int Id { get; set; }
 
+        public int RavenTestRunId { get; set; }
+
         public string TestName { get; set; }
 
         public string TestType { get; set; }

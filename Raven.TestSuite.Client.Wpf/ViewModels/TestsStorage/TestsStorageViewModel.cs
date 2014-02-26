@@ -62,11 +62,8 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage
             using (var session = DocumentStore.OpenSession())
             {
                 RavenTestResults.Clear();
-                var testRun = session.Include<RavenTestRun>(x => x.RavenTestResultIds).Load(testRunId);
-                foreach (var ravenTestResultId in testRun.RavenTestResultIds)
-                {
-                    RavenTestResults.Add(session.Load<RavenTestResult>(ravenTestResultId));
-                }
+                var testResults = session.Query<RavenTestResult>().Where(x => x.RavenTestRunId == testRunId).ToList();
+                testResults.ForEach(r => RavenTestResults.Add(r));
             }
         }
 

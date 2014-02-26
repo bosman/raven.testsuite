@@ -100,11 +100,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\Extensions\LinqExtensions.cs" />
     <Compile Include="ViewModels\TestRunner\CurrentTestResultViewModel.cs" />
     <Compile Include="ViewModels\TestRunner\VersionFolderViewModel.cs" />
+    <Compile Include="ViewModels\TestsComparator\RavenTestResultsByNameAverage.cs" />
+    <Compile Include="ViewModels\TestsComparator\RavenTestRunViewModel.cs" />
+    <Compile Include="ViewModels\TestsComparator\RavenVersionViewModel.cs" />
+    <Compile Include="ViewModels\TestsComparator\TestComparisonItemViewModel.cs" />
+    <Compile Include="ViewModels\TestsComparator\TestRuns_TestResultsIndex.cs" />
+    <Compile Include="ViewModels\TestsComparator\TestsComparatorViewModel.cs" />
     <Compile Include="ViewModels\TestsStorage\TestsStorageViewModel.cs" />
     <Compile Include="Views\TestRunnerView.xaml.cs">
       <DependentUpon>TestRunnerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestsComparatorView.xaml.cs">
+      <DependentUpon>TestsComparatorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestsStorageView.xaml.cs">
       <DependentUpon>TestsStorageView.xaml</DependentUpon>
@@ -150,6 +160,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\TestRunnerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestsComparatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

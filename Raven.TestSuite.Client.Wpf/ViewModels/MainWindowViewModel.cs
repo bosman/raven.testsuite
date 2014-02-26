@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Input;
 using Raven.TestSuite.Client.Wpf.Helpers;
 using Raven.TestSuite.Client.Wpf.Models;
+using Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator;
 using Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage;
 using Raven.TestSuite.TestRunner;
 using System.Linq;
@@ -18,18 +19,28 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
 
         public TestsStorageViewModel TestsStorageViewModel { get; set; }
 
+        public TestsComparatorViewModel TestsComparatorViewModel { get; set; }
+
         public IDocumentStore docStore;
 
         public MainWindowViewModel()
         {
             docStore = new Raven.Client.Embedded.EmbeddableDocumentStore
-            {
+            { 
                 DataDirectory = "Data",
                 UseEmbeddedHttpServer = true
             }.Initialize();
+            CreateIndexesAndTransformers(docStore);
             this.TestLibraryViewModel = new TestLibraryViewModel {DocumentStore = this.docStore};
             this.TestsStorageViewModel = new TestsStorageViewModel {DocumentStore = this.docStore};
+            this.TestsComparatorViewModel = new TestsComparatorViewModel {DocumentStore = this.docStore};
             this.TestsStorageViewModel.OnSearchTestRuns();
+            this.TestsComparatorViewModel.RefreshAvailableVersions();
+        }
+
+        private void CreateIndexesAndTransformers(IDocumentStore documentStore)
+        {
+            new RavenTestResultsByNameAverage().Execute(docStore);
         }
     }
 }

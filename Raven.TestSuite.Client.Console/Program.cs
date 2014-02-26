@@ -115,11 +115,13 @@ namespace Raven.TestSuite.Client.Console
                                       testRun.RavenVersion, testRun.StartedAt.ToString(),
                                       testRun.StoppedAt.ToString()));
 
+                    session.Store(ravenTestRun);
+
                     foreach (var testResult in testRun.TestResults)
                     {
                         var ravenTestResult = RavenTestResult.FromTestResult(testResult);
+                        ravenTestResult.RavenTestRunId = ravenTestRun.Id;
                         session.Store(ravenTestResult);
-                        ravenTestRun.RavenTestResultIds.Add(ravenTestResult.Id);
 
                         Console.WriteLine("Test name: " + testResult.TestName);
                         if (testResult.IsSuccess)
@@ -133,7 +135,7 @@ namespace Raven.TestSuite.Client.Console
                         Console.WriteLine("Execution time: " + testResult.ExecutionTime);
                     }
 
-                    session.Store(ravenTestRun);
+                    
                     session.SaveChanges();
                 }
                 Console.WriteLine("===============================");
