@@ -58,8 +58,15 @@
         <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding ComparisonResults}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Test Name" Binding="{Binding Name}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Left Time" Binding="{Binding LeftExecutionTime}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Right Time" Binding="{Binding RightExecutionTime}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Left Time" Binding="{Binding LeftExecutionTime, TargetNullValue='n/a', StringFormat=mm\\:ss\\.fff}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Right Time" Binding="{Binding RightExecutionTime, TargetNullValue='n/a', StringFormat=mm\\:ss\\.fff}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Percentage" Binding="{Binding PercentageDifference}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding Color}"></Setter>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

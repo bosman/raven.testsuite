@@ -84,12 +84,12 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
                 var rightTestRunIds = RightTestRuns.Where(x => x.IsChecked).Select(x => x.Id).ToList();
 
                 var leftResults = session.Query<RavenTestResult>()
-                                     .Where(x => x.RavenTestRunId.In(leftTestRunIds))
+                                     .Where(x => x.RavenTestRunId.In(leftTestRunIds) && x.IsSuccess)
                                      .TransformWith<RavenTestResultsByNameAverage, RavenTestResultsByNameAverage.Result>()
                                      .ToList();
 
                 var rightResults = session.Query<RavenTestResult>()
-                                     .Where(x => x.RavenTestRunId.In(rightTestRunIds))
+                                     .Where(x => x.RavenTestRunId.In(rightTestRunIds) && x.IsSuccess)
                                      .TransformWith<RavenTestResultsByNameAverage, RavenTestResultsByNameAverage.Result>()
                                      .ToList();
 

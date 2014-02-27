@@ -14,7 +14,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
         {
             public string TestName { get; set; }
 
-            public TimeSpan ExecutionTime { get; set; }
+            public TimeSpan? ExecutionTime { get; set; }
         }
 
         public RavenTestResultsByNameAverage()
