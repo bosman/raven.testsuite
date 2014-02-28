@@ -8,7 +8,7 @@ using Raven.TestSuite.Storage;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
 {
-    public class RavenTestRunViewModel : INotifyPropertyChanged
+    public class RavenTestRunViewModel : BaseViewModel
     {
         public static RavenTestRunViewModel FromRavenTestRun(RavenTestRun ravenTestRun)
         {
@@ -37,17 +37,9 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
                 if (isChecked != value)
                 {
                     isChecked = value;
-                    OnPropertyChanged("IsChecked");
+                    RaisePropertyChanged(() => IsChecked);
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

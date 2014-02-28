@@ -12,11 +12,11 @@ using Raven.TestSuite.Storage;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage
 {
-    public class TestsStorageViewModel : INotifyPropertyChanged
+    public class TestsStorageViewModel : BaseViewModel
     {
-        private RavenTestRun selectedTestRun;
+        private StoredTestRunViewModel selectedTestRun;
 
-        public RavenTestRun SelectedTestRun
+        public StoredTestRunViewModel SelectedTestRun
         {
             get { return selectedTestRun; }
             set
@@ -24,7 +24,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage
                 if (selectedTestRun != value)
                 {
                     selectedTestRun = value;
-                    OnPropertyChanged("SelectedTestRun");
+                    RaisePropertyChanged(() => SelectedTestRun);
                     if (selectedTestRun != null)
                     {
                         OnSearchTestResults(selectedTestRun.Id);
@@ -35,29 +35,33 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage
 
         public IDocumentStore DocumentStore { get; set; }
 
-        public ObservableCollection<RavenTestRun> RavenTestRuns { get; set; }
+        public ObservableCollection<StoredTestRunViewModel> RavenTestRuns { get; set; }
 
         public ObservableCollection<RavenTestResult> RavenTestResults { get; set; }
 
-        public ICommand SearchTestRunsCommand { get; set; }
+        public ICommand RefreshTestRunsCommand { get; set; }
 
         public TestsStorageViewModel()
         {
-            RavenTestRuns = new ObservableCollection<RavenTestRun>();
+            RavenTestRuns = new ObservableCollection<StoredTestRunViewModel>();
             RavenTestResults = new ObservableCollection<RavenTestResult>();
-            SearchTestRunsCommand = new DelegateCommand(OnSearchTestRuns);
+            RefreshTestRunsCommand = new DelegateCommand(OnSearchTestRuns);
         }
 
-        public void OnSearchTestRuns()
+        private void OnSearchTestRuns()
         {
             using (var session = DocumentStore.OpenSession())
             {
                 RavenTestRuns.Clear();
-                session.Query<RavenTestRun>().ToList().ForEach(x => RavenTestRuns.Add(x));
+                session.Query<RavenTestRun>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).ToList().ForEach(x => RavenTestRuns.Add(new StoredTestRunViewModel(x)));
+            }
+            if (!RavenTestRuns.Contains(SelectedTestRun))
+            {
+                SelectedTestRun = null;
             }
         }
 
-        public void OnSearchTestResults(int testRunId)
+        private void OnSearchTestResults(int testRunId)
         {
             using (var session = DocumentStore.OpenSession())
             {
@@ -65,14 +69,6 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsStorage
                 var testResults = session.Query<RavenTestResult>().Where(x => x.RavenTestRunId == testRunId).ToList();
                 testResults.ForEach(r => RavenTestResults.Add(r));
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

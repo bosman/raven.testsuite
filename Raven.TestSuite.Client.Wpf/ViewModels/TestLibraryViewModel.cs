@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Raven.Client;
 using Raven.TestSuite.Client.Wpf.Helpers;
 using Raven.TestSuite.Client.Wpf.Models;
@@ -21,6 +22,17 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
     public class TestLibraryViewModel : INotifyPropertyChanged
     {
         private static RavenTestRunner runner;
+ 
+        public event EventHandler TestRunsStored;
+
+        protected virtual void OnTestRunsStored()
+        {
+            EventHandler handler = TestRunsStored;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
 
         public IDocumentStore DocumentStore { get; set; }
 
@@ -161,6 +173,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             if (task.IsCompleted)
             {
                 StoreResults(task.Result);
+                OnTestRunsStored();
             }
             this.logMessages.Add("Finished");
             CommandManager.InvalidateRequerySuggested();
@@ -227,10 +240,6 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             var testResultProgressReport = progressReport as TestResultProgressReport;
             if (testResultProgressReport != null)
             {
-                foreach (var testCategory in TestCategories)
-                {
-                    testCategory.UpdateLastTestResult(testResultProgressReport.TestResult);
-                }
                 currentTestResults.Add(CurrentTestResultViewModel.FromTestResultProgressReport(testResultProgressReport));
             }
             this.logMessages.Add(progressReport.Message);

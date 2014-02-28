@@ -14,14 +14,13 @@ using Raven.TestSuite.Client.Wpf.Helpers.Extensions;
 
 namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
 {
-    public class TestsComparatorViewModel : INotifyPropertyChanged
+    public class TestsComparatorViewModel : BaseViewModel
     {
         public IDocumentStore DocumentStore { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public ObservableCollection<RavenVersionViewModel> AvailableVersions { get; set; }
 
+        public ICommand RefreshAvailableVersionsCommand { get; set; }
         public ICommand SearchCommand { get; set; }
 
         private RavenVersionViewModel leftSelectedVersion;
@@ -33,7 +32,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
                 if (leftSelectedVersion != value)
                 {
                     leftSelectedVersion = value;
-                    OnPropertyChanged("LeftSelectedVersion");
+                    RaisePropertyChanged(() => LeftSelectedVersion);
                     if (leftSelectedVersion != null)
                     {
                         RefreshLeftTestRuns(leftSelectedVersion.VersionName);
@@ -51,7 +50,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
                 if (rightSelectedVersion != value)
                 {
                     rightSelectedVersion = value;
-                    OnPropertyChanged("RightSelectedVersion");
+                    RaisePropertyChanged(() => RightSelectedVersion);
                     if (rightSelectedVersion != null)
                     {
                         RefreshRightTestRuns(rightSelectedVersion.VersionName);
@@ -73,6 +72,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
             RightTestRuns = new ObservableCollection<RavenTestRunViewModel>();
             ComparisonResults = new ObservableCollection<TestComparisonItemViewModel>();
             SearchCommand = new DelegateCommand(Search);
+            RefreshAvailableVersionsCommand = new DelegateCommand(OnRefreshAvailableVersions);
         }
 
         private void Search()
@@ -112,6 +112,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
             {
                 LeftTestRuns.Clear();
                 session.Query<RavenTestRun>()
+                       .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                        .Where(x => x.RavenVersion == ravenVersion)
                        .ToList()
                        .ForEach(x => LeftTestRuns.Add(RavenTestRunViewModel.FromRavenTestRun(x)));
@@ -124,29 +125,33 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
             {
                 RightTestRuns.Clear();
                 session.Query<RavenTestRun>()
+                       .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                        .Where(x => x.RavenVersion == ravenVersion)
                        .ToList()
                        .ForEach(x => RightTestRuns.Add(RavenTestRunViewModel.FromRavenTestRun(x)));
             }
         }
 
-        public void RefreshAvailableVersions()
+        private void OnRefreshAvailableVersions()
         {
             AvailableVersions.Clear();
             using (var session = DocumentStore.OpenSession())
             {
                 session.Query<RavenTestRun>()
+                       .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                        .Select(x => x.RavenVersion)
                        .Distinct()
                        .ToList()
                        .ForEach(x => AvailableVersions.Add(new RavenVersionViewModel { VersionName = x }));
             }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (!AvailableVersions.Contains(LeftSelectedVersion))
+            {
+                LeftSelectedVersion = null;
+            }
+            if (!AvailableVersions.Contains(RightSelectedVersion))
+            {
+                RightSelectedVersion = null;
+            }
         }
     }
 }

@@ -32,15 +32,38 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             }.Initialize();
             CreateIndexesAndTransformers(docStore);
             this.TestLibraryViewModel = new TestLibraryViewModel {DocumentStore = this.docStore};
+            this.TestLibraryViewModel.TestRunsStored += TestLibraryViewModel_InsertedItemsToDb;
             this.TestsStorageViewModel = new TestsStorageViewModel {DocumentStore = this.docStore};
             this.TestsComparatorViewModel = new TestsComparatorViewModel {DocumentStore = this.docStore};
-            this.TestsStorageViewModel.OnSearchTestRuns();
-            this.TestsComparatorViewModel.RefreshAvailableVersions();
+            RunRefreshCommandsInStorage();
+            RunRefreshCommandsInComparator();
+        }
+
+        protected void TestLibraryViewModel_InsertedItemsToDb(object sender, EventArgs e)
+        {
+            RunRefreshCommandsInStorage();
+            RunRefreshCommandsInComparator();
         }
 
         private void CreateIndexesAndTransformers(IDocumentStore documentStore)
         {
             new RavenTestResultsByNameAverage().Execute(docStore);
+        }
+
+        private void RunRefreshCommandsInStorage()
+        {
+            if (TestsStorageViewModel.RefreshTestRunsCommand.CanExecute(null))
+            {
+                this.TestsStorageViewModel.RefreshTestRunsCommand.Execute(null);
+            }
+        }
+
+        private void RunRefreshCommandsInComparator()
+        {
+            if (TestsComparatorViewModel.RefreshAvailableVersionsCommand.CanExecute(null))
+            {
+                this.TestsComparatorViewModel.RefreshAvailableVersionsCommand.Execute(null);
+            }
         }
     }
 }

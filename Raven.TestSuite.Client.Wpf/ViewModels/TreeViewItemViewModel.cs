@@ -49,14 +49,6 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
             }
         }
 
-        public virtual void UpdateLastTestResult(TestResult testResult)
-        {
-            foreach (var child in Children)
-            {
-                child.UpdateLastTestResult(testResult);
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

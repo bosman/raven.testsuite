@@ -19,7 +19,7 @@
 
         <StackPanel Grid.Column="0">
             <TextBlock Text="Test Runs"></TextBlock>
-            <Button Content="Search" Command="{Binding SearchTestRunsCommand}"></Button>
+            <Button Content="Search" Command="{Binding RefreshTestRunsCommand}"></Button>
             <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding RavenTestRuns}"
                       SelectedItem="{Binding SelectedTestRun, Mode=TwoWay}" SelectionMode="Single" SelectionUnit="FullRow">
                 <DataGrid.Columns>
@@ -27,6 +27,7 @@
                     <DataGridTextColumn Header="Wrapper Version" Binding="{Binding WrapperVersion}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Started At" Binding="{Binding StartedAt}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Stopped At" Binding="{Binding StoppedAt}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="DB Server Startup Time" Binding="{Binding DbServerStartupTime, StringFormat=ss\\.fffm, TargetNullValue='n/a'}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

@@ -28,39 +28,5 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels
         {
             get { return test.FullName; }
         }
-
-        public TestResult LastTestResult
-        {
-            get { return test.LastTestResult; }
-        }
-
-        public TestStatus TestStatus
-        {
-            get
-            {
-                return test.LastTestResult != null
-                           ? test.LastTestResult.IsSuccess ? TestStatus.LastTestPassed : TestStatus.LastTestFailed
-                           : TestStatus.Unknown;
-            }
-        }
-
-        public string IsLastTestPassed
-        {
-            get
-            {
-                return test.LastTestResult != null ? test.LastTestResult.IsSuccess ? "Passed" : "Failed" : "?" ;
-            }
-        }
-
-        public override void UpdateLastTestResult(TestResult testResult)
-        {
-            if (testResult.TestName == TestFullName)
-            {
-                test.LastTestResult = testResult;
-                this.OnPropertyChanged("LastTestResult");
-                this.OnPropertyChanged("IsLastTestPassed");
-                this.OnPropertyChanged("TestStatus");
-            }
-        }
     }
 }

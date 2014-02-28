@@ -9,7 +9,7 @@ namespace Raven.TestSuite.Client.Wpf.Helpers
         protected void RaisePropertyChanged<T>(Expression<Func<T>> action)
         {
             var propertyName = GetPropertyName(action);
-            RaisePropertyChanged(propertyName);
+            OnPropertyChanged(propertyName);
         }
 
         private static string GetPropertyName<T>(Expression<Func<T>> action)
@@ -19,12 +19,12 @@ namespace Raven.TestSuite.Client.Wpf.Helpers
             return propertyName;
         }
 
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

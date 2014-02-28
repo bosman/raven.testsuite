@@ -17,6 +17,7 @@ namespace Raven.TestSuite.Storage
                     WrapperVersion = testRun.WrapperVersion,
                     StartedAt = testRun.StartedAt,
                     StoppedAt = testRun.StoppedAt,
+                    DbServerStartupTime = testRun.DbServerStartupTime,
                     ExceptionMessage = testRun.Exception != null ? testRun.Exception.Message : string.Empty,
                     ExceptionType = testRun.Exception != null ? testRun.Exception.GetType() : null,
                 };
@@ -31,6 +32,8 @@ namespace Raven.TestSuite.Storage
         public DateTime StartedAt { get; set; }
 
         public DateTime StoppedAt { get; set; }
+
+        public TimeSpan DbServerStartupTime { get; set; }
 
         public string ExceptionMessage { get; set; }
 

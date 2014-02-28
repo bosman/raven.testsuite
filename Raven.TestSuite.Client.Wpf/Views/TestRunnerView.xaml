@@ -15,7 +15,6 @@
         <DockPanel DockPanel.Dock="Bottom" Height="70">
             <Button DockPanel.Dock="Left" Margin="3" Content="Run Tests" HorizontalAlignment="Left" Command="{Binding RunTestsCommand}" />
             <Button DockPanel.Dock="Left" Margin="3" Content="Stop Tests" HorizontalAlignment="Left" Command="{Binding StopTestsCommand}" />
-
             <ListBox Margin="5,0,5,5" VerticalAlignment="Bottom" Height="60" ItemsSource="{Binding LogMessages}">
             </ListBox>
         </DockPanel>
@@ -54,21 +53,6 @@
                             <StackPanel Orientation="Horizontal">
                                 <CheckBox Margin="1" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
                                 <TextBlock Margin="1" Text="{Binding TestName}"></TextBlock>
-                                <Image Width="12" Height="12">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
-                                            <Setter Property="Source" Value="../Images/question_mark_8x16.png"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding TestStatus}" Value="LastTestPassed">
-                                                    <Setter Property="Source" Value="../Images/check_16x13.png"></Setter>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding TestStatus}" Value="LastTestFailed">
-                                                    <Setter Property="Source" Value="../Images/x_14x14.png"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
                             </StackPanel>
                         </DataTemplate>
                     </TreeView.Resources>
