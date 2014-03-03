@@ -80,6 +80,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
+      <HintPath>..\packages\WPFToolkit.DataVisualization.3.5.50211.1\lib\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit">
+      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit">
+      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -94,6 +103,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit">
+      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\WPFToolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -103,6 +115,8 @@
     <Compile Include="Helpers\Extensions\LinqExtensions.cs" />
     <Compile Include="Models\TestGroupModel.cs" />
     <Compile Include="Models\TestModel.cs" />
+    <Compile Include="ViewModels\Graphs\TestNameAndTimeViewModel.cs" />
+    <Compile Include="ViewModels\Graphs\TestsComparisonViewModel.cs" />
     <Compile Include="ViewModels\TestRunner\CurrentTestResultViewModel.cs" />
     <Compile Include="ViewModels\TestRunner\VersionFolderViewModel.cs" />
     <Compile Include="ViewModels\TestsComparator\RavenTestResultsByNameAverage.cs" />
@@ -112,6 +126,9 @@
     <Compile Include="ViewModels\TestsComparator\TestsComparatorViewModel.cs" />
     <Compile Include="ViewModels\TestsStorage\StoredTestRunViewModel.cs" />
     <Compile Include="ViewModels\TestsStorage\TestsStorageViewModel.cs" />
+    <Compile Include="Views\Graphs\TestsComparison.xaml.cs">
+      <DependentUpon>TestsComparison.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestRunnerView.xaml.cs">
       <DependentUpon>TestRunnerView.xaml</DependentUpon>
     </Compile>
@@ -130,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\StylesResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Graphs\TestsComparison.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

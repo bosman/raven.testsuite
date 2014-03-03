@@ -1,0 +1,23 @@
+﻿<Window x:Class="Raven.TestSuite.Client.Wpf.Views.Graphs.TestsComparison"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:graphsViewModels="clr-namespace:Raven.TestSuite.Client.Wpf.ViewModels.Graphs"
+        Title="TestsComparison" Height="300" Width="300" WindowState="Maximized">
+    <Window.DataContext>
+        <graphsViewModels:TestsComparisonViewModel></graphsViewModels:TestsComparisonViewModel>
+    </Window.DataContext>
+    <Grid>
+        <TextBlock Text="Comparison"></TextBlock>
+        <chartingToolkit:Chart>
+            
+            <chartingToolkit:Chart.Axes>
+                <chartingToolkit:LinearAxis Orientation="X" Title="Execution time (miliseconds)" ></chartingToolkit:LinearAxis>
+                <chartingToolkit:CategoryAxis Orientation="Y" Title="Test Name" ></chartingToolkit:CategoryAxis>
+            </chartingToolkit:Chart.Axes>
+
+            <chartingToolkit:BarSeries Name="Left" Title="{Binding LeftVersion}" ItemsSource="{Binding LeftData}" DependentValueBinding="{Binding TimeSpanInMiliseconds}" IndependentValueBinding="{Binding TestName}" ></chartingToolkit:BarSeries>
+            <chartingToolkit:BarSeries Name="Right" Title="{Binding RightVersion}" ItemsSource="{Binding RightData}" DependentValueBinding="{Binding TimeSpanInMiliseconds}" IndependentValueBinding="{Binding TestName}"></chartingToolkit:BarSeries>
+        </chartingToolkit:Chart>
+    </Grid>
+</Window>

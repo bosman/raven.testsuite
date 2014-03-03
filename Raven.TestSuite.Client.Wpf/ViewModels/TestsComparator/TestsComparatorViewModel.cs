@@ -5,9 +5,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Raven.Client;
 using Raven.TestSuite.Client.Wpf.Helpers;
+using Raven.TestSuite.Client.Wpf.ViewModels.Graphs;
+using Raven.TestSuite.Client.Wpf.Views.Graphs;
 using Raven.TestSuite.Storage;
 using Raven.Client.Linq;
 using Raven.TestSuite.Client.Wpf.Helpers.Extensions;
@@ -22,6 +25,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
 
         public ICommand RefreshAvailableVersionsCommand { get; set; }
         public ICommand SearchCommand { get; set; }
+        public ICommand ShowResultsAsGraph { get; set; }
 
         private RavenVersionViewModel leftSelectedVersion;
         public RavenVersionViewModel LeftSelectedVersion
@@ -73,6 +77,7 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
             ComparisonResults = new ObservableCollection<TestComparisonItemViewModel>();
             SearchCommand = new DelegateCommand(Search);
             RefreshAvailableVersionsCommand = new DelegateCommand(OnRefreshAvailableVersions);
+            ShowResultsAsGraph = new DelegateCommand(OnShowResultsAsGraph);
         }
 
         private void Search()
@@ -130,6 +135,40 @@ namespace Raven.TestSuite.Client.Wpf.ViewModels.TestsComparator
                        .ToList()
                        .ForEach(x => RightTestRuns.Add(RavenTestRunViewModel.FromRavenTestRun(x)));
             }
+        }
+
+        private void OnShowResultsAsGraph()
+        {
+            var window = new TestsComparison { Owner = Application.Current.MainWindow };
+            var leftData =
+                ComparisonResults.Where(x => x.LeftExecutionTime.HasValue)
+                                 .Select(
+                                     x =>
+                                     new TestNameAndTimeViewModel
+                                         {
+                                             TestName = x.Name,
+                                             ExecutionTime = x.LeftExecutionTime.Value
+                                         })
+                                 .ToList();
+            var rightData =
+                ComparisonResults.Where(x => x.RightExecutionTime.HasValue)
+                                 .Select(
+                                     x =>
+                                     new TestNameAndTimeViewModel
+                                     {
+                                         TestName = x.Name,
+                                         ExecutionTime = x.RightExecutionTime.Value
+                                     })
+                                 .ToList();
+            var viewModel = new TestsComparisonViewModel
+                {
+                    LeftData = new ObservableCollection<TestNameAndTimeViewModel>(leftData),
+                    RightData = new ObservableCollection<TestNameAndTimeViewModel>(rightData),
+                    LeftVersion = string.Format("Left ({0})", LeftSelectedVersion.VersionName),
+                    RightVersion = string.Format("Right ({0})", RightSelectedVersion.VersionName)
+                };
+            window.DataContext = viewModel;
+            window.Show();
         }
 
         private void OnRefreshAvailableVersions()

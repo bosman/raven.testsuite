@@ -29,7 +29,13 @@
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Started At" Binding="{Binding StartedAt}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Stopped At" Binding="{Binding StoppedAt}"></DataGridTextColumn>
-                            <DataGridCheckBoxColumn Header="Include" Binding="{Binding IsChecked, Mode=TwoWay}"></DataGridCheckBoxColumn>
+                            <DataGridTemplateColumn Header="Include" SortMemberPath="IsChecked">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
@@ -47,14 +53,24 @@
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Started At" Binding="{Binding StartedAt}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Stopped At" Binding="{Binding StoppedAt}"></DataGridTextColumn>
-                            <DataGridCheckBoxColumn Header="Include" Binding="{Binding IsChecked, Mode=TwoWay}"></DataGridCheckBoxColumn>
+                            <DataGridTemplateColumn Header="Include" SortMemberPath="IsChecked">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
             </DockPanel>
         </Grid>
 
-        <Button Content="Search" Command="{Binding SearchCommand}"></Button>
+        <StackPanel DockPanel.Dock="Top">
+            <Button Content="Search" Command="{Binding SearchCommand}"></Button>
+            <Button Content="Graph" Command="{Binding ShowResultsAsGraph}"></Button>
+        </StackPanel>
+        
         <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding ComparisonResults}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Test Name" Binding="{Binding Name}"></DataGridTextColumn>
