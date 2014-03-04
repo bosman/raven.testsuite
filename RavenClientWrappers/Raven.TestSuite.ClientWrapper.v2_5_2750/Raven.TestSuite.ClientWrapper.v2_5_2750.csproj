@@ -79,6 +79,8 @@
     <Compile Include="PutResultWrapper.cs" />
     <Compile Include="CommandLineTools\ToolsRunner.cs" />
     <Compile Include="ServerErrorWrapper.cs" />
+    <Compile Include="SpatialOptionsWrapper.cs" />
+    <Compile Include="SuggestionOptionsWrapper.cs" />
     <Compile Include="TriggerInfoWrapper.cs" />
     <Compile Include="Wrapper.cs" />
   </ItemGroup>

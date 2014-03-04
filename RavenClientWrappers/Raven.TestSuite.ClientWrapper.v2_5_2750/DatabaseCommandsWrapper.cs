@@ -114,7 +114,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IIndexDefinitionWrapper[] GetIndexes(int start, int pageSize)
         {
-            throw new NotImplementedException();
+            return inner.GetIndexes(start, pageSize).Select(x => x.Wrap()).ToArray();
         }
 
         public void ResetIndex(string name)
@@ -124,7 +124,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IIndexDefinitionWrapper GetIndex(string name)
         {
-            throw new NotImplementedException();
+            return inner.GetIndex(name).Wrap();
         }
 
         public string PutIndex(string name, IIndexDefinitionWrapper indexDef)
