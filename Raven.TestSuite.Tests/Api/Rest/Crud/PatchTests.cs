@@ -1,10 +1,13 @@
-﻿namespace Raven.TestSuite.Tests.Api.Rest.Crud
+﻿using System;
+
+namespace Raven.TestSuite.Tests.Api.Rest.Crud
 {
     using Raven.TestSuite.Common.Abstractions;
     using Raven.TestSuite.Common.WrapperInterfaces;
     using Raven.TestSuite.Tests.Common.Attributes;
     using Xunit;
 
+    [Serializable]
     [RequiresFreshNorthwindDatabaseAttribute]
     public class PatchTests : BaseRestApiTestGroup
     {

@@ -11,6 +11,7 @@ namespace Raven.TestSuite.Common
         public TestRun()
         {
             this.StartedAt = DateTime.Now;
+            TestResults = new List<TestResult>();
         }
 
         public string RavenVersion { get; set; }

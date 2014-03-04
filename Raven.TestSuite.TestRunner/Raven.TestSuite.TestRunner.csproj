@@ -54,6 +54,7 @@
     <Compile Include="RavenTestRunner.cs" />
     <Compile Include="RavenTestsGroup.cs" />
     <Compile Include="TestResultProgressReport.cs" />
+    <Compile Include="TestRunnerExceptionProgressReport.cs" />
     <Compile Include="TestRunSetup.cs" />
     <Compile Include="VersionPicker.cs" />
   </ItemGroup>

@@ -4,7 +4,9 @@
     using Raven.TestSuite.Common.WrapperInterfaces;
     using Raven.TestSuite.Tests.Common.Attributes;
     using Xunit;
+    using System;
 
+    [Serializable]
     [RequiresFreshNorthwindDatabaseAttribute]
     public class GetTests : BaseRestApiTestGroup
     {

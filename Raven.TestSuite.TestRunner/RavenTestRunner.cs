@@ -43,6 +43,11 @@ namespace Raven.TestSuite.TestRunner
                             {
                                 throw;
                             }
+                            progress.Report(new TestRunnerExceptionProgressReport
+                            {
+                                Exception = ex,
+                                Message = "Exception in TestRunner: " + ex.Message
+                            });
                         }
                         finally
                         {
