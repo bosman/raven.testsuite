@@ -2,6 +2,7 @@
 {
     using Raven.TestSuite.Common.Abstractions;
     using Raven.TestSuite.Common.WrapperInterfaces;
+    using Raven.TestSuite.Tests.Common;
     using Raven.TestSuite.Tests.Common.Attributes;
     using Xunit;
     using System;
@@ -22,7 +23,7 @@
             {
                 var response = env.RawGet(Constants.DbUrl.Northwind + "/docs/NotExisting/1");
                 Assert.Null(response.RavenJTokenWrapper);
-                Assert.Equal((int)response.RawResponse.StatusCode, 404);
+                Assert.Equal(404, (int)response.RawResponse.StatusCode);
             });
         }
 
