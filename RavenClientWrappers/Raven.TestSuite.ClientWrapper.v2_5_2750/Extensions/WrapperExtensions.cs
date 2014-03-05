@@ -215,6 +215,20 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             }
         }
 
+        public static T ConvertEnum<T>(IConvertible source)
+            where T : IConvertible
+        {
+            if (!typeof(T).IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+            if (!source.GetType().IsEnum)
+            {
+                throw new ArgumentException("source must be an enumerated type");
+            }
+            return (T)Enum.Parse(typeof(T), source.ToString());
+        }
+
         public static FieldTermVectorWrapper Wrap(this FieldTermVector unwrapped)
         {
             switch (unwrapped)
@@ -300,23 +314,24 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static StringDistanceTypesWrapper Wrap(this StringDistanceTypes unwrapped)
+        public static SpatialOptions Unwrap(this ISpatialOptionsWrapper wrapped)
         {
-            switch (unwrapped)
+            if (wrapped != null)
             {
-                case StringDistanceTypes.Default:
-                    return StringDistanceTypesWrapper.Default;
-                case StringDistanceTypes.JaroWinkler:
-                    return StringDistanceTypesWrapper.JaroWinkler;
-                case StringDistanceTypes.Levenshtein:
-                    return StringDistanceTypesWrapper.Levenshtein;
-                case StringDistanceTypes.NGram:
-                    return StringDistanceTypesWrapper.NGram;
-                case StringDistanceTypes.None:
-                    return StringDistanceTypesWrapper.None;
-                default:
-                    throw new ArgumentException("Unknown StringDistanceTypes : " + unwrapped.ToString());
+                var unwrapped = new SpatialOptions
+                    {
+                        MaxTreeLevel = wrapped.MaxTreeLevel,
+                        MaxX = wrapped.MaxX,
+                        MaxY = wrapped.MaxY,
+                        MinX = wrapped.MinX,
+                        MinY = wrapped.MinY,
+                        Strategy = ConvertEnum<SpatialSearchStrategy>(wrapped.Strategy),
+                        Type = ConvertEnum<SpatialFieldType>(wrapped.Type),
+                        Units = ConvertEnum<SpatialUnits>(wrapped.Units)
+                    };
+                return unwrapped;
             }
+            return null;
         }
 
         public static ISuggestionOptionsWrapper Wrap(this SuggestionOptions unwrapped)
@@ -326,9 +341,23 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                 var wrapper = new SuggestionOptionsWrapper
                     {
                         Accuracy = unwrapped.Accuracy,
-                        Distance = unwrapped.Distance.Wrap()
+                        Distance = ConvertEnum<StringDistanceTypesWrapper>(unwrapped.Distance)
                     };
                 return wrapper;
+            }
+            return null;
+        }
+
+        public static SuggestionOptions Unwrap(this ISuggestionOptionsWrapper wrapped)
+        {
+            if (wrapped != null)
+            {
+                var unwrapped = new SuggestionOptions
+                    {
+                        Accuracy = wrapped.Accuracy,
+                        Distance = ConvertEnum<StringDistanceTypes>(wrapped.Distance)
+                    };
+                return unwrapped;
             }
             return null;
         }
@@ -337,7 +366,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
         {
             if (unwrapped != null)
             {
-                var wrapper = new IndexDefinitionWrapper
+                var wrapped = new IndexDefinitionWrapper
                     {
                         Name = unwrapped.Name,
                         Maps = unwrapped.Maps,
@@ -353,6 +382,32 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                         SpatialIndexes = unwrapped.SpatialIndexes.ToDictionary(x => x.Key, y => y.Value.Wrap()),
                         InternalFieldsMapping = unwrapped.InternalFieldsMapping.ToDictionary(x => x.Key, y => y.Value)
                     };
+                return wrapped;
+            }
+            return null;
+        }
+
+        public static IndexDefinition Unwrap(this IIndexDefinitionWrapper wrapped)
+        {
+            if (wrapped != null)
+            {
+                var unwrapped = new IndexDefinition
+                    {
+                        Name = wrapped.Name,
+                        Maps = wrapped.Maps,
+                        Reduce = wrapped.Reduce,
+                        IsCompiled = wrapped.IsCompiled,
+                        Stores = wrapped.Stores.ToDictionary(x => x.Key, y => ConvertEnum<FieldStorage>(y.Value)),
+                        Indexes = wrapped.Indexes.ToDictionary(x => x.Key, y => ConvertEnum<FieldIndexing>(y.Value)),
+                        SortOptions = wrapped.SortOptions.ToDictionary(x => x.Key, y => ConvertEnum<SortOptions>(y.Value)),
+                        Analyzers = wrapped.Analyzers.ToDictionary(x => x.Key, y => y.Value),
+                        Fields = new List<string>(wrapped.Fields),
+                        Suggestions = wrapped.Suggestions.ToDictionary(x => x.Key, y => y.Value.Unwrap()),
+                        TermVectors = wrapped.TermVectors.ToDictionary(x => x.Key, y => ConvertEnum<FieldTermVector>(y.Value)),
+                        SpatialIndexes = wrapped.SpatialIndexes.ToDictionary(x => x.Key, y => y.Value.Unwrap()),
+                        InternalFieldsMapping = wrapped.InternalFieldsMapping.ToDictionary(x => x.Key, y => y.Value)
+                    };
+                return unwrapped;
             }
             return null;
         }

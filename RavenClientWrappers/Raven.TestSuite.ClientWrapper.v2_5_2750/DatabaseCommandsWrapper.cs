@@ -129,7 +129,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public string PutIndex(string name, IIndexDefinitionWrapper indexDef)
         {
-            throw new NotImplementedException();
+            return inner.PutIndex(name, indexDef.Unwrap());
         }
 
         public string PutTransformer(string name, ITransformerDefinitionWrapper indexDef)
@@ -139,7 +139,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public string PutIndex(string name, IIndexDefinitionWrapper indexDef, bool overwrite)
         {
-            throw new NotImplementedException();
+            return inner.PutIndex(name, indexDef.Unwrap(), overwrite);
         }
 
         public string PutIndex<TDocument, TReduceResult>(string name, IIndexDefinitionBuilderWrapper<TDocument, TReduceResult> indexDef)
