@@ -198,23 +198,6 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static FieldIndexingWrapper Wrap(this FieldIndexing fieldIndexing)
-        {
-            switch (fieldIndexing)
-            {
-                case FieldIndexing.Analyzed:
-                    return FieldIndexingWrapper.Analyzed;
-                case FieldIndexing.Default:
-                    return FieldIndexingWrapper.Default;
-                case FieldIndexing.No:
-                    return FieldIndexingWrapper.No;
-                case FieldIndexing.NotAnalyzed:
-                    return FieldIndexingWrapper.NotAnalyzed;
-                default:
-                    throw new ArgumentException("Unknown FieldIndexing : " + fieldIndexing.ToString());
-            }
-        }
-
         public static T ConvertEnum<T>(IConvertible source)
             where T : IConvertible
         {
@@ -229,69 +212,9 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return (T)Enum.Parse(typeof(T), source.ToString());
         }
 
-        public static FieldTermVectorWrapper Wrap(this FieldTermVector unwrapped)
-        {
-            switch (unwrapped)
-            {
-                case FieldTermVector.Yes:
-                    return FieldTermVectorWrapper.Yes;
-                case FieldTermVector.WithPositionsAndOffsets:
-                    return FieldTermVectorWrapper.WithPositionsAndOffsets;
-                case FieldTermVector.WithPositions:
-                    return FieldTermVectorWrapper.WithPositions;
-                case FieldTermVector.WithOffsets:
-                    return FieldTermVectorWrapper.WithOffsets;
-                case FieldTermVector.No:
-                    return FieldTermVectorWrapper.No;
-                default:
-                    throw new ArgumentException("Unknown FieldTermVector : " + unwrapped.ToString());
-            }
-        }
-
         public static SortOptionsWrapper Wrap(this SortOptions unwrapped)
         {
             return (SortOptionsWrapper) ((int) unwrapped);
-        }
-
-        public static SpatialSearchStrategyWrapper Wrap(this SpatialSearchStrategy unwrapped)
-        {
-            switch (unwrapped)
-            {
-                case SpatialSearchStrategy.BoundingBox:
-                    return SpatialSearchStrategyWrapper.BoundingBox;
-                case SpatialSearchStrategy.GeohashPrefixTree:
-                    return SpatialSearchStrategyWrapper.GeohashPrefixTree;
-                case SpatialSearchStrategy.QuadPrefixTree:
-                    return SpatialSearchStrategyWrapper.QuadPrefixTree;
-                default:
-                    throw new ArgumentException("Unknown SpatialSearchStrategy : " + unwrapped.ToString());
-            }
-        }
-
-        public static SpatialFieldTypeWrapper Wrap(this SpatialFieldType unwrapped)
-        {
-            switch (unwrapped)
-            {
-                case SpatialFieldType.Cartesian:
-                    return SpatialFieldTypeWrapper.Cartesian;
-                case SpatialFieldType.Geography:
-                    return SpatialFieldTypeWrapper.Geography;
-                default:
-                    throw new ArgumentException("Unknown SpatialFieldType : " + unwrapped.ToString());
-            }
-        }
-
-        public static SpatialUnitsWrapper Wrap(this SpatialUnits unwrapped)
-        {
-            switch (unwrapped)
-            {
-                case SpatialUnits.Kilometers:
-                    return SpatialUnitsWrapper.Kilometers;
-                case SpatialUnits.Miles:
-                    return SpatialUnitsWrapper.Miles;
-                default:
-                    throw new ArgumentException("Unknown SpatialUnits : " + unwrapped.ToString());
-            }
         }
 
         public static ISpatialOptionsWrapper Wrap(this SpatialOptions unwrapped)
@@ -305,9 +228,9 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                         MaxY = unwrapped.MaxY,
                         MinX = unwrapped.MinX,
                         MinY = unwrapped.MinY,
-                        Strategy = unwrapped.Strategy.Wrap(),
-                        Type = unwrapped.Type.Wrap(),
-                        Units = unwrapped.Units.Wrap()
+                        Strategy = ConvertEnum<SpatialSearchStrategyWrapper>(unwrapped.Strategy),
+                        Type = ConvertEnum<SpatialFieldTypeWrapper>(unwrapped.Type),
+                        Units = ConvertEnum<SpatialUnitsWrapper>(unwrapped.Units)
                     };
                 return wrapper;
             }
@@ -373,12 +296,12 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                         Reduce = unwrapped.Reduce,
                         IsCompiled = unwrapped.IsCompiled,
                         Stores = unwrapped.Stores.ToDictionary(x => x.Key, y => y.Value == FieldStorage.Yes ? FieldStorageWrapper.Yes : FieldStorageWrapper.No),
-                        Indexes = unwrapped.Indexes.ToDictionary(x => x.Key, y => y.Value.Wrap()),
+                        Indexes = unwrapped.Indexes.ToDictionary(x => x.Key, y => ConvertEnum<FieldIndexingWrapper>(y.Value)),
                         SortOptions = unwrapped.SortOptions.ToDictionary(x => x.Key, y => y.Value.Wrap()),
                         Analyzers = unwrapped.Analyzers.ToDictionary(x => x.Key, y => y.Value),
                         Fields = new List<string>(unwrapped.Fields),
                         Suggestions = unwrapped.Suggestions.ToDictionary(x => x.Key, y => y.Value.Wrap()),
-                        TermVectors = unwrapped.TermVectors.ToDictionary(x => x.Key, y => y.Value.Wrap()),
+                        TermVectors = unwrapped.TermVectors.ToDictionary(x => x.Key, y => ConvertEnum<FieldTermVectorWrapper>(y.Value)),
                         SpatialIndexes = unwrapped.SpatialIndexes.ToDictionary(x => x.Key, y => y.Value.Wrap()),
                         InternalFieldsMapping = unwrapped.InternalFieldsMapping.ToDictionary(x => x.Key, y => y.Value)
                     };
