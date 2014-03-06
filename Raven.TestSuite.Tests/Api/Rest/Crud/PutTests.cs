@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Raven.TestSuite.Tests.Api.Rest.Crud
+﻿namespace Raven.TestSuite.Tests.Api.Rest.Crud
 {
     using Raven.TestSuite.Common.Abstractions;
     using Raven.TestSuite.Common.WrapperInterfaces;
-    using Raven.TestSuite.Tests.Common;
     using Raven.TestSuite.Tests.Common.Attributes;
+    using System;
     using System.Collections.Generic;
     using Xunit;
 

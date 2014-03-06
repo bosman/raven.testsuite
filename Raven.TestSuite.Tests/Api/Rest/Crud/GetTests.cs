@@ -2,10 +2,9 @@
 {
     using Raven.TestSuite.Common.Abstractions;
     using Raven.TestSuite.Common.WrapperInterfaces;
-    using Raven.TestSuite.Tests.Common;
     using Raven.TestSuite.Tests.Common.Attributes;
-    using Xunit;
     using System;
+    using Xunit;
 
     [Serializable]
     [RequiresFreshNorthwindDatabaseAttribute]
