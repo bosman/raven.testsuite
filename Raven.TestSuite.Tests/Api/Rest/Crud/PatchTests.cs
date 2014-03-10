@@ -167,7 +167,7 @@
         }
 
         [RavenRestApiTest]
-        public void IncrementByNonIntegerValueReturnsError()
+        public void IncrementByNonIntegerValueReturnsErrorTest()
         {
             this.wrapper.Execute(env =>
             {
@@ -256,6 +256,96 @@
                 response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/9");
                 base.AssertNotNullGetResponse(response);
                 Assert.Equal(-1, response.RavenJTokenWrapper.SelectToken("Lines[1]").Value<int>("Quantity"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void NestedInsideNestedTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPut(Constants.DbUrl.Northwind + "/docs/tests/1",
+                    "{array: [{ nested: [{  name: 'testName' }] }]}");
+                Assert.NotNull(response.RavenJTokenWrapper);
+                Assert.NotNull(response.RavenJTokenWrapper.Value<string>("ETag"));
+                Assert.Equal("tests/1", response.RavenJTokenWrapper.Value<string>("Key"));
+                Assert.Equal(201, (int)response.RawResponse.StatusCode);
+
+                env.RawPatch(Constants.DbUrl.Northwind + "/docs/tests/1",
+                    "[{ Type: 'Modify', Name: 'array[0]', Nested: [{ Type: 'Modify', Name: 'nested[0]', Nested: [{ Type: 'Set', Name: 'name', Value: -1 }]}]}]");
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/tests/1");
+                base.AssertNotNullGetResponse(response);
+                Assert.Equal(-1, response.RavenJTokenWrapper.SelectToken("array[0].nested[0]").Value<int>("name"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void AddItemToNotExisitngArrayTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/9",
+                    "[{ Type: 'Add', Name: 'testArray', Value: {testAttribute: 'testValue'}}]");
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/9");
+                base.AssertNotNullGetResponse(response);
+                Assert.Equal("testValue", response.RavenJTokenWrapper.SelectToken("testArray[0]").Value<string>("testAttribute"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void AddItemToExisitngArray()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/10",
+                    "[{ Type: 'Add', Name: 'Lines', Value: {testAttribute: 'testValue'}}]");
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/10");
+                base.AssertNotNullGetResponse(response);
+
+                var lines = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Lines");
+                Assert.Equal("testValue", lines[lines.Length - 1].Value<string>("testAttribute"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void InsertIntoArrayAtGivenPositionTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/11",
+                    "[{ Type: 'Add', Name: 'Lines', Position: 0, Value: {testAttribute: 'testValue'}}]");
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/11");
+                base.AssertNotNullGetResponse(response);
+
+                var lines = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Lines");
+                Assert.Equal("testValue", lines[0].Value<string>("testAttribute"));
+
+                env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/11",
+                    "[{ Type: 'Add', Name: 'Lines', Position: 1, Value: {testAttribute: 'testValue'}}]");
+                base.AssertNotNullGetResponse(response);
+
+                lines = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Lines");
+                Assert.Equal("testValue", lines[1].Value<string>("testAttribute"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void RemoveFromArrayTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/12",
+                    "[{ Type: 'Remove', Name: 'Lines', Position: 1 }]");
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/12");
+                base.AssertNotNullGetResponse(response);
+
+                var lines = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Lines");
+                Assert.Equal(1, lines.Length);
+                Assert.Equal("products/21", lines[0].Value<string>("Product"));
+
+                response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/13",
+                    "[{ Type: 'Remove', Name: 'Lines', Position: 100 }]");
+                Assert.Equal(500, (int)response.RawResponse.StatusCode);
             });
         }
     }
