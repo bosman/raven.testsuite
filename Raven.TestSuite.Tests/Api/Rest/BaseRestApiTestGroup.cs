@@ -17,8 +17,8 @@ namespace Raven.TestSuite.Tests.Api.Rest
 
         protected void AssertNotNullGetResponse(RestResponse response)
         {
-            Assert.NotNull(response.RavenJTokenWrapper);
             Assert.Equal(200, (int)response.RawResponse.StatusCode);
+            Assert.NotNull(response.RavenJTokenWrapper);
         }
     }
 }

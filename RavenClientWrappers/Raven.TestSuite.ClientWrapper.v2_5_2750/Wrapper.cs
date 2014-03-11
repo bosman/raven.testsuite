@@ -98,10 +98,10 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         #region REST HTTP Api
 
-        public RestResponse RawGet(string url)
+        public RestResponse RawGet(string url, string query = null)
         {
             var client = new HttpClient();
-            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, CompleteUrlIfNeeded(url)));
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, CompleteUrlIfNeeded(url, query)));
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
@@ -143,10 +143,10 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawPost(string url, string content)
+        public RestResponse RawPost(string url, string content, string query = null)
         {
             var client = new HttpClient();
-            var task = client.PostAsync(CompleteUrlIfNeeded(url), new StringContent(content));
+            var task = client.PostAsync(CompleteUrlIfNeeded(url, query), new StringContent(content));
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
@@ -157,7 +157,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = null };
         }
 
-        private string CompleteUrlIfNeeded(string url)
+        private string CompleteUrlIfNeeded(string url, string query = null)
         {
             Uri result;
             if (Uri.TryCreate(url, UriKind.Absolute, out result))
@@ -165,6 +165,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
                 return result.ToString();
             }
             var ub = new UriBuilder("http", "localhost", databasePort, url);
+            ub.Query = query;
             return ub.ToString();
         }
 

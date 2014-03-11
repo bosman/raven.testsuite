@@ -57,10 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Rest\BaseRestApiTestGroup.cs" />
-    <Compile Include="Api\Rest\Crud\GetTests.cs" />
-    <Compile Include="Api\Rest\Crud\PatchTests.cs" />
-    <Compile Include="Api\Rest\Crud\PostTests.cs" />
-    <Compile Include="Api\Rest\Crud\PutTests.cs" />
+    <Compile Include="Api\Rest\GetTests.cs" />
+    <Compile Include="Api\Rest\MutlipleDocumentsOperationsTests.cs" />
+    <Compile Include="Api\Rest\PatchTests.cs" />
+    <Compile Include="Api\Rest\PostTests.cs" />
+    <Compile Include="Api\Rest\PutTests.cs" />
     <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
     <Compile Include="Common\Attributes\RavenRestApiTestAttribute.cs" />

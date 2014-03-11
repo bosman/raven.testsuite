@@ -16,13 +16,13 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         #region REST HTTP Api
 
-        RestResponse RawGet(string url);
+        RestResponse RawGet(string url, string query = null);
 
         RestResponse RawPatch(string url, string content, Dictionary<string, List<string>> headers = null);
 
         RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null);
 
-        RestResponse RawPost(string url, string content);
+        RestResponse RawPost(string url, string content, string query = null);
 
         RestResponse RawDelete(string url);
 
