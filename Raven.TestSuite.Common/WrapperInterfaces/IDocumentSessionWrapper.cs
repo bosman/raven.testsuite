@@ -10,6 +10,8 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
         //TODO: finish me
         IOrderedQueryable<T> Query<T>();
 
+        IOrderedQueryable<T> Query<T>(string indexName, bool isMapReduce = false);
+
         void Store(dynamic entity);
 
         T Load<T>(ValueType id);

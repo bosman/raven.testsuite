@@ -19,6 +19,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return this.documentSession.Query<T>();
         }
 
+        public IOrderedQueryable<T> Query<T>(string indexName, bool isMapReduce = false)
+        {
+            return this.documentSession.Query<T>(indexName, isMapReduce);
+        }
+
         public void Dispose()
         {
             if (this.documentSession != null)
