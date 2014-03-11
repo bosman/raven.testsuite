@@ -348,5 +348,64 @@
                 Assert.Equal(500, (int)response.RawResponse.StatusCode);
             });
         }
+
+        [RavenRestApiTest]
+        public void MatchAndMismatchEtagTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var headers = new Dictionary<string, List<string>>();
+                headers.Add("If-Match", new List<string>(new string[] { "01000000-0000-0001-0000-0000000000ED" }));
+
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/14",
+                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", headers);
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/14");
+                base.AssertNotNullGetResponse(response);
+                Assert.Equal("MatchAndMismatchEtagTest", response.RavenJTokenWrapper.Value<string>("Company"));
+
+                response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/15",
+                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", headers);
+                Assert.Equal(409, (int)response.RawResponse.StatusCode);
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/15");
+                base.AssertNotNullGetResponse(response);
+                Assert.NotEqual("MatchAndMismatchEtagTest", response.RavenJTokenWrapper.Value<string>("Company"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void SeveralOperationsInSingleRequestTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var operations = "[{ Type: 'Set', Name: 'Name', Value: 'Order16' }," +
+                    "{ Type: 'Unset', Name: 'Company' }," +
+                    "{ Type: 'Modify', Name: 'Lines[0]', Nested: [{ Type: 'Inc', Name: 'Quantity', Value: 1 }] }," +
+                    "{ Type: 'Copy', Name: 'ShipTo', Value: 'ShipToCopy' }," +
+                    "{ Type: 'Rename', Name: 'ShipVia', Value: 'ShipViaCopy' }]";
+
+                var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/16", operations);
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/16");
+                base.AssertNotNullGetResponse(response);
+
+                Assert.Equal("Order16", response.RavenJTokenWrapper.Value<string>("Name"));
+                Assert.Null(response.RavenJTokenWrapper.Value<string>("Company"));
+                Assert.Equal(61, response.RavenJTokenWrapper.SelectToken("Lines[0]").Value<float>("Quantity"));
+                Assert.Equal("Graz", response.RavenJTokenWrapper.SelectToken("ShipToCopy").Value<string>("City"));
+                Assert.Equal("shippers/3", response.RavenJTokenWrapper.Value<string>("ShipViaCopy"));
+                Assert.Null(response.RavenJTokenWrapper.Value<string>("ShipVia"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void DeleteTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawDelete(Constants.DbUrl.Northwind + "/docs/orders/17");
+                Assert.Equal(204, (int)response.RawResponse.StatusCode);
+                response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/17");
+                Assert.Equal(404, (int)response.RawResponse.StatusCode);
+            });
+        }
     }
 }

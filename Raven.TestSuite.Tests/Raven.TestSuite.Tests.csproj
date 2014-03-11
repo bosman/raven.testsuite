@@ -59,6 +59,7 @@
     <Compile Include="Api\Rest\BaseRestApiTestGroup.cs" />
     <Compile Include="Api\Rest\Crud\GetTests.cs" />
     <Compile Include="Api\Rest\Crud\PatchTests.cs" />
+    <Compile Include="Api\Rest\Crud\PostTests.cs" />
     <Compile Include="Api\Rest\Crud\PutTests.cs" />
     <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
