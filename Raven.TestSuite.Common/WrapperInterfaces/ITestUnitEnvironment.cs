@@ -18,7 +18,7 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawGet(string url);
 
-        RestResponse RawPatch(string url, string content);
+        RestResponse RawPatch(string url, string content, Dictionary<string, List<string>> headers = null);
 
         RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null);
 

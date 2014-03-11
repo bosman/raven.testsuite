@@ -105,9 +105,16 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawPatch(string url, string content)
+        public RestResponse RawPatch(string url, string content, Dictionary<string, List<string>> headers = null)
         {
             var request = new HttpRequestMessage();
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, List<string>> header in headers)
+                {
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
             request.Content = new StringContent(content);
             request.RequestUri = new Uri(CompleteUrlIfNeeded(url));
             request.Method = new HttpMethod("PATCH");
@@ -124,7 +131,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             {
                 foreach (KeyValuePair<string, List<string>> header in headers)
                 {
-                    request.Headers.Add(header.Key, header.Value);
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
             }
             request.Content = new StringContent(content);
