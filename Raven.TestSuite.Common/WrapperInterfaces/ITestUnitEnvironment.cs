@@ -18,13 +18,13 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawGet(string url, string query = null);
 
-        RestResponse RawPatch(string url, string content, Dictionary<string, List<string>> headers = null);
+        RestResponse RawPatch(string url, string content, string query = null, Dictionary<string, List<string>> headers = null);
 
         RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null);
 
         RestResponse RawPost(string url, string content, string query = null);
 
-        RestResponse RawDelete(string url);
+        RestResponse RawDelete(string url, string query = null);
 
         #endregion
 

@@ -358,13 +358,13 @@
                 headers.Add("If-Match", new List<string>(new string[] { "01000000-0000-0001-0000-0000000000ED" }));
 
                 var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/14",
-                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", headers);
+                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", "", headers);
                 response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/14");
                 base.AssertNotNullGetResponse(response);
                 Assert.Equal("MatchAndMismatchEtagTest", response.RavenJTokenWrapper.Value<string>("Company"));
 
                 response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/15",
-                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", headers);
+                    "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", "", headers);
                 Assert.Equal(409, (int)response.RawResponse.StatusCode);
                 response = env.RawGet(Constants.DbUrl.Northwind + "/docs/orders/15");
                 base.AssertNotNullGetResponse(response);

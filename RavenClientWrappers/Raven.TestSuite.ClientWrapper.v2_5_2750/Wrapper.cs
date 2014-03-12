@@ -105,7 +105,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawPatch(string url, string content, Dictionary<string, List<string>> headers = null)
+        public RestResponse RawPatch(string url, string content, string query = null, Dictionary<string, List<string>> headers = null)
         {
             var request = new HttpRequestMessage();
             if (headers != null)
@@ -116,7 +116,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
                 }
             }
             request.Content = new StringContent(content);
-            request.RequestUri = new Uri(CompleteUrlIfNeeded(url));
+            request.RequestUri = new Uri(CompleteUrlIfNeeded(url, query));
             request.Method = new HttpMethod("PATCH");
 
             var client = new HttpClient();
@@ -150,10 +150,10 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawDelete(string url)
+        public RestResponse RawDelete(string url, string query = null)
         {
             var client = new HttpClient();
-            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, CompleteUrlIfNeeded(url)));
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, CompleteUrlIfNeeded(url, query)));
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = null };
         }
 

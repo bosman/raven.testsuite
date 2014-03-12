@@ -3,6 +3,9 @@
     using System.Threading.Tasks;
     using System;
     using Raven.TestSuite.Common.WrapperInterfaces;
+    using Raven.TestSuite.Common.Abstractions;
+    using Raven.TestSuite.Common.Abstractions.Json.Linq;
+    using System.Threading;
 
     [Serializable]
     public abstract class BaseTestGroup

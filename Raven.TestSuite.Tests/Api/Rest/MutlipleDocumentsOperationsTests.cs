@@ -92,5 +92,47 @@
                 Assert.Equal("Suyama", includes[3].Value<string>("LastName"));
             });
         }
+
+        [RavenRestApiTest]
+        public void SetBasedDeletesTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPut(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts",
+                    "{ Map:'from product in docs.Products select new { product.Discontinued }' }");
+                Assert.Equal(201, (int)response.RawResponse.StatusCode);
+                Assert.Equal("discontinuedProducts", response.RavenJTokenWrapper.Value<string>("Index"));
+
+                response = env.RawDelete(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts",
+                    "query=Discontinued:True");
+                base.WaitForIndexes();
+                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts", "query=Discontinued:True");
+                Assert.Equal(0, response.RavenJTokenWrapper.Value<int>("TotalResults"));
+            });
+        }
+
+        [RavenRestApiTest]
+        public void SetBasedUpdatesTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                var response = env.RawPut(Constants.DbUrl.Northwind + "/indexes/PricePerUser",
+                    "{ Map:'from product in docs.Products select new { product.PricePerUser }' }");
+                Assert.Equal(201, (int)response.RawResponse.StatusCode);
+                Assert.Equal("PricePerUser", response.RavenJTokenWrapper.Value<string>("Index"));
+
+                env.RawPatch(Constants.DbUrl.Northwind + "/indexes/PricePerUser",
+                    "[{ Type: 'Set', Name: 'Name', Value: 'SetBasedUpdatesTest'}]",
+                    "query=PricePerUser:18");
+                base.WaitForIndexes();
+                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/PricePerUser", "query=PricePerUser:18");
+
+                var results = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
+                foreach (RavenJTokenWrapper item in results)
+                {
+                    Assert.Equal("SetBasedUpdatesTest", item.Value<string>("Name"));
+                }
+            });
+        }
     }
 }

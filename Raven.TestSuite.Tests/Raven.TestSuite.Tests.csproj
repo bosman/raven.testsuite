@@ -58,7 +58,9 @@
   <ItemGroup>
     <Compile Include="Api\DotNet\Indexes\IndexSimpleTests.cs" />
     <Compile Include="Api\Rest\BaseRestApiTestGroup.cs" />
+    <Compile Include="Api\Rest\BulkDocsEndpointTests.cs" />
     <Compile Include="Api\Rest\GetTests.cs" />
+    <Compile Include="Api\Rest\IndexesBasicOperationsTests.cs" />
     <Compile Include="Api\Rest\MutlipleDocumentsOperationsTests.cs" />
     <Compile Include="Api\Rest\PatchTests.cs" />
     <Compile Include="Api\Rest\PostTests.cs" />
