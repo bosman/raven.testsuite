@@ -26,7 +26,7 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawPut(string url, string content, Dictionary<string, List<string>> headers = null);
 
-        RestResponse RawPost(string url, string content, string query = null);
+        RestResponse RawPost(string url, string content, string query = null, Dictionary<string, List<string>> headers = null);
 
 
         #endregion

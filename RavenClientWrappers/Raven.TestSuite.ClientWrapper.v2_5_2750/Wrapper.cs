@@ -161,10 +161,22 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
-        public RestResponse RawPost(string url, string content, string query = null)
+        public RestResponse RawPost(string url, string content, string query = null, Dictionary<string, List<string>> headers = null)
         {
+            var request = new HttpRequestMessage();
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, List<string>> header in headers)
+                {
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+            request.Content = new StringContent(content);
+            request.RequestUri = new Uri(CompleteUrlIfNeeded(url, query));
+            request.Method = HttpMethod.Post;
+
             var client = new HttpClient();
-            var task = client.PostAsync(CompleteUrlIfNeeded(url, query), new StringContent(content));
+            var task = client.SendAsync(request);
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
