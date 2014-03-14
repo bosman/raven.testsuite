@@ -16,7 +16,7 @@
         }
 
         [RavenRestApiTest]
-        public void CreateSimpleIndexTest()
+        public void CreateAndDeleteSimpleIndexTest()
         {
             this.wrapper.Execute(env =>
             {
@@ -24,6 +24,12 @@
                     "{ Map:'from product in docs.Products where product.Discontinued == true select new { product.Discontinued }' }");
                 Assert.Equal(201, (int)response.RawResponse.StatusCode);
                 Assert.Equal("discontinuedProducts", response.RavenJTokenWrapper.Value<string>("Index"));
+
+                response = env.RawDelete(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts");
+                Assert.Equal(204, (int)response.RawResponse.StatusCode);
+
+                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts");
+                Assert.Equal(404, (int)response.RawResponse.StatusCode);
             });
         }
     }
