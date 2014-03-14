@@ -98,10 +98,28 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         #region REST HTTP Api
 
+        public RestResponse RawDelete(string url, string query = null)
+        {
+            var client = new HttpClient();
+            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, CompleteUrlIfNeeded(url, query)));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = null };
+        }
+
         public RestResponse RawGet(string url, string query = null)
         {
             var client = new HttpClient();
             var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, CompleteUrlIfNeeded(url, query)));
+            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
+        }
+
+        public RestResponse RawHead(string url)
+        {
+            var request = new HttpRequestMessage();
+            request.RequestUri = new Uri(CompleteUrlIfNeeded(url));
+            request.Method = new HttpMethod("HEAD");
+
+            var client = new HttpClient();
+            var task = client.SendAsync(request);
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
         }
 
@@ -148,13 +166,6 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             var client = new HttpClient();
             var task = client.PostAsync(CompleteUrlIfNeeded(url, query), new StringContent(content));
             return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = HttpResponseMessageToRavenJTokenWrapper(task.Result) };
-        }
-
-        public RestResponse RawDelete(string url, string query = null)
-        {
-            var client = new HttpClient();
-            var task = client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, CompleteUrlIfNeeded(url, query)));
-            return new RestResponse { RawResponse = task.Result, RavenJTokenWrapper = null };
         }
 
         private string CompleteUrlIfNeeded(string url, string query = null)

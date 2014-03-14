@@ -16,7 +16,11 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         #region REST HTTP Api
 
+        RestResponse RawDelete(string url, string query = null);
+
         RestResponse RawGet(string url, string query = null);
+
+        RestResponse RawHead(string url);
 
         RestResponse RawPatch(string url, string content, string query = null, Dictionary<string, List<string>> headers = null);
 
@@ -24,7 +28,6 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         RestResponse RawPost(string url, string content, string query = null);
 
-        RestResponse RawDelete(string url, string query = null);
 
         #endregion
 
