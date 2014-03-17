@@ -103,9 +103,10 @@
                 Assert.Equal(201, (int)response.RawResponse.StatusCode);
                 Assert.Equal("discontinuedProducts", response.RavenJTokenWrapper.Value<string>("Index"));
 
-                response = env.RawDelete(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts",
+                response = env.RawDelete(Constants.DbUrl.Northwind + "/bulk_docs/discontinuedProducts",
                     "query=Discontinued:True");
                 base.WaitForIndexes();
+
                 response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/discontinuedProducts", "query=Discontinued:True");
                 Assert.Equal(0, response.RavenJTokenWrapper.Value<int>("TotalResults"));
             });
@@ -121,12 +122,14 @@
                 Assert.Equal(201, (int)response.RawResponse.StatusCode);
                 Assert.Equal("PricePerUser", response.RavenJTokenWrapper.Value<string>("Index"));
 
-                env.RawPatch(Constants.DbUrl.Northwind + "/indexes/PricePerUser",
+                response = env.RawPatch(Constants.DbUrl.Northwind + "/bulk_docs/PricePerUser",
                     "[{ Type: 'Set', Name: 'Name', Value: 'SetBasedUpdatesTest'}]",
                     "query=PricePerUser:18");
+                Assert.Equal(200, (int)response.RawResponse.StatusCode);
+                Assert.NotNull(response.RavenJTokenWrapper.Value<int>("OperationId"));
                 base.WaitForIndexes();
-                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/PricePerUser", "query=PricePerUser:18");
 
+                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/PricePerUser", "query=PricePerUser:18");
                 var results = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
                 foreach (RavenJTokenWrapper item in results)
                 {
