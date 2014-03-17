@@ -102,6 +102,7 @@
                     "{ Map:'from product in docs.Products select new { product.Discontinued }' }");
                 Assert.Equal(201, (int)response.RawResponse.StatusCode);
                 Assert.Equal("discontinuedProducts", response.RavenJTokenWrapper.Value<string>("Index"));
+                base.WaitForIndexes();
 
                 response = env.RawDelete(Constants.DbUrl.Northwind + "/bulk_docs/discontinuedProducts",
                     "query=Discontinued:True");
@@ -121,6 +122,7 @@
                     "{ Map:'from product in docs.Products select new { product.PricePerUser }' }");
                 Assert.Equal(201, (int)response.RawResponse.StatusCode);
                 Assert.Equal("PricePerUser", response.RavenJTokenWrapper.Value<string>("Index"));
+                base.WaitForIndexes();
 
                 response = env.RawPatch(Constants.DbUrl.Northwind + "/bulk_docs/PricePerUser",
                     "[{ Type: 'Set', Name: 'Name', Value: 'SetBasedUpdatesTest'}]",
