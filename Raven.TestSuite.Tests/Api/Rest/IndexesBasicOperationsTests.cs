@@ -94,36 +94,5 @@
                 Assert.Equal(8, response.RavenJTokenWrapper.Value<int>("TotalResults"));
             });
         }
-
-        [RavenRestApiTest]
-        public void QueryDynamicIndexUsingOrOperatorTest()
-        {
-            this.wrapper.Execute(env =>
-            {
-                var response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/dynamic", "query=Name:(Chang OR Ikura)");
-                Assert.Equal(2, response.RavenJTokenWrapper.Value<int>("TotalResults"));
-                var result = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
-                foreach (RavenJTokenWrapper item in result)
-                {
-                    Assert.True(item.Value<string>("Name") == "Chang" || item.Value<string>("Name") == "Ikura");
-                }
-
-                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/dynamic", "query=Name:(Chang OR \"Antonio Moreno Taquería\")");
-                Assert.Equal(2, response.RavenJTokenWrapper.Value<int>("TotalResults"));
-                result = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
-                foreach (RavenJTokenWrapper item in result)
-                {
-                    Assert.True(item.Value<string>("Name") == "Chang" || item.Value<string>("Name") == "Antonio Moreno Taquería");
-                }
-
-                response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/dynamic", "query=Name:Chang OR FirstName:Nancy");
-                Assert.Equal(2, response.RavenJTokenWrapper.Value<int>("TotalResults"));
-                result = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
-                foreach (RavenJTokenWrapper item in result)
-                {
-                    Assert.True(item.Value<string>("Name") == "Chang" || item.Value<string>("FirstName") == "Nancy");
-                }
-            });
-        }
     }
 }
