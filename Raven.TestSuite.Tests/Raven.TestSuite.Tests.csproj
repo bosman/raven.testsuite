@@ -57,16 +57,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\DotNet\Indexes\IndexSimpleTests.cs" />
-    <Compile Include="Api\Rest\AttachmentOperationsTests.cs" />
+    <Compile Include="Api\Rest\Attachments\AttachmentOperationsTests.cs" />
     <Compile Include="Api\Rest\BaseRestApiTestGroup.cs" />
-    <Compile Include="Api\Rest\BulkDocsEndpointTests.cs" />
-    <Compile Include="Api\Rest\GetTests.cs" />
-    <Compile Include="Api\Rest\IndexesBasicOperationsTests.cs" />
-    <Compile Include="Api\Rest\LuceneQuerySyntaxTests.cs" />
-    <Compile Include="Api\Rest\MutlipleDocumentsOperationsTests.cs" />
-    <Compile Include="Api\Rest\PatchTests.cs" />
-    <Compile Include="Api\Rest\PostTests.cs" />
-    <Compile Include="Api\Rest\PutTests.cs" />
+    <Compile Include="Api\Rest\Documents\BulkDocsEndpointTests.cs" />
+    <Compile Include="Api\Rest\Documents\GetTests.cs" />
+    <Compile Include="Api\Rest\Indexes\IndexesBasicOperationsTests.cs" />
+    <Compile Include="Api\Rest\Indexes\LuceneQuerySyntaxTests.cs" />
+    <Compile Include="Api\Rest\Documents\MutlipleDocumentsOperationsTests.cs" />
+    <Compile Include="Api\Rest\Documents\PatchTests.cs" />
+    <Compile Include="Api\Rest\Documents\PostTests.cs" />
+    <Compile Include="Api\Rest\Documents\PutTests.cs" />
     <Compile Include="Common\Attributes\ExecutableAttribute.cs" />
     <Compile Include="Common\Attributes\PreinitializeDatabaseAttribute.cs" />
     <Compile Include="Common\Attributes\RavenRestApiTestAttribute.cs" />
