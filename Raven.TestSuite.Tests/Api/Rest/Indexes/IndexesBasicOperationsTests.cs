@@ -84,7 +84,7 @@
         }
 
         [RavenRestApiTest]
-        public void CreateAndQuerySimpleIndexWithPaging()
+        public void CreateAndQuerySimpleIndexWithPagingTest()
         {
             this.wrapper.Execute(env =>
             {

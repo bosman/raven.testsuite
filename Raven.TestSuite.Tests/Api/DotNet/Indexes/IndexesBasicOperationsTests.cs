@@ -70,6 +70,7 @@
                         var result = session.Query<Product>(indexName)
                             .Where(x => x.Discontinued.Equals(true))
                             .ToArray<Product>();
+                        Assert.NotNull(result);
                         Assert.Equal(8, result.Count());
                     }
                 }
@@ -110,6 +111,83 @@
                             .ToArray();
                         Assert.NotNull(result);
                         Assert.Equal(1678.08m, result.First().Freight);
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void CreateAndQuerySimpleIndexWithPagingTest()
+        {
+            const string indexName = "CreateAndQuerySimpleIndexWithPagingTest";
+
+            this.wrapper.Execute(env =>
+            {
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    store.DatabaseCommands.PutIndex(indexName,
+                        new IndexDefinitionWrapper
+                        {
+                            Map = "from product in docs.Products select new { product.Discontinued }",
+                            InternalFieldsMapping = new Dictionary<string, string>()
+                        });
+                    base.WaitForStaleIndexes(env, Constants.DbName.Northwind);
+
+                    using (var session = store.OpenSession())
+                    {
+                        var result = session.Query<Product>(indexName)
+                            .Where(x => x.Discontinued.Equals(true))
+                            .Take(2)
+                            .ToArray();
+                        Assert.NotNull(result);
+                        Assert.Equal(2, result.Count());
+                        Assert.Equal("products/5", result[0].Id);
+                        Assert.Equal("products/9", result[1].Id);
+
+                        result = session.Query<Product>(indexName)
+                            .Where(x => x.Discontinued.Equals(true))
+                            .Skip(2)
+                            .Take(2)
+                            .ToArray();
+                        Assert.NotNull(result);
+                        Assert.Equal(2, result.Count());
+                        Assert.Equal("products/17", result[0].Id);
+                        Assert.Equal("products/24", result[1].Id);
+
+                        result = session.Query<Product>(indexName)
+                            .Where(x => x.Discontinued.Equals(true))
+                            .Skip(4)
+                            .Take(5)
+                            .ToArray();
+                        Assert.NotNull(result);
+                        Assert.Equal(4, result.Count());
+                        Assert.Equal("products/28", result[0].Id);
+                        Assert.Equal("products/29", result[1].Id);
+                        Assert.Equal("products/42", result[2].Id);
+                        Assert.Equal("products/53", result[3].Id);
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void SimpleQueryDynamicIndexTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    using (var session = store.OpenSession())
+                    {
+                        session.Query<Product>()
+                            .Where(x => x.Discontinued.Equals(true));
+                        base.WaitForStaleIndexes(env, Constants.DbName.Northwind);
+
+                        var result = session.Query<Product>()
+                            .Where(x => x.Discontinued.Equals(true))
+                            .ToArray();
+                        Assert.NotNull(result);
+                        Assert.Equal(8, result.Count());
                     }
                 }
             });

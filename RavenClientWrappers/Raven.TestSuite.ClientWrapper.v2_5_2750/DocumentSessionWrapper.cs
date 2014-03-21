@@ -14,6 +14,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             this.documentSession = documentSession;
         }
 
+        public ISyncAdvancedSessionOperationWrapper Advanced
+        {
+            get { return new SyncAdvancedSessionOperationWrapper(this.documentSession.Advanced); }
+        }
+
         public IOrderedQueryable<T> Query<T>()
         {
             return this.documentSession.Query<T>();
@@ -40,6 +45,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
         public void SaveChanges()
         {
             this.documentSession.SaveChanges();
+        }
+
+        public T Load<T>(string id)
+        {
+            return this.documentSession.Load<T>(id);
         }
 
         public T Load<T>(ValueType id)

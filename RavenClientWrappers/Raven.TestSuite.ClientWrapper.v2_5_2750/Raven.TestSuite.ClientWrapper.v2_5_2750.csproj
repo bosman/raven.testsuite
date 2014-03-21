@@ -81,6 +81,7 @@
     <Compile Include="ServerErrorWrapper.cs" />
     <Compile Include="SpatialOptionsWrapper.cs" />
     <Compile Include="SuggestionOptionsWrapper.cs" />
+    <Compile Include="SyncAdvancedSessionOperationWrapper.cs" />
     <Compile Include="TriggerInfoWrapper.cs" />
     <Compile Include="Wrapper.cs" />
   </ItemGroup>

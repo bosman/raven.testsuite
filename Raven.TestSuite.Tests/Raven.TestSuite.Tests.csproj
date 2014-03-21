@@ -57,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\DotNet\BaseDotNetApiTestGroup.cs" />
+    <Compile Include="Api\DotNet\Documents\LoadDocumentTests.cs" />
+    <Compile Include="Api\DotNet\Documents\StoreDocumentTests.cs" />
     <Compile Include="Api\DotNet\Indexes\IndexesBasicOperationsTests.cs" />
     <Compile Include="Api\DotNet\Indexes\IndexStatsTests.cs" />
+    <Compile Include="Api\DotNet\Session\AdvancedTests.cs" />
     <Compile Include="Api\Rest\Attachments\AttachmentOperationsTests.cs" />
     <Compile Include="Api\Rest\BaseRestApiTestGroup.cs" />
     <Compile Include="Api\Rest\Documents\BulkDocsEndpointTests.cs" />
