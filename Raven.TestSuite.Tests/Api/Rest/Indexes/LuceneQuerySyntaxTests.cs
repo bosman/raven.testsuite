@@ -151,11 +151,6 @@
                 response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/dynamic", "query=Lines,Product:products/2");
                 base.AssertNotNullGetResponse(response);
                 Assert.Equal(44, response.RavenJTokenWrapper.Value<int>("TotalResults"));
-                var result = response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results");
-                foreach (RavenJTokenWrapper item in result)
-                {
-                    Assert.Equal("products/2", item.SelectToken("Lines").Value<string>("Product"));
-                }
             });
         }
     }

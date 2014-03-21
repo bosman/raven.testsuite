@@ -1,11 +1,10 @@
 ﻿namespace Raven.TestSuite.Tests.Common
 {
-    using System.Threading.Tasks;
-    using System;
     using Raven.TestSuite.Common.WrapperInterfaces;
-    using Raven.TestSuite.Common.Abstractions;
-    using Raven.TestSuite.Common.Abstractions.Json.Linq;
+    using System;
+    using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
 
     [Serializable]
     public abstract class BaseTestGroup

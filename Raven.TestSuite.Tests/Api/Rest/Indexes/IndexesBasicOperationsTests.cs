@@ -75,11 +75,11 @@
 
                 response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/ordersByCompany", "query=Company:companies/52");
                 base.AssertNotNullGetResponse(response);
-                Assert.Equal(321.46, response.RavenJTokenWrapper.Value<float>("Company"));
+                Assert.Equal(322.04m, response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results")[0].Value<decimal>("Freight"));
 
                 response = env.RawGet(Constants.DbUrl.Northwind + "/indexes/ordersByCompany", "query=Company:companies/24");
                 base.AssertNotNullGetResponse(response);
-                Assert.Equal(1654.41, response.RavenJTokenWrapper.Value<float>("Company"));
+                Assert.Equal(1678.08m, response.RavenJTokenWrapper.Value<RavenJArrayWrapper>("Results")[0].Value<decimal>("Freight"));
             });
         }
 
