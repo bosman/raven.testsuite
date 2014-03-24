@@ -5,6 +5,8 @@
 
     public interface IDocumentSessionWrapper : IDisposable
     {
+        void Delete<T>(T entity);
+
         ISyncAdvancedSessionOperationWrapper Advanced { get; }
 
         //TODO: finish me

@@ -85,40 +85,5 @@
                 }
             });
         }
-
-        [RavenDotNetApiTest]
-        public void SetDocumentMetadataTest()
-        {
-            this.wrapper.Execute(env =>
-            {
-                const string objectId = "SetDocumentMetadataTestObject";
-                const string attrKey = "SetDocumentMetadataTestKey";
-                const string attrVal = "SetDocumentMetadataTestValue";
-
-                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
-                {
-                    using (var session = store.OpenSession())
-                    {
-                        var category = new Category();
-                        category.Id = objectId;
-                        session.Store(category);
-
-                        var result = session.Advanced.GetMetadataFor(category);
-                        Assert.NotNull(result);
-
-                        result.Add(attrKey, attrVal);
-                        session.SaveChanges();
-                    }
-
-                    using (var session = store.OpenSession())
-                    {
-                        var category = session.Load<Category>(objectId);
-                        var result = session.Advanced.GetMetadataFor(category);
-                        Assert.NotNull(result);
-                        Assert.Equal(attrVal, result.Value<string>(attrKey));
-                    }
-                }
-            });
-        }
     }
 }

@@ -5,6 +5,20 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
     {
         string GetDocumentId(object entity);
 
+        bool HasChanges { get; }
+
+        int MaxNumberOfRequestsPerSession { get; set; }
+
+        int NumberOfRequests { get; }
+
+        string StoreIdentifier { get; }
+
+        bool UseOptimisticConcurrency { get; set; }
+
+        void Clear();
+
+        void Evict<T>(T entity);
+
         RavenJObjectWrapper GetMetadataFor<T>(T instance);
     }
 }

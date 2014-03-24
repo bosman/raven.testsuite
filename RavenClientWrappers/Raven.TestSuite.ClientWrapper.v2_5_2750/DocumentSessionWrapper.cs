@@ -14,6 +14,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             this.documentSession = documentSession;
         }
 
+        public void Delete<T>(T entity)
+        {
+            this.documentSession.Delete<T>(entity);
+        }
+
         public ISyncAdvancedSessionOperationWrapper Advanced
         {
             get { return new SyncAdvancedSessionOperationWrapper(this.documentSession.Advanced); }
