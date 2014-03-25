@@ -10,9 +10,9 @@
 
     [Serializable]
     [RequiresFreshNorthwindDatabaseAttribute]
-    public class AdvancedTests : BaseDotNetApiTestGroup
+    public class AdvancedSessionTests : BaseDotNetApiTestGroup
     {
-        public AdvancedTests(IRavenClientWrapper wrapper)
+        public AdvancedSessionTests(IRavenClientWrapper wrapper)
             : base(wrapper)
         {
         }
@@ -32,7 +32,7 @@
                     {
                         var category = session.Load<Category>(cat1Id);
                         Assert.NotNull(category);
-                        session.Advanced.GetMetadataFor<Category>(category)[attrKey] = attrVal;
+                        session.Advanced.SetMetadataValueFor<Category>(category, attrKey, attrVal);
                         session.SaveChanges();
                     }
 
@@ -111,7 +111,7 @@
                     {
                         var category = session.Load<Category>(cat4Id);
                         Assert.NotNull(category);
-                        Assert.True(session.Advanced.HasChanges);
+                        Assert.False(session.Advanced.HasChanges);
                         session.Store(category);
                         session.SaveChanges();
                         Assert.False(session.Advanced.HasChanges);
@@ -286,7 +286,7 @@
                 const string employee4 = "Employees/4";
                 const string employee5 = "Employees/5";
                 const string firstName = "EvictTest";
-
+                
                 using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
                 {
                     using (var session = store.OpenSession())
@@ -317,6 +317,88 @@
 
                         var empl5 = session.Load<Employee>(employee5);
                         Assert.Equal(firstName, empl5.FirstName);
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void GetEtagForTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    using (var session = store.OpenSession())
+                    {
+                        var category = session.Load<Category>("categories/6");
+                        Assert.Equal("01000000-0000-0001-0000-000000000066", session.Advanced.GetEtagFor<Category>(category).ToString());
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void HasChangedTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    using (var session = store.OpenSession())
+                    {
+                        var company = session.Load<Company>("companies/1");
+                        Assert.NotNull(company);
+                        Assert.False(session.Advanced.HasChanged(company));
+
+                        company.Name = "HasChangedTest";
+                        Assert.True(session.Advanced.HasChanged(company));
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void IsLoadedTest()
+        {
+            this.wrapper.Execute(env =>
+            {
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    using (var session = store.OpenSession())
+                    {
+                        Assert.False(session.Advanced.IsLoaded("categories/7"));
+                        session.Load<Category>("categories/7");
+                        Assert.True(session.Advanced.IsLoaded("categories/7"));
+                    }
+                }
+            });
+        }
+
+        [RavenDotNetApiTest]
+        public void MarkReadOnlyTest()
+        {
+            this.wrapper.Execute(env => 
+            {
+                const string categoryName = "MarkReadOnlyTest";
+
+                using (var store = env.CreateDocumentStore(Constants.DbName.Northwind).Initialize())
+                {
+                    using (var session = store.OpenSession())
+                    {
+                        var category = session.Load<Category>("categories/7");
+                        session.Advanced.MarkReadOnly(category);
+                        category.Name = categoryName;
+                        Assert.True(session.Advanced.HasChanges);
+
+                        session.Store(category);
+                        session.SaveChanges();
+                    }
+
+                    using (var session = store.OpenSession())
+                    {
+                        var category = session.Load<Category>("categories/7");
+                        Assert.True(session.Advanced.GetMetadataFor<Category>(category).Value<bool>("Raven-Read-Only"));
                     }
                 }
             });

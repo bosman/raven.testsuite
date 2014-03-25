@@ -611,8 +611,10 @@
     <Compile Include="WrapperInterfaces\IDatabaseStatisticsWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDocumentConventionWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDomainContainer.cs" />
+    <Compile Include="WrapperInterfaces\IEagerSessionOperationsWrapper.cs" />
     <Compile Include="WrapperInterfaces\IHighlightedFieldWrapper.cs" />
     <Compile Include="WrapperInterfaces\IIndexStatsWrapper.cs" />
+    <Compile Include="WrapperInterfaces\ILazySessionOperationsWrapper.cs" />
     <Compile Include="WrapperInterfaces\IReferenceWrapper.cs" />
     <Compile Include="WrapperInterfaces\IAttachmentWrapper.cs" />
     <Compile Include="WrapperInterfaces\IDatabaseCommandsWrapper.cs" />

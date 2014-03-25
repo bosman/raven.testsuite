@@ -5,6 +5,7 @@
     using Raven.TestSuite.Common.Abstractions.Json.Linq;
     using Raven.Json.Linq;
     using Raven.Imports.Newtonsoft.Json;
+    using Raven.TestSuite.Common.Abstractions.Data;
 
     public class SyncAdvancedSessionOperationWrapper : ISyncAdvancedSessionOperationWrapper
     {
@@ -13,6 +14,16 @@
         internal SyncAdvancedSessionOperationWrapper(ISyncAdvancedSessionOperation syncAdvancedSessionOperation)
         {
             this.syncAdvancedSessionOperation = syncAdvancedSessionOperation;
+        }
+
+        public IEagerSessionOperationsWrapper Eagerly
+        {
+            get { return new EagerSessionOperationsWrapper(this.syncAdvancedSessionOperation.Eagerly); }
+        }
+
+        public ILazySessionOperationsWrapper Lazily
+        {
+            get { return new LazySessionOperationsWrapper(this.syncAdvancedSessionOperation.Lazily); }
         }
 
         public string GetDocumentUrl(object entity)
@@ -67,9 +78,34 @@
             this.syncAdvancedSessionOperation.Evict<T>(entity);
         }
 
+        public EtagWrapper GetEtagFor<T>(T instance)
+        {
+            return new EtagWrapper(this.syncAdvancedSessionOperation.GetEtagFor<T>(instance).ToString());
+        }
+
         public RavenJObjectWrapper GetMetadataFor<T>(T instance)
         {
             return RavenJObjectWrapper.Parse(this.syncAdvancedSessionOperation.GetMetadataFor<T>(instance).ToString());
+        }
+
+        public void SetMetadataValueFor<T>(T instance, string key, string value)
+        {
+            this.syncAdvancedSessionOperation.GetMetadataFor<T>(instance)[key] = value;
+        }
+
+        public bool HasChanged(object entity)
+        {
+            return this.syncAdvancedSessionOperation.HasChanged(entity);
+        }
+
+        public bool IsLoaded(string id)
+        {
+            return this.syncAdvancedSessionOperation.IsLoaded(id);
+        }
+
+        public void MarkReadOnly(object entity)
+        {
+            this.syncAdvancedSessionOperation.MarkReadOnly(entity);
         }
     }
 }
