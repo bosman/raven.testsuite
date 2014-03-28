@@ -1,14 +1,11 @@
-﻿using Raven.Abstractions.Data;
-using Raven.TestSuite.Common.Abstractions.Data;
-using Raven.TestSuite.Common.WrapperInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions;
-
-namespace Raven.TestSuite.ClientWrapper.v2_5_2750
+﻿namespace Raven.TestSuite.Common.Data
 {
-    public class IndexStatsWrapper : IIndexStatsWrapper
+    using Raven.TestSuite.Common.Abstractions.Data;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using System;
+    using System.Collections.Generic;
+
+    public class IndexStatsWrapper
     {
         public string Name { get; set; }
 
@@ -48,14 +45,14 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public List<string> ForEntityName { get; set; }
 
-        public IIndexingPerformanceStatsWrapper[] Performance { get; set; }
+        public IndexingPerformanceStatsWrapper[] Performance { get; set; }
 
         public int DocsCount { get; set; }
     }
 
-    public class IndexingPerformanceStatsWrapper : IIndexingPerformanceStatsWrapper
+    public class IndexingPerformanceStatsWrapper
     {
-        public bool Equals(IIndexingPerformanceStatsWrapper other)
+        public bool Equals(IndexingPerformanceStatsWrapper other)
         {
             return string.Equals(Operation, other.Operation) && OutputCount == other.OutputCount && InputCount == other.InputCount && Duration.Equals(other.Duration) && Started.Equals(other.Started);
         }
@@ -86,7 +83,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((IndexingPerformanceStats)obj);
+            return Equals((IndexingPerformanceStatsWrapper)obj);
         }
 
         public override string ToString()

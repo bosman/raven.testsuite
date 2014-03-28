@@ -2,6 +2,7 @@
 {
     using Raven.TestSuite.ClientWrapper.v2_5_2750;
     using Raven.TestSuite.Common.Abstractions;
+    using Raven.TestSuite.Common.Indexing;
     using Raven.TestSuite.Common.WrapperInterfaces;
     using Raven.TestSuite.Tests.Common;
     using Raven.TestSuite.Tests.Common.Attributes;

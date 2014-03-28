@@ -11,6 +11,8 @@ using Raven.TestSuite.Common.WrapperInterfaces;
 using System.Linq;
 using Raven.Abstractions.Data;
 using Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions;
+using Raven.TestSuite.Common.Data;
+using Raven.TestSuite.Common.Indexing;
 
 namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 {
@@ -37,7 +39,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return new JsonDocumentWrapper(inner.Get(key));
         }
 
-        public IMultiLoadResultWrapper Get(string[] ids, string[] includes, string transformer = null, Dictionary<string, RavenJTokenWrapper> queryInputs = null,
+        public MultiLoadResultWrapper Get(string[] ids, string[] includes, string transformer = null, Dictionary<string, RavenJTokenWrapper> queryInputs = null,
                                            bool metadataOnly = false)
         {
             Dictionary<string, RavenJToken> qi = null;
@@ -60,9 +62,9 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return docs.Select(d => new JsonDocumentWrapper(d) as IJsonDocumentWrapper).ToArray();
         }
 
-        public IPutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata)
+        public PutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata)
         {
-            return new PutResultWrapper(inner.Put(key, etag.Unwrap(), document.Unwrap(), metadata.Unwrap()));
+            return inner.Put(key, etag.Unwrap(), document.Unwrap(), metadata.Unwrap()).Wrap();
         }
 
         public void Delete(string key, EtagWrapper etag)
@@ -80,19 +82,19 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             inner.UpdateAttachmentMetadata(key, etag.Unwrap(), metadata.Unwrap());
         }
 
-        public IAttachmentWrapper GetAttachment(string key)
+        public AttachmentWrapper GetAttachment(string key)
         {
             return inner.GetAttachment(key).Wrap();
         }
 
-        public IEnumerable<IAttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize)
+        public IEnumerable<AttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize)
         {
             return
                 inner.GetAttachmentHeadersStartingWith(idPrefix, start, pageSize)
                      .Select(a => a.Wrap());
         }
 
-        public IAttachmentWrapper HeadAttachment(string key)
+        public AttachmentWrapper HeadAttachment(string key)
         {
             return inner.HeadAttachment(key).Wrap();
         }
@@ -112,7 +114,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             return inner.GetIndexNames(start, pageSize);
         }
 
-        public IIndexDefinitionWrapper[] GetIndexes(int start, int pageSize)
+        public IndexDefinitionWrapper[] GetIndexes(int start, int pageSize)
         {
             return inner.GetIndexes(start, pageSize).Select(x => x.Wrap()).ToArray();
         }
@@ -122,12 +124,12 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             inner.ResetIndex(name);
         }
 
-        public IIndexDefinitionWrapper GetIndex(string name)
+        public IndexDefinitionWrapper GetIndex(string name)
         {
             return inner.GetIndex(name).Wrap();
         }
 
-        public string PutIndex(string name, IIndexDefinitionWrapper indexDef)
+        public string PutIndex(string name, IndexDefinitionWrapper indexDef)
         {
             return inner.PutIndex(name, indexDef.Unwrap());
         }
@@ -137,7 +139,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             throw new NotImplementedException();
         }
 
-        public string PutIndex(string name, IIndexDefinitionWrapper indexDef, bool overwrite)
+        public string PutIndex(string name, IndexDefinitionWrapper indexDef, bool overwrite)
         {
             return inner.PutIndex(name, indexDef.Unwrap(), overwrite);
         }
@@ -312,7 +314,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             throw new NotImplementedException();
         }
 
-        public IDatabaseStatisticsWrapper GetStatistics()
+        public DatabaseStatisticsWrapper GetStatistics()
         {
             return inner.GetStatistics().Wrap();
         }

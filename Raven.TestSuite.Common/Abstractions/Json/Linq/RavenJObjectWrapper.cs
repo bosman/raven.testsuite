@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
-using Raven.Imports.Newtonsoft.Json;
-using Raven.Imports.Newtonsoft.Json.Linq;
-using Raven.Imports.Newtonsoft.Json.Utilities;
-using Raven.TestSuite.Common.Abstractions.Extensions;
-using Raven.TestSuite.Common.Abstractions.Imports.Newtonsoft.Json;
-
-namespace Raven.TestSuite.Common.Abstractions.Json.Linq
+﻿namespace Raven.TestSuite.Common.Abstractions.Json.Linq
 {
+    using Raven.Imports.Newtonsoft.Json;
+    using Raven.Imports.Newtonsoft.Json.Linq;
+    using Raven.Imports.Newtonsoft.Json.Utilities;
+    using Raven.TestSuite.Common.Abstractions.Extensions;
+    using Raven.TestSuite.Common.Abstractions.Imports.Newtonsoft.Json;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Threading.Tasks;
+
 	/// <summary>
 	/// Represents a JSON object.
 	/// </summary>

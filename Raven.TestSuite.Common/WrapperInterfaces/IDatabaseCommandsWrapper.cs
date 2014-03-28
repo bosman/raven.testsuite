@@ -5,6 +5,9 @@ using System.IO;
 using System.Net;
 using Raven.TestSuite.Common.Abstractions.Data;
 using Raven.TestSuite.Common.Abstractions.Json.Linq;
+using Raven.TestSuite.ClientWrapper.v2_5_2750;
+using Raven.TestSuite.Common.Data;
+using Raven.TestSuite.Common.Indexing;
 
 namespace Raven.TestSuite.Common.WrapperInterfaces
 {
@@ -16,11 +19,11 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         IJsonDocumentWrapper Get(string key);
 
-        IMultiLoadResultWrapper Get(string[] ids, string[] includes, string transformer = null, Dictionary<string, RavenJTokenWrapper> queryInputs = null, bool metadataOnly = false);
+        MultiLoadResultWrapper Get(string[] ids, string[] includes, string transformer = null, Dictionary<string, RavenJTokenWrapper> queryInputs = null, bool metadataOnly = false);
 
         IJsonDocumentWrapper[] GetDocuments(int start, int pageSize, bool metadataOnly = false);
 
-        IPutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata);
+        PutResultWrapper Put(string key, EtagWrapper etag, RavenJObjectWrapper document, RavenJObjectWrapper metadata);
 
         void Delete(string key, EtagWrapper etag);
 
@@ -28,11 +31,11 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         void UpdateAttachmentMetadata(string key, EtagWrapper etag, RavenJObjectWrapper metadata);
 
-        IAttachmentWrapper GetAttachment(string key);
+        AttachmentWrapper GetAttachment(string key);
 
-        IEnumerable<IAttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize);
+        IEnumerable<AttachmentWrapper> GetAttachmentHeadersStartingWith(string idPrefix, int start, int pageSize);
 
-        IAttachmentWrapper HeadAttachment(string key);
+        AttachmentWrapper HeadAttachment(string key);
 
         void DeleteAttachment(string key, EtagWrapper etag);
 
@@ -40,17 +43,17 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         string[] GetIndexNames(int start, int pageSize);
 
-        IIndexDefinitionWrapper[] GetIndexes(int start, int pageSize);
+        IndexDefinitionWrapper[] GetIndexes(int start, int pageSize);
 
         void ResetIndex(string name);
 
-        IIndexDefinitionWrapper GetIndex(string name);
+        IndexDefinitionWrapper GetIndex(string name);
 
-        string PutIndex(string name, IIndexDefinitionWrapper indexDef);
+        string PutIndex(string name, IndexDefinitionWrapper indexDef);
 
         string PutTransformer(string name, ITransformerDefinitionWrapper indexDef);
 
-        string PutIndex(string name, IIndexDefinitionWrapper indexDef, bool overwrite);
+        string PutIndex(string name, IndexDefinitionWrapper indexDef, bool overwrite);
 
         string PutIndex<TDocument, TReduceResult>(string name, IIndexDefinitionBuilderWrapper<TDocument, TReduceResult> indexDef);
 
@@ -118,7 +121,7 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         //TODO: GetResponse[] MultiGet(GetRequest[] requests);
 
-        IDatabaseStatisticsWrapper GetStatistics();
+        DatabaseStatisticsWrapper GetStatistics();
 
         //TODO: JsonDocumentMetadata Head(string key);
 

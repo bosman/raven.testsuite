@@ -63,28 +63,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttachmentWrapper.cs" />
     <Compile Include="CommandLineTools\SmugglerArgumentsBuilder.cs" />
     <Compile Include="DatabaseCommandsWrapper.cs" />
-    <Compile Include="DatabaseStatisticsWrapper.cs" />
     <Compile Include="DocumentSessionWrapper.cs" />
     <Compile Include="DocumentStoreWrapper.cs" />
     <Compile Include="DomainContainer.cs" />
     <Compile Include="EagerSessionOperationsWrapper.cs" />
     <Compile Include="Extensions\WrapperExtensions.cs" />
-    <Compile Include="IndexDefinitionWrapper.cs" />
-    <Compile Include="IndexStatsWrapper.cs" />
     <Compile Include="JsonDocumentWrapper.cs" />
     <Compile Include="LazySessionOperationsWrapper.cs" />
-    <Compile Include="MultiLoadResultWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PutResultWrapper.cs" />
     <Compile Include="CommandLineTools\ToolsRunner.cs" />
-    <Compile Include="ServerErrorWrapper.cs" />
-    <Compile Include="SpatialOptionsWrapper.cs" />
-    <Compile Include="SuggestionOptionsWrapper.cs" />
     <Compile Include="SyncAdvancedSessionOperationWrapper.cs" />
-    <Compile Include="TriggerInfoWrapper.cs" />
     <Compile Include="Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>

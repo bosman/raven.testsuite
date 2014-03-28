@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Raven.Abstractions.Data;
-using Raven.Abstractions.Indexing;
-using Raven.Json.Linq;
-using Raven.TestSuite.Common.Abstractions.Data;
-using Raven.TestSuite.Common.Abstractions.Enums;
-using Raven.TestSuite.Common.Abstractions.Json.Linq;
-using Raven.TestSuite.Common.WrapperInterfaces;
-
-namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
+﻿namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
 {
+    using Raven.Abstractions.Data;
+    using Raven.Abstractions.Indexing;
+    using Raven.Json.Linq;
+    using Raven.TestSuite.Common.Abstractions.Data;
+    using Raven.TestSuite.Common.Abstractions.Enums;
+    using Raven.TestSuite.Common.Abstractions.Json.Linq;
+    using Raven.TestSuite.Common.Data;
+    using Raven.TestSuite.Common.Indexing;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class WrapperExtensions
     {
         public static RavenJToken Unwrap(this RavenJTokenWrapper wrapped)
@@ -43,7 +45,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return ravenJObj != null ? RavenJObjectWrapper.Parse(ravenJObj.ToString()) : null;
         }
 
-        public static IIndexingPerformanceStatsWrapper Wrap(this IndexingPerformanceStats ips)
+        public static IndexingPerformanceStatsWrapper Wrap(this IndexingPerformanceStats ips)
         {
             if (ips != null)
             {
@@ -61,11 +63,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static IDatabaseStatisticsWrapper Wrap(this DatabaseStatistics databaseStatistics)
+        public static DatabaseStatisticsWrapper Wrap(this DatabaseStatistics databaseStatistics)
         {
             if (databaseStatistics != null)
             {
-                var attachemntWrapper = new DatabaseStatisticsWrapper
+                var databaseStatisticsWrapper = new DatabaseStatisticsWrapper
                 {
                     LastDocEtag = databaseStatistics.LastDocEtag.Wrap(),
                     LastAttachmentEtag = databaseStatistics.LastAttachmentEtag.Wrap(),
@@ -78,14 +80,14 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                     CurrentNumberOfItemsToReduceInSingleBatch = databaseStatistics.CurrentNumberOfItemsToReduceInSingleBatch,
                     DatabaseTransactionVersionSizeInMB = databaseStatistics.DatabaseTransactionVersionSizeInMB,
                     Indexes = databaseStatistics.Indexes.Select(indexStat => indexStat.Wrap()).ToArray(),
-                    Errors = databaseStatistics.Errors.Select(err => ServerErrorWrapper.FromServerError(err) as IServerErrorWrapper).ToArray(),
-                    Triggers = databaseStatistics.Triggers.Select(t => TriggerInfoWrapper.FromTriggerInfo(t) as ITriggerInfoWrapper).ToArray(),
+                    Errors = databaseStatistics.Errors.Select(err => err.Wrap() as ServerErrorWrapper).ToArray(),
+                    Triggers = databaseStatistics.Triggers.Select(t => t.Wrap() as ITriggerInfoWrapper).ToArray(),
                     Extensions = databaseStatistics.Extensions.Select(e => e.Wrap()).ToArray(),
                     ActualIndexingBatchSize = databaseStatistics.ActualIndexingBatchSize.Select(a => a.Wrap()).ToArray(),
                     Prefetches = databaseStatistics.Prefetches.Select(p => p.Wrap()).ToArray(),
                     DatabaseId = databaseStatistics.DatabaseId
                 };
-                return attachemntWrapper;
+                return databaseStatisticsWrapper;
             }
             return null;
         }
@@ -148,7 +150,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static IIndexStatsWrapper Wrap(this IndexStats indexStats)
+        public static IndexStatsWrapper Wrap(this IndexStats indexStats)
         {
             if (indexStats != null)
             {
@@ -181,7 +183,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static IAttachmentWrapper Wrap(this Attachment attachment)
+        public static AttachmentWrapper Wrap(this Attachment attachment)
         {
             if (attachment != null)
             {
@@ -217,7 +219,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return (SortOptionsWrapper) ((int) unwrapped);
         }
 
-        public static ISpatialOptionsWrapper Wrap(this SpatialOptions unwrapped)
+        public static SpatialOptionsWrapper Wrap(this SpatialOptions unwrapped)
         {
             if (unwrapped != null)
             {
@@ -237,7 +239,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static SpatialOptions Unwrap(this ISpatialOptionsWrapper wrapped)
+        public static SpatialOptions Unwrap(this SpatialOptionsWrapper wrapped)
         {
             if (wrapped != null)
             {
@@ -257,7 +259,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static ISuggestionOptionsWrapper Wrap(this SuggestionOptions unwrapped)
+        public static SuggestionOptionsWrapper Wrap(this SuggestionOptions unwrapped)
         {
             if (unwrapped != null)
             {
@@ -271,7 +273,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static SuggestionOptions Unwrap(this ISuggestionOptionsWrapper wrapped)
+        public static SuggestionOptions Unwrap(this SuggestionOptionsWrapper wrapped)
         {
             if (wrapped != null)
             {
@@ -285,7 +287,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static IIndexDefinitionWrapper Wrap(this IndexDefinition unwrapped)
+        public static IndexDefinitionWrapper Wrap(this IndexDefinition unwrapped)
         {
             if (unwrapped != null)
             {
@@ -310,7 +312,7 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
             return null;
         }
 
-        public static IndexDefinition Unwrap(this IIndexDefinitionWrapper wrapped)
+        public static IndexDefinition Unwrap(this IndexDefinitionWrapper wrapped)
         {
             if (wrapped != null)
             {
@@ -331,6 +333,96 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750.Extensions
                         InternalFieldsMapping = wrapped.InternalFieldsMapping.ToDictionary(x => x.Key, y => y.Value)
                     };
                 return unwrapped;
+            }
+            return null;
+        }
+
+        public static ServerErrorWrapper Wrap(this ServerError unwrapped)
+        {
+            if (unwrapped != null)
+            {
+                var result = new ServerErrorWrapper
+                    {
+                        Index = unwrapped.Index,
+                        Error = unwrapped.Error,
+                        Timestamp = unwrapped.Timestamp,
+                        Document = unwrapped.Document,
+                        Action = unwrapped.Action
+                    };
+                return result;
+            }
+            return null;
+        }
+
+        public static ServerError Unrap(this ServerErrorWrapper wrapped)
+        {
+            if (wrapped != null)
+            {
+                var result = new ServerError
+                {
+                    Index = wrapped.Index,
+                    Error = wrapped.Error,
+                    Timestamp = wrapped.Timestamp,
+                    Document = wrapped.Document,
+                    Action = wrapped.Action
+                };
+                return result;
+            }
+            return null;
+        }
+
+        public static TriggerInfoWrapper Wrap(this Raven.Abstractions.Data.DatabaseStatistics.TriggerInfo unwrapped)
+        {
+            if (unwrapped != null)
+            {
+                var result = new TriggerInfoWrapper
+                {
+                    Name = unwrapped.Name,
+                    Type = unwrapped.Type
+                };
+                return result;
+            }
+            return null;
+        }
+
+        public static Raven.Abstractions.Data.DatabaseStatistics.TriggerInfo Unwrap(this TriggerInfoWrapper wrapped)
+        {
+            if (wrapped != null)
+            {
+                var result = new Raven.Abstractions.Data.DatabaseStatistics.TriggerInfo
+                {
+                    Name = wrapped.Name,
+                    Type = wrapped.Type
+                };
+                return result;
+            }
+            return null;
+        }
+
+        public static PutResultWrapper Wrap(this PutResult unwrapped)
+        {
+            if (unwrapped != null)
+            {
+                var result = new PutResultWrapper
+                {
+                    Key = unwrapped.Key,
+                    ETag = unwrapped.ETag.Wrap()
+                };
+                return result;
+            }
+            return null;
+        }
+
+        public static PutResult Unrap(this PutResultWrapper wrapped)
+        {
+            if (wrapped != null)
+            {
+                var result = new PutResult
+                {
+                    Key = wrapped.Key,
+                    ETag = wrapped.ETag.Unwrap()
+                };
+                return result;
             }
             return null;
         }

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Raven.TestSuite.Common.Abstractions.Enums;
+using Raven.TestSuite.Common.Indexing;
+using Raven.TestSuite.Common.Data;
 
 namespace Raven.TestSuite.Common.WrapperInterfaces
 {
@@ -27,17 +29,17 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
 		IDictionary<string, string> AnalyzersStrings { get; set; }
 
-        IDictionary<Expression<Func<TReduceResult, object>>, ISuggestionOptionsWrapper> Suggestions { get; set; }
+        IDictionary<Expression<Func<TReduceResult, object>>, SuggestionOptionsWrapper> Suggestions { get; set; }
 
 		IDictionary<Expression<Func<TReduceResult, object>>, FieldTermVectorWrapper> TermVectors { get; set; }
 
         IDictionary<string, FieldTermVectorWrapper> TermVectorsStrings { get; set; }
 
-		IDictionary<Expression<Func<TReduceResult, object>>, ISpatialOptionsWrapper> SpatialIndexes { get; set; }
+		IDictionary<Expression<Func<TReduceResult, object>>, SpatialOptionsWrapper> SpatialIndexes { get; set; }
 
-        IDictionary<string, ISpatialOptionsWrapper> SpatialIndexesStrings { get; set; }
+        IDictionary<string, SpatialOptionsWrapper> SpatialIndexesStrings { get; set; }
 
-	    IIndexDefinitionWrapper ToIndexDefinition(IDocumentConventionWrapper convention, bool validateMap = true);
+	    IndexDefinitionWrapper ToIndexDefinition(IDocumentConventionWrapper convention, bool validateMap = true);
 
 
 

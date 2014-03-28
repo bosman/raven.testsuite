@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Raven.TestSuite.Common.Abstractions.Data;
+using Raven.TestSuite.Common.Data;
 
 namespace Raven.TestSuite.Common.WrapperInterfaces
 {
@@ -25,9 +26,9 @@ namespace Raven.TestSuite.Common.WrapperInterfaces
 
         decimal DatabaseTransactionVersionSizeInMB { get; set; }
 
-        IIndexStatsWrapper[] Indexes { get; set; }
+        IndexStatsWrapper[] Indexes { get; set; }
 
-        IServerErrorWrapper[] Errors { get; set; }
+        ServerErrorWrapper[] Errors { get; set; }
 
         ITriggerInfoWrapper[] Triggers { get; set; }
 

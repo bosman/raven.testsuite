@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.TestSuite.Common.Abstractions.Enums;
-using Raven.TestSuite.Common.WrapperInterfaces;
-
-namespace Raven.TestSuite.ClientWrapper.v2_5_2750
+﻿namespace Raven.TestSuite.Common.Data
 {
-    public class SpatialOptionsWrapper : ISpatialOptionsWrapper
+    using Raven.TestSuite.Common.Abstractions.Enums;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+
+    public class SpatialOptionsWrapper
     {
         public SpatialFieldTypeWrapper Type { get; set; }
 

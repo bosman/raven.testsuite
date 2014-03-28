@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.TestSuite.Common.Abstractions.Enums;
-using Raven.TestSuite.Common.WrapperInterfaces;
-
-namespace Raven.TestSuite.ClientWrapper.v2_5_2750
+﻿namespace Raven.TestSuite.Common.Indexing
 {
-    public class IndexDefinitionWrapper : IIndexDefinitionWrapper
+    using Raven.TestSuite.Common.Abstractions.Enums;
+    using Raven.TestSuite.Common.Data;
+    using Raven.TestSuite.Common.WrapperInterfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    public class IndexDefinitionWrapper
     {
         public IndexDefinitionWrapper()
         {
@@ -18,9 +17,9 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
             Analyzers = new Dictionary<string, string>();
             SortOptions = new Dictionary<string, SortOptionsWrapper>();
             Fields = new List<string>();
-            Suggestions = new Dictionary<string, ISuggestionOptionsWrapper>();
+            Suggestions = new Dictionary<string, SuggestionOptionsWrapper>();
             TermVectors = new Dictionary<string, FieldTermVectorWrapper>();
-            SpatialIndexes = new Dictionary<string, ISpatialOptionsWrapper>();
+            SpatialIndexes = new Dictionary<string, SpatialOptionsWrapper>();
         }
 
         public string Name { get; set; }
@@ -62,11 +61,11 @@ namespace Raven.TestSuite.ClientWrapper.v2_5_2750
 
         public IList<string> Fields { get; set; }
 
-        public IDictionary<string, ISuggestionOptionsWrapper> Suggestions { get; set; }
+        public IDictionary<string, SuggestionOptionsWrapper> Suggestions { get; set; }
 
         public IDictionary<string, FieldTermVectorWrapper> TermVectors { get; set; }
 
-        public IDictionary<string, ISpatialOptionsWrapper> SpatialIndexes { get; set; }
+        public IDictionary<string, SpatialOptionsWrapper> SpatialIndexes { get; set; }
 
         public IDictionary<string, string> InternalFieldsMapping { get; set; }
 
