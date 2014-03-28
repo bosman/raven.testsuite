@@ -6,6 +6,7 @@
     using Raven.TestSuite.Tests.Common.Attributes;
     using Raven.TestSuite.Tests.DatabaseObjects.Northwind;
     using System;
+    using System.IO;
     using Xunit;
 
     [Serializable]
@@ -332,7 +333,7 @@
                     using (var session = store.OpenSession())
                     {
                         var category = session.Load<Category>("categories/6");
-                        Assert.Equal("01000000-0000-0001-0000-000000000066", session.Advanced.GetEtagFor<Category>(category).ToString());
+                        Assert.Equal("01000000-0000-0001-0000-0000000000A1", session.Advanced.GetEtagFor<Category>(category).ToString());
                     }
                 }
             });

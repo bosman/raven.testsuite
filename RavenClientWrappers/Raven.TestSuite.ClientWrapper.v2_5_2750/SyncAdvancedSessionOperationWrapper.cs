@@ -26,6 +26,11 @@
             get { return new LazySessionOperationsWrapper(this.syncAdvancedSessionOperation.Lazily); }
         }
 
+        public T[] LoadStartingWith<T>(string keyPrefix, string matches = null, int start = 0, int pageSize = 25, string exclude = null)
+        {
+            return this.syncAdvancedSessionOperation.LoadStartingWith<T>(keyPrefix, matches, start, pageSize, exclude);
+        }
+
         public string GetDocumentUrl(object entity)
         {
             return this.syncAdvancedSessionOperation.GetDocumentUrl(entity);

@@ -4,7 +4,6 @@
     using Raven.TestSuite.Common.Abstractions;
     using Raven.TestSuite.Common.WrapperInterfaces;
     using Raven.TestSuite.Tests.Api.Rest;
-    using Raven.TestSuite.Tests.Common;
     using Raven.TestSuite.Tests.Common.Attributes;
     using Raven.TestSuite.Tests.DatabaseObjects.Northwind;
     using System;
@@ -141,8 +140,8 @@
                             .ToArray();
                         Assert.NotNull(result);
                         Assert.Equal(2, result.Count());
-                        Assert.Equal("products/5", result[0].Id);
-                        Assert.Equal("products/9", result[1].Id);
+                        Assert.Equal("products/17", result[0].Id);
+                        Assert.Equal("products/24", result[1].Id);
 
                         result = session.Query<Product>(indexName)
                             .Where(x => x.Discontinued.Equals(true))
@@ -151,8 +150,8 @@
                             .ToArray();
                         Assert.NotNull(result);
                         Assert.Equal(2, result.Count());
-                        Assert.Equal("products/17", result[0].Id);
-                        Assert.Equal("products/24", result[1].Id);
+                        Assert.Equal("products/28", result[0].Id);
+                        Assert.Equal("products/29", result[1].Id);
 
                         result = session.Query<Product>(indexName)
                             .Where(x => x.Discontinued.Equals(true))
@@ -161,10 +160,10 @@
                             .ToArray();
                         Assert.NotNull(result);
                         Assert.Equal(4, result.Count());
-                        Assert.Equal("products/28", result[0].Id);
-                        Assert.Equal("products/29", result[1].Id);
-                        Assert.Equal("products/42", result[2].Id);
-                        Assert.Equal("products/53", result[3].Id);
+                        Assert.Equal("products/42", result[0].Id);
+                        Assert.Equal("products/5", result[1].Id);
+                        Assert.Equal("products/53", result[2].Id);
+                        Assert.Equal("products/9", result[3].Id);
                     }
                 }
             });

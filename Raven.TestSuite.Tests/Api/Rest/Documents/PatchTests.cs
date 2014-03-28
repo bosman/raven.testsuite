@@ -355,7 +355,7 @@
             this.wrapper.Execute(env =>
             {
                 var headers = new Dictionary<string, List<string>>();
-                headers.Add("If-Match", new List<string>(new string[] { "01000000-0000-0001-0000-0000000000ED" }));
+                headers.Add("If-Match", new List<string>(new string[] { "01000000-0000-0001-0000-000000000043" }));
 
                 var response = env.RawPatch(Constants.DbUrl.Northwind + "/docs/orders/14",
                     "[{ Type: 'Set', Name: 'Company', Value: 'MatchAndMismatchEtagTest' }]", "", headers);

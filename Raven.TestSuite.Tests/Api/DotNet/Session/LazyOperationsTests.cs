@@ -6,7 +6,7 @@
     using Raven.TestSuite.Tests.Common.Attributes;
     using Raven.TestSuite.Tests.DatabaseObjects.Northwind;
     using System;
-using Xunit;
+    using Xunit;
 
     [Serializable]
     [RequiresFreshNorthwindDatabaseAttribute]
